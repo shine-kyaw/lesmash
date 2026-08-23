@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import { localePath } from '../lib/i18n';
+import { t } from '../data/copy';
+import { title, description } from '../lib/seo';
+
+/*
+ * Useful, not cute (PRD §11.10). It keeps the sticky action bar and routes
+ * straight to the two things a lost visitor almost always wants.
+ *
+ * A single English 404 serves both locales: a static host serves one 404
+ * document for the whole site, so it links onward rather than guessing which
+ * language the visitor was after.
+ */
+const locale = 'en' as const;
+const c = t(locale);
+---
+<Base
+  locale={locale}
+  route="/404"
+  title={title(locale, 'Page not found')}
+  description={description(locale, 'notFound')}
+  noindex
+>
+  <div class="container">
+    <section class="section stack">
+      <h1>Page not found</h1>
+      <p class="lede">
+        That page does not exist. Here is where most people are heading:
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={localePath(locale, '/menu')}>{c.cta.seeMenu}</a>
+        <a class="btn btn--secondary" href={localePath(locale, '/locations')}>{c.nav.locations}</a>
+        <a class="btn btn--ghost" href={localePath(locale, '/')}>{c.cta.backHome}</a>
+      </div>
+      <p class="meta" style="margin-top:var(--sp-5)">
+        <a href={localePath('my', '/')} lang="my" hreflang="my">မြန်မာ</a>
+      </p>
+    </section>
+  </div>
+</Base>

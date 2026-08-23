@@ -1,0 +1,10 @@
+{
+  "slug": "milkshake",
+  "name": { "en": "Milkshake", "my": "နို့ရည်ဖျော်ရည်များ" },
+  "description": null,
+  "displayGroup": "drinks",
+  "sortOrder": 100,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

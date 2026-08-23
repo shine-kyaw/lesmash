@@ -1,0 +1,10 @@
+{
+  "slug": "non-coffee",
+  "name": { "en": "Non Coffee", "my": "ကော်ဖီမဟုတ်သော အဖျော်ယမကာများ" },
+  "description": null,
+  "displayGroup": "drinks",
+  "sortOrder": 80,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

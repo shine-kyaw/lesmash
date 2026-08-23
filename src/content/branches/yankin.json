@@ -1,0 +1,43 @@
+{
+  "slug": "yankin",
+  "name": { "en": "Yankin", "my": "ရန်ကင်း" },
+  "addressLine": {
+    "en": "No. 2, Thazin Myaing Street, Parami Avenue",
+    "my": "အမှတ် ၂၊ သဇင်မြိုင်လမ်း၊ ပါရမီလမ်းမကြီး"
+  },
+  "township": { "en": "Yankin Township", "my": "ရန်ကင်းမြို့နယ်" },
+  "city": { "en": "Yangon", "my": "ရန်ကုန်" },
+  "postalCode": null,
+
+  "phone": [],
+  "viber": null,
+  "telegram": null,
+
+  "latitude": null,
+  "longitude": null,
+  "googlePlaceId": null,
+  "googleMapsUrl": null,
+
+  "foodpandaUrl": "https://www.foodpanda.com.mm/en/restaurant/qe02/le-smash-burgers-and-co-rn-kng",
+
+  "openingHours": [],
+  "specialHours": [],
+  "breakfastHoursNote": null,
+
+  "hasDineIn": null,
+  "hasDelivery": true,
+  "hasTakeaway": null,
+  "servesBreakfast": null,
+
+  "seatingNote": null,
+  "branchNote": null,
+
+  "soldOutItems": [],
+  "images": [],
+
+  "seoTitle": null,
+  "seoDescription": null,
+
+  "sortOrder": 2,
+  "isPublished": true
+}

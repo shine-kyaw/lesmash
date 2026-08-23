@@ -1,0 +1,36 @@
+---
+import { hasConfirmedHours, formatDay, type HoursEntry, type Weekday } from '../lib/hours';
+import { t } from '../data/copy';
+import type { Locale } from '../lib/i18n';
+
+interface Props { hours: HoursEntry[]; locale: Locale }
+const { hours, locale } = Astro.props;
+const c = t(locale);
+
+const DAY_NAMES: Record<Locale, string[]> = {
+  en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+  my: ['တနင်္ဂနွေ', 'တနင်္လာ', 'အင်္ဂါ', 'ဗုဒ္ဓဟူး', 'ကြာသပတေး', 'သောကြာ', 'စနေ'],
+};
+
+// Monday-first reading order.
+const order: Weekday[] = [1, 2, 3, 4, 5, 6, 0];
+const confirmed = hasConfirmedHours(hours);
+---
+{confirmed ? (
+  <table class="hours-table js-hours-table">
+    <caption class="visually-hidden">{c.labels.hours}</caption>
+    <tbody>
+      {order.map((day) => (
+        <tr data-day={day}>
+          <th scope="row">{DAY_NAMES[locale][day]}</th>
+          <td>{formatDay(hours, day) ?? c.state.closedNow}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+) : (
+  <div class="notice">
+    <strong>{c.state.hoursUnconfirmed}</strong>
+    <p>{c.state.checkHours}</p>
+  </div>
+)}

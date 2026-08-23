@@ -1,0 +1,237 @@
+/* --- Header ---------------------------------------------------------------
+ * Sticky, ≤56px, and never overlays the LCP element on load (NAV-01).
+ * "Menu" is a direct link, not hidden behind the drawer trigger (NAV-02).
+ * -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  height: var(--header-h);
+  display: flex; align-items: center;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--paper-3);
+}
+.site-header__inner { display: flex; align-items: center; gap: var(--sp-3); width: 100%; }
+.brandmark {
+  font-family: var(--font-display); font-weight: 600; font-size: var(--step-1);
+  letter-spacing: -0.02em; text-decoration: none; margin-right: auto; white-space: nowrap;
+}
+.brandmark em { font-style: normal; color: var(--accent); }
+.header-nav { display: none; }
+@media (min-width: 62rem) {
+  .header-nav { display: flex; align-items: center; gap: var(--sp-5); margin-right: var(--sp-4); }
+  .header-nav a { text-decoration: none; font-size: var(--step-0); padding-block: var(--sp-2); }
+  .header-nav a:hover, .header-nav a[aria-current='page'] { text-decoration: underline; text-underline-offset: 0.4em; }
+}
+.header-order { display: none; }
+@media (min-width: 62rem) {
+  .header-order { display: inline-flex; margin-left: var(--sp-3); }
+}
+.header-link {
+  text-decoration: none; font-weight: 600; padding: var(--sp-2) var(--sp-3);
+  min-height: var(--tap); display: inline-flex; align-items: center;
+}
+.lang-toggle {
+  display: inline-flex; align-items: center; min-height: var(--tap);
+  padding: var(--sp-2) var(--sp-3); border: 1px solid var(--paper-3);
+  border-radius: var(--radius-pill); text-decoration: none;
+  font-size: var(--step--1); font-weight: 600; white-space: nowrap;
+}
+.lang-toggle:hover { border-color: var(--ink-3); }
+.drawer-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--tap); height: var(--tap);
+  background: none; border: 0; border-radius: var(--radius); cursor: pointer;
+}
+/* Declared after the base rule so it actually wins: above this breakpoint the
+   full navigation is inline and a drawer trigger would be redundant. The close
+   button inside the open drawer is exempt. */
+@media (min-width: 62rem) {
+  .site-header .drawer-toggle { display: none; }
+}
+
+/* Drawer. Progressive enhancement: without JS it is a link to the sitemap-ish
+   footer, so navigation never depends on script (NAV-05). */
+.drawer[hidden] { display: none; }
+.drawer {
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--paper);
+  padding: var(--sp-4);
+  overflow-y: auto;
+}
+.drawer__head { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
+.drawer__nav { display: flex; flex-direction: column; margin-top: var(--sp-4); }
+.drawer__nav a {
+  padding: var(--sp-4) 0; border-bottom: 1px solid var(--paper-3);
+  text-decoration: none; font-family: var(--font-display); font-size: var(--step-2);
+}
+.drawer__foot { margin-top: var(--sp-5); display: grid; gap: var(--sp-3); }
+
+/* --- Sticky action bar ----------------------------------------------------
+ * The single most important navigational element on the site (PRD §9.5):
+ * guarantees Order / Directions / Call are one tap from anywhere.
+ * -------------------------------------------------------------------------- */
+/* Mobile only. Above this breakpoint the header carries Order inline and the
+   viewport is not short enough to need a persistent thumb-reach bar, so pinning
+   one would just cover content (PRD §9.5 desktop navigation). */
+@media (min-width: 62rem) {
+  .action-bar { display: none; }
+  body { padding-bottom: 0; }
+}
+.action-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+  background: var(--paper);
+  box-shadow: var(--shadow-2);
+  padding: var(--sp-2) var(--sp-3) calc(var(--sp-2) + env(safe-area-inset-bottom, 0px));
+}
+.action-bar__inner {
+  display: flex; align-items: stretch; gap: var(--sp-2);
+  max-width: var(--container); margin-inline: auto;
+}
+.action-bar .btn { flex: 1 1 auto; padding-inline: var(--sp-3); font-size: var(--step--1); }
+.action-bar .btn--icon { flex: 0 0 var(--tap); padding-inline: 0; }
+.action-bar__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[lang='my'] .action-bar .btn { font-size: 0.8125rem; }
+
+/* --- Hero -----------------------------------------------------------------
+ * No animation, no carousel, no video. First screen must be meaningful before
+ * any lazy asset resolves (HOME-01, HOME-02).
+ * -------------------------------------------------------------------------- */
+.hero { background: var(--ink); color: var(--paper); }
+.hero__inner {
+  display: grid; gap: var(--sp-5);
+  padding-block: var(--sp-6) var(--sp-7);
+}
+@media (min-width: 56rem) {
+  .hero__inner { grid-template-columns: 1.05fr 1fr; align-items: center; gap: var(--sp-7); padding-block: var(--sp-8); }
+}
+.hero h1 { font-size: var(--step-5); color: var(--paper); }
+@media (min-width: 56rem) { .hero h1 { font-size: 3.25rem; } }
+[lang='my'] .hero h1 { font-size: var(--step-4); }
+.hero__positioning { font-size: var(--step-1); color: #ded5c8; max-width: 42ch; }
+.hero__branches { font-size: var(--step--1); color: #c3b7a7; }
+.hero__branches a { color: inherit; }
+.hero .ph { background: repeating-linear-gradient(135deg, #241e18 0 10px, #2c251d 10px 20px); color: #9d9182; border-radius: var(--radius-lg); }
+.hero .ph__mark { color: #c3b7a7; }
+
+/* --- Proof strip ----------------------------------------------------------- */
+.proof { border-block: 1px solid var(--paper-3); background: var(--paper-2); }
+.proof__list { display: grid; gap: var(--sp-4); padding-block: var(--sp-5); list-style: none; padding-inline: 0; }
+@media (min-width: 48rem) { .proof__list { grid-template-columns: repeat(3, 1fr); } }
+.proof__list li { font-weight: 600; }
+
+/* --- Menu -----------------------------------------------------------------
+ * Category chips scroll-anchor rather than navigate; they degrade to plain
+ * anchor links with no JS (MENU-05).
+ * -------------------------------------------------------------------------- */
+.chips {
+  position: sticky; top: var(--header-h); z-index: 30;
+  background: var(--paper);
+  border-bottom: 1px solid var(--paper-3);
+  margin-inline: calc(var(--sp-4) * -1);
+  padding: var(--sp-3) var(--sp-4);
+}
+.chips__scroll {
+  display: flex; gap: var(--sp-2); overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.chips__scroll::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto; display: inline-flex; align-items: center;
+  min-height: 40px; padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--paper-3); border-radius: var(--radius-pill);
+  background: var(--paper); text-decoration: none;
+  font-size: var(--step--1); font-weight: 600; white-space: nowrap;
+}
+.chip[aria-current='true'], .chip.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.menu-section { scroll-margin-top: calc(var(--header-h) + 64px); padding-top: var(--sp-6); }
+.menu-section__head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+.menu-list { list-style: none; padding: 0; display: grid; gap: var(--sp-4); }
+@media (min-width: 40rem) { .menu-list { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .menu-list { grid-template-columns: repeat(3, 1fr); } }
+
+.item { display: flex; flex-direction: column; height: 100%; }
+.item__media { border-bottom: 1px solid var(--paper-3); }
+.item__body { padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); flex: 1; }
+.item__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
+.item__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; line-height: 1.25; }
+[lang='my'] .item__name { line-height: 1.5; }
+.item__price { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.item__price--unset { color: var(--ink-3); font-weight: 600; font-size: var(--step--1); white-space: normal; }
+.item__desc { font-size: var(--step--1); color: var(--ink-2); }
+/* Portion facts sit on the card, never behind a tap — the whole point of the
+   project is that the customer learns the size before they commit (§5.1). */
+.item__facts { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: auto; padding-top: var(--sp-2); }
+.item--unavailable { opacity: 0.62; }
+.item--unavailable .item__media { filter: grayscale(1); }
+.item__details { margin-top: var(--sp-2); font-size: var(--step--1); }
+.item__details summary {
+  cursor: pointer; font-weight: 600; color: var(--ink-2);
+  min-height: var(--tap); display: flex; align-items: center;
+}
+.item__details[open] summary { margin-bottom: var(--sp-2); }
+.item__details dl { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-1) var(--sp-3); margin: 0; }
+.item__details dt { color: var(--ink-3); }
+.item__details dd { margin: 0; }
+
+/* --- Branch card ----------------------------------------------------------- */
+.branch-card { padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); height: 100%; }
+.branch-card__name { font-family: var(--font-display); font-size: var(--step-2); }
+.branch-card__addr { font-size: var(--step--1); color: var(--ink-2); }
+.branch-card .btn-row { margin-top: auto; padding-top: var(--sp-2); }
+.branch-card .btn { flex: 1 1 auto; }
+
+.hours-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.hours-table th, .hours-table td { text-align: start; padding: var(--sp-2) 0; border-bottom: 1px solid var(--paper-3); }
+.hours-table th { font-weight: 600; color: var(--ink-2); }
+.hours-table td { font-variant-numeric: tabular-nums; }
+.hours-table tr[data-today] { background: var(--paper-2); }
+
+/* --- Branch chooser -------------------------------------------------------
+ * A <dialog> when JS is available; the same markup is a plain server-rendered
+ * page at /order, so ordering never depends on script (ORD-02).
+ * -------------------------------------------------------------------------- */
+.chooser::backdrop { background: rgb(23 19 15 / 0.55); }
+.chooser {
+  border: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--sp-5); width: 100%; max-width: 34rem;
+  margin: auto auto 0; background: var(--paper); color: var(--ink);
+}
+@media (min-width: 40rem) { .chooser { border-radius: var(--radius-lg); margin: auto; } }
+.chooser__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.chooser__list { display: grid; gap: var(--sp-3); list-style: none; padding: 0; }
+.chooser__option {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  width: 100%; padding: var(--sp-4); text-align: start;
+  border: 1px solid var(--paper-3); border-radius: var(--radius); background: var(--paper);
+  text-decoration: none; min-height: var(--tap);
+}
+.chooser__option:hover { border-color: var(--ink); }
+.chooser__option strong { font-family: var(--font-display); font-size: var(--step-1); }
+
+/* --- Footer ---------------------------------------------------------------- */
+.site-footer { background: var(--ink); color: #ded5c8; padding-block: var(--sp-7); margin-top: var(--sp-8); }
+.site-footer a { color: var(--paper); }
+.site-footer h2 { color: var(--paper); font-size: var(--step-1); margin-bottom: var(--sp-3); }
+.footer-grid { display: grid; gap: var(--sp-6); }
+@media (min-width: 48rem) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+.footer-list { list-style: none; padding: 0; display: grid; gap: var(--sp-2); font-size: var(--step--1); }
+.footer-bottom {
+  margin-top: var(--sp-6); padding-top: var(--sp-4);
+  border-top: 1px solid #3a322a; font-size: var(--step--1);
+  display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: space-between;
+}
+
+/* --- Pre-launch banner ----------------------------------------------------
+ * Only rendered in preview builds. It states plainly that content is not yet
+ * confirmed, so no one mistakes placeholder data for published fact.
+ * -------------------------------------------------------------------------- */
+.prelaunch {
+  background: var(--warn); color: #fff;
+  font-size: var(--step--1); padding: var(--sp-3) 0;
+}
+.prelaunch strong { font-weight: 700; }
+.prelaunch a { color: #fff; }
+.prelaunch p { max-width: none; }
+.prelaunch__more { display: none; }
+@media (min-width: 48rem) { .prelaunch__more { display: inline; } }

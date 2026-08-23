@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import MenuItemCard from '../../components/MenuItemCard.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import EditorialSlot from '../../components/EditorialSlot.astro';
+import BranchChooserInline from '../../components/BranchChooser.astro';
+import { localePaths, localeFromParam, localePath } from '../../lib/i18n';
+import { t } from '../../data/copy';
+import { EDITORIAL } from '../../data/editorial';
+import { getBranches, getCategories, getMenuItems, itemsInCategory, L } from '../../lib/content';
+import { title, description } from '../../lib/seo';
+import { menuSchema, breadcrumbSchema } from '../../lib/schema';
+
+export function getStaticPaths() { return localePaths(); }
+
+const locale = localeFromParam(Astro.params.lang);
+const c = t(locale);
+const branches = await getBranches();
+const categories = await getCategories();
+const items = await getMenuItems();
+const burgers = itemsInCategory(items, 'burgers');
+const combos = itemsInCategory(items, 'burger-combo');
+
+const schema = [
+  menuSchema(categories, items, locale, 'burgers'),
+  breadcrumbSchema(
+    [{ name: c.nav.home, path: '/' }, { name: c.nav.burgers, path: '/burgers' }],
+    locale
+  ),
+];
+---
+<Base
+  locale={locale}
+  route="/burgers"
+  title={title(locale, locale === 'my' ? 'Smash ဘာဂါများ' : 'Smash Burgers')}
+  description={description(locale, 'burgers')}
+  schema={schema}
+>
+  <div class="container">
+    <section class="section grid grid--2">
+      <div class="stack">
+        <p class="eyebrow">{c.nav.burgers}</p>
+        <h1>{locale === 'my' ? 'ရန်ကုန်တွင် Smash ဘာဂါများ' : 'Smash Burgers in Yangon'}</h1>
+      </div>
+      <Placeholder ratio="4x3" label={c.state.noPhoto} />
+    </section>
+
+    {/*
+      "How we smash" — the strategic heart of the whole site.
+      This is the one place that states, in plain language and with a photograph
+      carrying a visible scale reference, exactly how big a Le SMASH burger is.
+      It is the single highest-leverage block on the site for closing the gap
+      between what marketing implies and what arrives at the table (PRD §11.5).
+    */}
+    <section class="section">
+      <div class="grid grid--2">
+        <div class="stack">
+          <h2>{locale === 'my' ? 'ကျွန်ုပ်တို့ smash လုပ်ပုံ' : 'How we smash'}</h2>
+          <EditorialSlot slot={EDITORIAL.howWeSmash} locale={locale} />
+          <EditorialSlot slot={EDITORIAL.portionHonesty} locale={locale} class="lede" />
+        </div>
+        <div class="stack">
+          <Placeholder
+            ratio="4x3"
+            label={locale === 'my'
+              ? 'အရွယ်အစား နှိုင်းယှဉ်ပြသည့် ဓာတ်ပုံ လိုအပ်သည်'
+              : 'Scale-reference photograph required'}
+          />
+          <p class="meta">
+            {locale === 'my'
+              ? 'ဓာတ်ပုံတွင် အသားပြားအရေအတွက်ကို ရေတွက်နိုင်ရမည်ဖြစ်ပြီး အရွယ်အစားကို နှိုင်းယှဉ်နိုင်သည့် အရာတစ်ခု ပါဝင်ရမည်။'
+              : 'This image must show the patties countable in profile, with a scale cue in frame — the actual plate, a hand, or the serving basket.'}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {burgers.length > 0 && (
+      <section class="section menu-section">
+        <h2 class="section-head">{c.nav.burgers}</h2>
+        <ul class="menu-list">
+          {burgers.map((item) => <MenuItemCard item={item} locale={locale} branches={branches} />)}
+        </ul>
+      </section>
+    )}
+
+    {combos.length > 0 && (
+      <section class="section menu-section">
+        <h2 class="section-head">{c.labels.combo}</h2>
+        <ul class="menu-list">
+          {combos.map((item) => <MenuItemCard item={item} locale={locale} branches={branches} />)}
+        </ul>
+      </section>
+    )}
+
+    <section class="section stack">
+      <h2>{c.nav.order}</h2>
+      <BranchChooserInline locale={locale} branches={branches} variant="inline" />
+      <p><a href={localePath(locale, '/menu')}>{c.cta.fullMenu}</a></p>
+    </section>
+  </div>
+</Base>

@@ -1,0 +1,10 @@
+{
+  "slug": "sides",
+  "name": { "en": "Sides", "my": "ဘေးတွဲ အစားအစာများ" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 60,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

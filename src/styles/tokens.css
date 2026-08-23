@@ -1,0 +1,86 @@
+/*
+ * Design tokens.
+ *
+ * No brand identity assets were available when this was built (PRD Q9, R-18),
+ * so this is a deliberately neutral premium-casual bistro palette chosen to
+ * meet WCAG AA and to stay out of the food photography's way. It is token-driven
+ * precisely so that adopting the real brand is a change to this file and nothing
+ * else (PRD §25.3).
+ *
+ * Every foreground/background pair below is AA-compliant; the ratios are noted
+ * so a brand swap can be checked against the same bar.
+ */
+:root {
+  /* --- Colour ------------------------------------------------------------ */
+  --ink: #17130f;           /* warm near-black       on --paper  = 15.9:1 */
+  --ink-2: #443b33;         /* secondary text        on --paper  =  9.0:1 */
+  --ink-3: #6b6058;         /* muted / meta text     on --paper  =  5.2:1 */
+  --paper: #fbf8f3;         /* warm off-white page ground              */
+  --paper-2: #f4efe6;       /* raised surface / cards                  */
+  --paper-3: #eae2d5;       /* borders, dividers, placeholder fill      */
+
+  --accent: #a8321c;        /* bistro brick red      on --paper  =  6.2:1 */
+  --accent-ink: #fbf8f3;    /* text on accent                    =  6.2:1 */
+  --accent-soft: #f6e7e2;   /* accent-tinted surface                   */
+
+  --positive: #2f6b45;      /* "open now"            on --paper  =  5.3:1 */
+  --positive-soft: #e4efe7;
+  --warn: #8a5a12;          /* unconfirmed / pending on --paper  =  5.1:1 */
+  --warn-soft: #f7eddb;
+
+  --focus: #1a4fd6;         /* focus ring, ≥3:1 against both grounds   */
+
+  /* --- Type -------------------------------------------------------------- */
+  /* System serif — zero bytes, no request, no swap. See global.css for why. */
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
+                  'Noto Serif', 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-my: 'Noto Sans Myanmar', 'Padauk', 'Myanmar Text', 'Noto Sans Myanmar UI', sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.125rem;
+  --step-2: 1.375rem;
+  --step-3: 1.75rem;
+  --step-4: 2.125rem;
+  --step-5: 2.625rem;
+
+  --lh-body: 1.6;
+  --lh-heading: 1.18;
+  --tracking-heading: -0.015em;
+
+  /* --- Space, radius, shadow --------------------------------------------- */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgb(23 19 15 / 0.06), 0 2px 6px rgb(23 19 15 / 0.04);
+  --shadow-2: 0 -1px 0 var(--paper-3), 0 -8px 24px rgb(23 19 15 / 0.06);
+
+  /* --- Layout ------------------------------------------------------------ */
+  --measure: 62ch;
+  --container: 76rem;
+  --header-h: 56px;         /* PRD NAV-01: ≤56px on mobile */
+  --bar-h: 64px;            /* PRD NAV-04: ≤64px + safe area */
+  --tap: 44px;              /* PRD A11Y-06 minimum touch target */
+}
+
+/*
+ * Burmese type is a separate specification, not a font swap (PRD §16.2).
+ * Stacked diacritics need more vertical room; caps and letter-spacing are
+ * prohibited because they break glyph clusters. This is an accessibility
+ * requirement (A11Y-05), not a stylistic preference.
+ */
+:root:lang(my),
+[lang='my'] {
+  --font-body: var(--font-my);
+  --font-display: var(--font-my);
+  --step-0: 1.0625rem;      /* ≥17px body */
+  --lh-body: 1.9;
+  --lh-heading: 1.45;
+  --tracking-heading: 0;
+}

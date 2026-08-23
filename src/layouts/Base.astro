@@ -1,0 +1,59 @@
+---
+import '../styles/global.css';
+import '../styles/components.css';
+import Head from '../components/Head.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ActionBar from '../components/ActionBar.astro';
+import BranchChooser from '../components/BranchChooser.astro';
+import PreLaunchNotice from '../components/PreLaunchNotice.astro';
+import { HTML_LANG, type Locale } from '../lib/i18n';
+import { t } from '../data/copy';
+import { getBranches, type Branch } from '../lib/content';
+
+interface Props {
+  locale: Locale;
+  route: string;
+  title: string;
+  description: string;
+  noindex?: boolean;
+  schema?: unknown[];
+  /** Branch context for the sticky bar, on branch pages. */
+  branch?: Branch | null;
+}
+const {
+  locale, route, title, description, noindex = false, schema = [], branch = null,
+} = Astro.props;
+
+const c = t(locale);
+const branches = await getBranches();
+---
+<!doctype html>
+<html lang={HTML_LANG[locale]}>
+  <head>
+    <Head
+      locale={locale}
+      route={route}
+      title={title}
+      description={description}
+      noindex={noindex}
+      schema={schema}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{c.labels.skipToContent}</a>
+    <PreLaunchNotice locale={locale} />
+    <Header locale={locale} route={route} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer locale={locale} branches={branches} route={route} />
+    <ActionBar locale={locale} branches={branches} branch={branch} />
+    <BranchChooser locale={locale} branches={branches} />
+
+    {/* Deferred, non-blocking, and entirely optional — see public/scripts/app.js. */}
+    <script src="/scripts/app.js" defer is:inline></script>
+  </body>
+</html>

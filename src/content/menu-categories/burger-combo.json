@@ -1,0 +1,10 @@
+{
+  "slug": "burger-combo",
+  "name": { "en": "Burger Combo", "my": "ဘာဂါ ကွန်ဘို" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 20,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

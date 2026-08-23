@@ -1,0 +1,67 @@
+---
+import { SITE, absoluteUrl, localePath, otherLocale, type Locale } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+  /** Locale-independent route key, e.g. "/menu". Drives canonical + hreflang. */
+  route: string;
+  title: string;
+  description: string;
+  noindex?: boolean;
+  schema?: unknown[];
+  ogImage?: string | null;
+}
+
+const { locale, route, title, description, noindex = false, schema = [], ogImage = null } =
+  Astro.props;
+
+const canonical = absoluteUrl(localePath(locale, route));
+const alternates = [
+  { hreflang: 'en', href: absoluteUrl(localePath('en', route)) },
+  { hreflang: 'my', href: absoluteUrl(localePath('my', route)) },
+  { hreflang: 'x-default', href: absoluteUrl(localePath('en', route)) },
+];
+
+const jsonLd =
+  schema.length > 0 ? { '@context': 'https://schema.org', '@graph': schema } : null;
+
+const ogLocale = locale === 'my' ? 'my_MM' : 'en_US';
+const other = otherLocale(locale);
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+
+{/* Self-referencing canonical; never cross-locale (SEO-06). */}
+<link rel="canonical" href={canonical} />
+{alternates.map((alt) => (
+  <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+))}
+
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+{/* Locale-aware OG. These previews matter disproportionately in Viber and
+    Telegram in this market, not only Facebook (SEO-07). */}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.brand.legal} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:locale:alternate" content={other === 'my' ? 'my_MM' : 'en_US'} />
+{ogImage && <meta property="og:image" content={absoluteUrl(ogImage)} />}
+{ogImage && <meta property="og:image:width" content="1200" />}
+{ogImage && <meta property="og:image:height" content="630" />}
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+
+<meta name="theme-color" content="#17130f" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+{/* Burmese pages preload the Myanmar face, because on those pages it is on the
+    critical path for the LCP text. English pages request no font at all. */}
+{locale === 'my' && (
+  <link rel="preload" href="/fonts/noto-myanmar-400.woff2" as="font" type="font/woff2" crossorigin />
+)}
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

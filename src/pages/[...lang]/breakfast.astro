@@ -1,0 +1,118 @@
+---
+import Base from '../../layouts/Base.astro';
+import MenuItemCard from '../../components/MenuItemCard.astro';
+import BranchCard from '../../components/BranchCard.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import EditorialSlot from '../../components/EditorialSlot.astro';
+import { localePaths, localeFromParam, localePath } from '../../lib/i18n';
+import { t } from '../../data/copy';
+import { EDITORIAL } from '../../data/editorial';
+import { getBranches, getCategories, getMenuItems, itemsInCategory, L } from '../../lib/content';
+import { title, description } from '../../lib/seo';
+import { menuSchema, breadcrumbSchema } from '../../lib/schema';
+import { hasConfirmedHours } from '../../lib/hours';
+
+export function getStaticPaths() { return localePaths(); }
+
+const locale = localeFromParam(Astro.params.lang);
+const c = t(locale);
+const branches = await getBranches();
+const categories = await getCategories();
+const items = await getMenuItems();
+const breakfastItems = itemsInCategory(items, 'breakfast');
+const breakfastCategory = categories.find((cat) => cat.slug === 'breakfast');
+
+/*
+ * Breakfast is a distinct daypart with its own search intent, so it gets its own
+ * indexable page rather than an anchor inside the long menu (PRD F5, §9.1).
+ *
+ * The question this page exists to answer is "when, and at which branch". If we
+ * cannot answer it we say so at the top — getting this wrong would produce
+ * exactly the wasted journey the project exists to prevent (PRD Flow 3).
+ */
+const branchesWithHours = branches.filter((b) => hasConfirmedHours(b.openingHours) || b.breakfastHoursNote);
+const hoursKnown = branchesWithHours.length > 0;
+
+const schema = [
+  menuSchema(categories, items, locale, 'breakfast'),
+  breadcrumbSchema(
+    [{ name: c.nav.home, path: '/' }, { name: c.nav.breakfast, path: '/breakfast' }],
+    locale
+  ),
+];
+---
+<Base
+  locale={locale}
+  route="/breakfast"
+  title={title(locale, locale === 'my' ? 'မနက်စာနှင့် brunch' : 'Breakfast & Brunch')}
+  description={description(locale, 'breakfast')}
+  schema={schema}
+>
+  <div class="container">
+    <section class="section grid grid--2">
+      <div class="stack">
+        <p class="eyebrow">{c.nav.breakfast}</p>
+        <h1>
+          {locale === 'my' ? 'ရန်ကုန်တွင် မနက်စာနှင့် brunch' : 'Breakfast & Brunch in Yangon'}
+        </h1>
+        <EditorialSlot slot={EDITORIAL.breakfastIntro} locale={locale} class="lede" />
+      </div>
+      <Placeholder ratio="4x3" label={c.state.noPhoto} />
+    </section>
+
+    {/* Service hours, above the fold, per branch — this is the whole reason the
+        page ranks and the whole reason a visitor opened it. */}
+    <section class="section">
+      <h2 class="section-head">{c.labels.breakfastService}</h2>
+      {hoursKnown ? (
+        <div class="grid grid--2">
+          {branches.map((branch) => (
+            <div class="card branch-card">
+              <h3 class="branch-card__name">{L(branch.name, locale)}</h3>
+              {L(branch.breakfastHoursNote, locale) ? (
+                <p>{L(branch.breakfastHoursNote, locale)}</p>
+              ) : (
+                <p class="meta">{c.state.hoursUnconfirmed}</p>
+              )}
+              {branch.servesBreakfast === false && (
+                <p class="badge badge--warn">
+                  {locale === 'my' ? 'ဤဆိုင်ခွဲတွင် မနက်စာ မရှိပါ' : 'Breakfast is not served at this branch'}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="notice">
+          <strong>{c.state.hoursUnconfirmed}</strong>
+          <p>
+            {locale === 'my'
+              ? 'မနက်စာ ဝန်ဆောင်ချိန်နှင့် မည်သည့်ဆိုင်ခွဲတွင် ရရှိနိုင်သည်ကို အတည်မပြုရသေးပါ။ ဆိုင်သို့ ဆက်သွယ်၍ စုံစမ်းပါ။'
+              : 'Breakfast service hours and which branches serve breakfast are not yet confirmed. Please contact the restaurant before travelling.'}
+          </p>
+        </div>
+      )}
+    </section>
+
+    {breakfastItems.length > 0 && (
+      <section class="section">
+        <h2 class="section-head">{L(breakfastCategory?.name ?? null, locale) ?? c.nav.breakfast}</h2>
+        <ul class="menu-list">
+          {breakfastItems.map((item) => (
+            <MenuItemCard item={item} locale={locale} branches={branches} />
+          ))}
+        </ul>
+        <p style="margin-top:var(--sp-5)">
+          <a class="btn btn--secondary" href={localePath(locale, '/menu')}>{c.cta.fullMenu}</a>
+        </p>
+      </section>
+    )}
+
+    <section class="section">
+      <h2 class="section-head">{c.labels.branches}</h2>
+      <div class="grid grid--2">
+        {branches.map((branch) => <BranchCard locale={locale} branch={branch} />)}
+      </div>
+    </section>
+  </div>
+</Base>

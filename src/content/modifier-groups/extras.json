@@ -1,0 +1,10 @@
+{
+  "slug": "extras",
+  "name": { "en": "Add extras", "my": "ထပ်ဖြည့်ရန်" },
+  "type": "multi-select",
+  "isRequired": false,
+  "options": [
+    { "label": { "en": "Extra patty", "my": "အသားပြား ထပ်ဖြည့်" }, "priceDelta": null },
+    { "label": { "en": "Extra cheese", "my": "ချိစ် ထပ်ဖြည့်" }, "priceDelta": null }
+  ]
+}

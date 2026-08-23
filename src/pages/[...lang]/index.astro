@@ -1,0 +1,165 @@
+---
+import Base from '../../layouts/Base.astro';
+import Placeholder from '../../components/Placeholder.astro';
+import MenuItemCard from '../../components/MenuItemCard.astro';
+import BranchCard from '../../components/BranchCard.astro';
+import EditorialSlot from '../../components/EditorialSlot.astro';
+import BranchChooserInline from '../../components/BranchChooser.astro';
+import { localePaths, localeFromParam, localePath, SITE } from '../../lib/i18n';
+import { t } from '../../data/copy';
+import { EDITORIAL, editorialText } from '../../data/editorial';
+import { getBranches, getMenuItems, featuredItems, L, IS_PREVIEW } from '../../lib/content';
+import { title, description } from '../../lib/seo';
+import { organizationSchema, websiteSchema, restaurantSchema } from '../../lib/schema';
+
+export function getStaticPaths() { return localePaths(); }
+
+const locale = localeFromParam(Astro.params.lang);
+const c = t(locale);
+const branches = await getBranches();
+const items = await getMenuItems();
+const featured = featuredItems(items, 6);
+
+const proof = EDITORIAL.proofPoints.value[locale].length
+  ? EDITORIAL.proofPoints.value[locale]
+  : EDITORIAL.proofPoints.value.en;
+
+const schema = [
+  organizationSchema(locale),
+  websiteSchema(locale),
+  ...branches.map((b) => restaurantSchema(b, locale, { withMenu: true })),
+];
+---
+<Base
+  locale={locale}
+  route="/"
+  title={title(locale, null)}
+  description={description(locale, 'home')}
+  schema={schema}
+>
+  {/*
+    First screen (HOME-01). A stranger arriving from a creator video must be able
+    to answer "what is this, where is it, what now" without scrolling and without
+    waiting: heading, positioning line, both branch names, and two CTAs are all
+    static HTML above the fold. No animation, no carousel, no modal (HOME-02).
+  */}
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="stack-lg">
+        <div class="stack">
+          <p class="eyebrow" style="color:#c3b7a7">{c.brandTagline}</p>
+          <h1>
+            {editorialText(EDITORIAL.heroLine, locale) ?? `${SITE.brand.legal}`}
+          </h1>
+          <EditorialSlot slot={EDITORIAL.heroPositioning} locale={locale} class="hero__positioning" />
+        </div>
+
+        <div class="btn-row">
+          {/* Discovery before transaction: for a cold arrival the first job is
+              comprehension, so the menu is the primary CTA (PRD §9.6 tier 0). */}
+          <a class="btn btn--onDark" href={localePath(locale, '/menu')}>{c.cta.seeMenu}</a>
+          <a class="btn btn--primary" href={localePath(locale, '/order')}
+             data-order-cta data-analytics="order_cta_click" data-source="hero">
+            {c.cta.orderShort}
+          </a>
+        </div>
+
+        <p class="hero__branches">
+          {c.labels.branches}: {branches.map((b, i) => (
+            <>
+              {i > 0 && ' · '}
+              <a href={localePath(locale, `/locations/${b.slug}`)}>{L(b.name, locale)}</a>
+            </>
+          ))}
+        </p>
+      </div>
+
+      <Placeholder ratio="4x5" label={c.state.noPhoto} />
+    </div>
+  </section>
+
+  {(proof.length > 0 || IS_PREVIEW) && (
+    <section class="proof">
+      <div class="container">
+        {proof.length > 0 ? (
+          <ul class="proof__list">
+            {proof.map((point) => <li>{point}</li>)}
+          </ul>
+        ) : (
+          <div style="padding-block:var(--sp-5)">
+            <div class="slot">
+              <span class="slot__ref">
+                Content slot {EDITORIAL.proofPoints.ref} · owner: {EDITORIAL.proofPoints.owner}
+              </span>
+              {EDITORIAL.proofPoints.note}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {/* The menu preview sits above brand storytelling on purpose: the highest-
+      intent visitor will not scroll through a story to reach the food. */}
+  {featured.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>{c.labels.menu}</h2>
+          <a href={localePath(locale, '/menu')}>{c.cta.fullMenu}</a>
+        </div>
+        <ul class="menu-list">
+          {featured.map((item) => (
+            <MenuItemCard item={item} locale={locale} branches={branches} />
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container grid grid--2">
+      <div class="stack">
+        <h2>{c.nav.breakfast}</h2>
+        <EditorialSlot slot={EDITORIAL.breakfastIntro} locale={locale} class="lede" />
+        <p><a class="btn btn--secondary" href={localePath(locale, '/breakfast')}>{c.nav.breakfast}</a></p>
+      </div>
+      <Placeholder ratio="3x2" label={c.state.noPhoto} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>{c.nav.about}</h2>
+        <a href={localePath(locale, '/about')}>{c.nav.about}</a>
+      </div>
+      {/* The rooms are a genuine brand asset and the main justification for the
+          price point to an English-speaking visitor (PRD F6). */}
+      <div class="grid grid--3">
+        <Placeholder ratio="3x2" label={c.state.noPhoto} />
+        <Placeholder ratio="3x2" label={c.state.noPhoto} />
+        <Placeholder ratio="3x2" label={c.state.noPhoto} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-head">{c.labels.branches}</h2>
+      <div class="grid grid--2">
+        {branches.map((branch) => <BranchCard locale={locale} branch={branch} />)}
+      </div>
+    </div>
+  </section>
+
+  {/* Setting the expectation that ordering happens on Foodpanda, before the
+      customer is bounced off-site by a CTA (PRD §11.2 module 7). */}
+  <section class="section">
+    <div class="container stack">
+      <h2>{c.nav.order}</h2>
+      <EditorialSlot slot={EDITORIAL.orderExplainer} locale={locale} class="lede" />
+      <BranchChooserInline locale={locale} branches={branches} variant="inline" />
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,82 @@
+---
+import { localePath, type Locale } from '../lib/i18n';
+import { t } from '../data/copy';
+import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
+
+/**
+ * The persistent bottom action bar (NAV-04).
+ *
+ * Guarantees the PRD's "two taps to the thing that matters": from any page, any
+ * persona is one tap from Order, Directions or Call.
+ *
+ * Branch handling is a loop over whatever branches exist, never a hard-coded
+ * pair — adding a third branch is data entry, not development (PRD §14.2).
+ * With a branch in context the actions deep-link straight to it; without one,
+ * Order routes through the chooser and Directions/Call route to /locations.
+ */
+interface Props {
+  locale: Locale;
+  branches: Branch[];
+  /** Set on branch pages so the actions skip the chooser entirely. */
+  branch?: Branch | null;
+}
+const { locale, branches, branch = null } = Astro.props;
+const c = t(locale);
+
+const orderable = branches.filter((b) => b.foodpandaUrl);
+const phone = branch ? primaryPhone(branch) : null;
+
+// With exactly one orderable branch there is nothing to choose, so we skip
+// straight to it. Otherwise the chooser opens.
+const singleOrder = !branch && orderable.length === 1 ? orderable[0] : null;
+const orderHref = branch?.foodpandaUrl ?? singleOrder?.foodpandaUrl ?? localePath(locale, '/order');
+const orderIsExternal = Boolean(branch?.foodpandaUrl ?? singleOrder?.foodpandaUrl);
+
+const directionsHref = branch ? directionsUrl(branch, locale) : localePath(locale, '/locations');
+const callHref = phone ? `tel:${phone.e164}` : localePath(locale, '/locations');
+---
+<div class="action-bar">
+  <div class="action-bar__inner" role="group" aria-label={c.a11y.branchActions}>
+    <a
+      class="btn btn--primary"
+      href={orderHref}
+      data-order-cta
+      data-branch={branch?.slug ?? ''}
+      data-analytics={orderIsExternal ? 'foodpanda_outbound' : 'order_cta_click'}
+      data-source="action_bar"
+      {...(orderIsExternal
+        ? { target: '_blank', rel: 'noopener noreferrer' }
+        : {})}
+    >
+      <span class="action-bar__label">{c.cta.orderShort}</span>
+    </a>
+
+    <a
+      class="btn btn--secondary"
+      href={directionsHref}
+      data-analytics="directions_click"
+      data-branch={branch?.slug ?? ''}
+      data-source="action_bar"
+      {...(branch ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      <span class="action-bar__label">{c.cta.directionsShort}</span>
+    </a>
+
+    {/* Call is only ever a tel: link when a real number exists (DS-02). If the
+        number is unknown it points at the branch pages rather than dialling
+        nothing. */}
+    <a
+      class="btn btn--ghost btn--icon"
+      href={callHref}
+      data-analytics="phone_click"
+      data-branch={branch?.slug ?? ''}
+      data-source="action_bar"
+      aria-label={phone ? `${c.cta.call} ${phone.display}` : c.cta.callShort}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6.5 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2L21 14.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4 5.2 2 2 0 0 1 6 3Z"
+          stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>

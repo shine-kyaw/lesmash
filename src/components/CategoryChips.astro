@@ -1,0 +1,45 @@
+---
+import { t } from '../data/copy';
+import { L, type MenuCategory } from '../lib/content';
+import type { Locale } from '../lib/i18n';
+
+/**
+ * Sticky category chips (MENU-05).
+ *
+ * These are plain in-page anchors. With JavaScript they gain scroll-spy —
+ * the active chip follows the reader — but with script disabled they still
+ * scroll-anchor correctly, because that is what an anchor does.
+ *
+ * The three drink categories are presented under one "Drinks" heading because
+ * that is how people think about them, while remaining three separate
+ * categories in the CMS (PRD §9.1, §13.3).
+ */
+interface Props {
+  locale: Locale;
+  categories: MenuCategory[];
+  /** Categories that actually have items to show. */
+  populated: Set<string>;
+}
+const { locale, categories, populated } = Astro.props;
+const c = t(locale);
+
+const food = categories.filter((cat) => cat.displayGroup === 'food' && populated.has(cat.slug));
+const drinks = categories.filter((cat) => cat.displayGroup === 'drinks' && populated.has(cat.slug));
+---
+<nav class="chips" aria-label={c.a11y.categoryNav}>
+  <div class="chips__scroll">
+    <a class="chip" href="#menu-top" data-chip="all">{c.labels.all}</a>
+    {food.map((cat) => (
+      <a class="chip" href={`#cat-${cat.slug}`} data-chip={cat.slug}
+         data-analytics="menu_category_select" data-category={cat.slug}>
+        {L(cat.name, locale)}
+      </a>
+    ))}
+    {drinks.length > 0 && (
+      <a class="chip" href="#cat-drinks" data-chip="drinks"
+         data-analytics="menu_category_select" data-category="drinks">
+        {c.labels.drinks}
+      </a>
+    )}
+  </div>
+</nav>

@@ -1,0 +1,41 @@
+---
+import { hasConfirmedHours, DAY_KEYS, type HoursEntry } from '../lib/hours';
+import { t } from '../data/copy';
+import type { Locale } from '../lib/i18n';
+
+/**
+ * Open-now state (BR-03, US-05).
+ *
+ * This is a static site, so "open now" cannot be baked in at build time — it
+ * would be wrong within the hour. It is computed in the browser, in Asia/Yangon,
+ * from the same hours the page already renders.
+ *
+ * The pre-JS state is deliberately not a guess and not a spinner: it shows
+ * today's actual hours, which is useful on its own. Script then upgrades it to
+ * Open/Closed. Because the starting state is truthful, there is no wrong-value
+ * flash to correct.
+ */
+interface Props {
+  hours: HoursEntry[];
+  locale: Locale;
+  class?: string;
+}
+const { hours, locale, class: className = '' } = Astro.props;
+const c = t(locale);
+const confirmed = hasConfirmedHours(hours);
+---
+{confirmed ? (
+  <span
+    class={`badge js-open-state ${className}`}
+    data-hours={JSON.stringify(hours)}
+    data-label-open={c.state.openNow}
+    data-label-closed={c.state.closedNow}
+    data-day-keys={JSON.stringify(DAY_KEYS)}
+  >
+    {/* Neutral until script resolves the visitor's current Yangon time. It
+        states nothing that could be wrong, so nothing has to be corrected. */}
+    <span class="js-open-state__text">{c.labels.hours}</span>
+  </span>
+) : (
+  <span class={`badge badge--warn ${className}`}>{c.state.hoursUnconfirmed}</span>
+)}

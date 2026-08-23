@@ -1,0 +1,10 @@
+{
+  "slug": "breakfast",
+  "name": { "en": "Breakfast", "my": "မနက်စာ" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 30,
+  "hasLandingPage": true,
+  "serviceHours": null,
+  "isActive": true
+}

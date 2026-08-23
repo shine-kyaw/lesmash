@@ -1,0 +1,10 @@
+{
+  "slug": "burgers",
+  "name": { "en": "Burgers", "my": "ဘာဂါများ" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 10,
+  "hasLandingPage": true,
+  "serviceHours": null,
+  "isActive": true
+}

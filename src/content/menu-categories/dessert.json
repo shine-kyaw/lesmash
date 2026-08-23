@@ -1,0 +1,10 @@
+{
+  "slug": "dessert",
+  "name": { "en": "Dessert", "my": "အချိုပွဲများ" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 70,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

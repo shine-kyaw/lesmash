@@ -1,0 +1,10 @@
+{
+  "slug": "smoothies",
+  "name": { "en": "Smoothies", "my": "စမူသီများ" },
+  "description": null,
+  "displayGroup": "drinks",
+  "sortOrder": 90,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

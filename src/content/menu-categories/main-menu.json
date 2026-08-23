@@ -1,0 +1,10 @@
+{
+  "slug": "main-menu",
+  "name": { "en": "Main Menu", "my": "အဓိက အစားအစာများ" },
+  "description": null,
+  "displayGroup": "food",
+  "sortOrder": 40,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

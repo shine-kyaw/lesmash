@@ -1,0 +1,27 @@
+---
+/**
+ * Branded image placeholder.
+ *
+ * No photography existed when this site was built (PRD §18 is a whole workstream
+ * that has not run yet). The alternatives — a broken image, or stock food
+ * photography — are both explicitly rejected by the PRD, and stock imagery would
+ * recreate the exact expectation gap the project exists to close.
+ *
+ * So every image slot renders this instead: a designed, clearly-labelled panel
+ * that reserves the correct aspect ratio (so there is no layout shift when the
+ * real photograph lands) and states plainly that the photograph is coming.
+ */
+interface Props {
+  ratio?: '4x3' | '16x9' | '3x2' | '4x5';
+  label?: string | null;
+  mark?: string;
+  class?: string;
+}
+const { ratio = '4x3', label = null, mark = 'LS', class: className = '' } = Astro.props;
+---
+<div class={`ph ph--${ratio} ${className}`} role="img" aria-label={label ?? undefined}>
+  <div>
+    <div class="ph__mark" aria-hidden="true">{mark}</div>
+    {label && <div style="margin-top:.35rem">{label}</div>}
+  </div>
+</div>

@@ -1,0 +1,11 @@
+# Le SMASH Burgers & Co. — Yangon
+# /order carries no unique content and would compete with the branch pages,
+# so it is excluded from indexing while remaining fully crawlable for links
+# (PRD SEO-05, §9.3).
+
+User-agent: *
+Allow: /
+Disallow: /order
+Disallow: /my/order
+
+Sitemap: https://www.eatlesmash.com/sitemap.xml

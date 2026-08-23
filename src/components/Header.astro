@@ -1,0 +1,98 @@
+---
+import { localePath, otherLocale, LOCALE_LABEL, SITE, type Locale } from '../lib/i18n';
+import { navItems } from '../lib/nav';
+import { t } from '../data/copy';
+
+interface Props { locale: Locale; route: string }
+const { locale, route } = Astro.props;
+const c = t(locale);
+const items = navItems(locale);
+const other = otherLocale(locale);
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brandmark" href={localePath(locale, '/')}>
+      Le <em>SMASH</em>
+    </a>
+
+    <nav class="header-nav" aria-label={c.a11y.mainNav}>
+      {items.map((item) => (
+        <a
+          href={localePath(locale, item.route)}
+          aria-current={route === item.route ? 'page' : undefined}
+        >{item.label}</a>
+      ))}
+    </nav>
+
+    {/* Menu is a direct link on every viewport, never buried in the drawer —
+        it is the highest-value page on the site (NAV-02). */}
+    <a class="header-link" href={localePath(locale, '/menu')} style="display:inline-flex"
+       data-hide-wide>{c.nav.menu}</a>
+
+    {/* Labelled in the target language, never a flag icon (PRD §11.1). */}
+    <a
+      class="lang-toggle"
+      href={localePath(other, route)}
+      lang={other}
+      hreflang={other}
+      rel="alternate"
+      data-analytics="language_switch"
+      data-to-locale={other}
+    >{LOCALE_LABEL[other]}</a>
+
+    {/* Desktop's persistent Order action. On mobile this job belongs to the
+        sticky bottom bar, so it is hidden here rather than duplicated. */}
+    <a
+      class="btn btn--primary header-order"
+      href={localePath(locale, '/order')}
+      data-order-cta
+      data-analytics="order_cta_click"
+      data-source="header"
+    >{c.nav.order}</a>
+
+    <button
+      class="drawer-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-drawer"
+      data-drawer-open
+      hidden
+    >
+      <span class="visually-hidden">{c.labels.openMenu}</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="drawer" id="site-drawer" hidden>
+  <div class="container">
+    <div class="drawer__head">
+      <span class="brandmark">Le <em>SMASH</em></span>
+      <button class="drawer-toggle" type="button" data-drawer-close>
+        <span class="visually-hidden">{c.labels.closeMenu}</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <nav class="drawer__nav" aria-label={c.a11y.mainNav}>
+      {items.map((item) => <a href={localePath(locale, item.route)}>{item.label}</a>)}
+      <a href={localePath(locale, '/order')}>{c.nav.order}</a>
+    </nav>
+    <div class="drawer__foot">
+      <a class="lang-toggle" href={localePath(other, route)} lang={other} hreflang={other}>
+        {LOCALE_LABEL[other]}
+      </a>
+      <slot name="drawer-contact" />
+    </div>
+  </div>
+</div>
+
+<style>
+  /* The drawer trigger only exists where the inline nav does not fit. It is
+     revealed by script, because without script the footer carries every link
+     and a dead toggle would be worse than none (NAV-05). */
+  @media (min-width: 62rem) { [data-hide-wide] { display: none !important; } }
+</style>

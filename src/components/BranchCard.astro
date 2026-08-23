@@ -1,0 +1,67 @@
+---
+import { localePath, type Locale } from '../lib/i18n';
+import { t } from '../data/copy';
+import { L, directionsUrl, primaryPhone, type Branch } from '../lib/content';
+import OpenState from './OpenState.astro';
+
+interface Props { locale: Locale; branch: Branch; showOrder?: boolean }
+const { locale, branch, showOrder = true } = Astro.props;
+const c = t(locale);
+const phone = primaryPhone(branch);
+
+/**
+ * Service badges render only for a confirmed value. `null` means genuinely
+ * unknown — and printing "no dine-in" when nobody has told us either way would
+ * be exactly the kind of confident misinformation this project exists to stop
+ * (PRD Q4, R-08). Unknown is shown as unknown.
+ */
+const services = [
+  { on: branch.hasDineIn, label: c.labels.dineIn },
+  { on: branch.hasDelivery, label: c.labels.delivery },
+  { on: branch.hasTakeaway, label: c.labels.takeaway },
+];
+---
+<article class="card branch-card">
+  <div>
+    <h3 class="branch-card__name">
+      <a href={localePath(locale, `/locations/${branch.slug}`)} style="text-decoration:none">
+        {L(branch.name, locale)}
+      </a>
+    </h3>
+    <p class="branch-card__addr">
+      {L(branch.addressLine, locale)}<br />
+      {L(branch.township, locale)}, {L(branch.city, locale)}
+    </p>
+  </div>
+
+  <div class="badge-row">
+    <OpenState hours={branch.openingHours} locale={locale} />
+    {services.map((s) =>
+      s.on === true ? <span class="badge">{s.label}</span>
+      : s.on === null ? <span class="badge badge--warn">{s.label}: {c.labels.unconfirmed}</span>
+      : null
+    )}
+  </div>
+
+  <div class="btn-row">
+    <a class="btn btn--secondary" href={directionsUrl(branch, locale)!}
+       target="_blank" rel="noopener noreferrer"
+       data-analytics="directions_click" data-branch={branch.slug} data-source="branch_card">
+      {c.cta.directionsShort}
+    </a>
+    {phone && (
+      <a class="btn btn--ghost" href={`tel:${phone.e164}`}
+         data-analytics="phone_click" data-branch={branch.slug} data-source="branch_card">
+        {c.cta.callShort}
+      </a>
+    )}
+    {showOrder && branch.foodpandaUrl && (
+      <a class="btn btn--primary" href={branch.foodpandaUrl}
+         target="_blank" rel="noopener noreferrer"
+         data-analytics="foodpanda_outbound" data-branch={branch.slug} data-source="branch_card"
+         data-remember-branch={branch.slug}>
+        {c.cta.orderShort}
+      </a>
+    )}
+  </div>
+</article>
