@@ -217,3 +217,41 @@ win back.
 Astro 5 (static output), zero UI framework, self-hosted subset font, JSON
 content collections, Sanity-ready schemas. No adapter and no serverless
 functions — the output is plain static files and will host anywhere.
+
+---
+
+## Deploying
+
+`vercel.json` is committed and configures the build, cache headers and a strict
+Content-Security-Policy. The CSP is genuinely strict — `default-src 'self'` with
+no third-party origins allowed — because the site loads nothing from anyone
+else. That closes the security items on the launch checklist.
+
+**Import the repo at [vercel.com/new](https://vercel.com/new).** Framework
+detects as Astro; build command `npm run build`; output directory `dist`.
+Nothing else needs configuring.
+
+Or from a machine with the Vercel CLI:
+
+```bash
+npx vercel            # preview deployment
+npx vercel --prod     # production
+```
+
+The build runs the performance budget gate, so a change that breaks the JS, CSS
+or font budget fails the deploy rather than shipping.
+
+### Environment variables
+
+| Variable | Set it to | Effect |
+|---|---|---|
+| `CONTENT_MODE` | *(unset)* | Preview build — unconfirmed content renders under a standing notice. **This is what you want today.** |
+| `CONTENT_MODE` | `live` | Unconfirmed content stops rendering. Only set this once `npm run content:report` passes in live mode, or pages will be missing content rather than showing it. |
+
+### Before pointing a real domain at it
+
+Set the canonical origin in `src/lib/site.config.mjs` (`origin`, and flip
+`originResolved` to `true`). Until then, every absolute URL — canonicals,
+hreflang, sitemap, structured data, OG tags — points at a placeholder domain,
+which will actively damage search if it goes live uncorrected. That is Q10 on
+the content register.

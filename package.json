@@ -4,6 +4,9 @@
   "private": true,
   "description": "Le SMASH Burgers & Co. \u2014 Yangon. Bilingual (EN/my) static site.",
   "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

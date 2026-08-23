@@ -3,46 +3,45 @@
   "framework": "astro",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "cleanUrls": true,
   "trailingSlash": false,
+  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
+          "//": "The site loads nothing from a third-party origin, so the policy can be genuinely strict. 'unsafe-inline' is needed for style-src only because Astro inlines the stylesheet to save a round trip on slow connections. Scripts are same-origin files; the one inline <script> is application/ld+json, which is never executed and is still read from the DOM by crawlers.",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
         },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        {
+          "key": "Strict-Transport-Security",
+          "//": "Two years, subdomains included. Do not add 'preload' until the canonical domain is settled (PRD Q10) — preload lists are slow to undo.",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        {
+          "key": "Permissions-Policy",
+          "//": "The site asks for no device permissions at all. Geolocation is refused deliberately: branch choice is remembered client-side rather than prompted for (PRD Flow 4).",
+          "value": "geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()"
+        }
       ]
     },
     {
       "source": "/fonts/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "//": "Content-hashed by filename change only, so cache hard. This is the single largest asset on a Burmese page.",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/_astro/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
       "source": "/scripts/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
-      ]
-    },
-    {
-      "source": "/(sitemap.xml|robots.txt)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400" }
-      ]
+      "//": "Not content-hashed, so it must revalidate or a fix would not reach returning visitors.",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     }
   ]
 }
