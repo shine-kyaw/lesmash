@@ -52,7 +52,12 @@
     if (typeof window.plausible === 'function') window.plausible(name, { props: payload });
   }
 
+  var globalsBound = false;
+
   function bindAnalytics() {
+    // Document-level, so bind once even if boot() runs again.
+    if (globalsBound) return;
+    globalsBound = true;
     document.addEventListener('pointerdown', handle, true);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') handle(e);
@@ -314,7 +319,11 @@
 
   /* ----------------------------------------------------------- scroll depth */
 
+  var scrollBound = false;
+
   function initScrollDepth() {
+    if (scrollBound) return;
+    scrollBound = true;
     var marks = [25, 50, 75, 100];
     var sent = {};
     var ticking = false;
@@ -361,6 +370,14 @@
   window.addEventListener('error', function (e) {
     track('js_error', { message: String(e.message || '').slice(0, 200) });
   });
+
+  /*
+   * Exposed so a host page that swaps the visible view without a page load can
+   * re-run the per-view wiring. boot() is safe to call repeatedly: the
+   * document-level listeners guard themselves, and everything else re-queries
+   * the DOM it is binding to.
+   */
+  window.__lesmashBoot = boot;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
