@@ -6,12 +6,33 @@
  * value for a null slot; the UI degrades honestly instead (PRD §17.1).
  */
 
+const PLACEHOLDER_ORIGIN = 'https://www.eatlesmash.com';
+
+function resolveOrigin() {
+  const explicit = process.env.SITE_ORIGIN;
+  if (explicit) return explicit.replace(/\/$/, '');
+
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  if (vercelHost) return `https://${vercelHost.replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+
+  return PLACEHOLDER_ORIGIN;
+}
+
 export const SITE = {
   // DS/Q10 — canonical domain is NOT yet decided (PRD §19.7, R-01).
-  // This placeholder only affects absolute URLs in schema/sitemap/OG.
-  // Change it in one place at DNS cutover (P9).
-  origin: 'https://www.eatlesmash.com',
-  originResolved: false,
+  // Resolved at build time, in this order:
+  //   1. SITE_ORIGIN            — set this once the real domain exists
+  //   2. VERCEL_PROJECT_PRODUCTION_URL — the project's stable production domain
+  //   3. VERCEL_URL             — the per-deployment preview domain
+  //   4. the placeholder below
+  //
+  // This matters more than it looks: canonical tags, hreflang, the sitemap and
+  // OG URLs are all absolute. Hard-coding a domain nobody owns yet would make a
+  // live deployment declare itself canonical at an address that does not
+  // resolve, which is worse than having no canonical at all.
+  origin: resolveOrigin(),
+  originResolved: Boolean(process.env.SITE_ORIGIN),
 
   // Q11 — canonical brand strings. Proposed in PRD §19.7, pending client sign-off.
   brand: {

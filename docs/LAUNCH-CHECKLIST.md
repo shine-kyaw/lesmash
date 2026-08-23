@@ -111,8 +111,8 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## Security
 
-- ☐ HTTPS enforced; HSTS enabled; certificate auto-renewal — *hosting decision*
-- ☐ Security headers set (CSP, X-Content-Type-Options, Referrer-Policy) — *hosting config; the site has no inline third-party origins to allow*
+- ✅ HTTPS enforced; HSTS enabled with preload; certificate auto-renewal — *`vercel.json`, automatic on Vercel*
+- ✅ Security headers set — CSP restricted to `'self'`, nosniff, Referrer-Policy, Permissions-Policy, frame denial. Verified against the built site with zero violations. **Adding analytics will require amending the CSP**
 - ☐ CMS accounts use strong credentials and 2FA; no shared logins
 - ✅ No secrets in the repository
 - n/a Form spam protection — no forms exist
@@ -128,7 +128,7 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## Legal and domain
 
-- ⛔ Canonical domain live; variants 301-redirecting — *Q10*
+- ⛔ Canonical domain live; variants 301-redirecting — *Q10. Deployment is wired; set `SITE_ORIGIN` once the domain exists*
 - ⛔ Domain registered to the client with client-held access
 - ☐ DNS documented and handed over
 - ✅ Privacy notice published in both locales — ⛔ pending legal review (*C-18*)
@@ -136,6 +136,16 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 - ✅ No unlicensed imagery, fonts or content — the only bundled font is Noto Sans Myanmar (SIL Open Font License); there is no imagery
 
 ---
+
+## Deployment
+
+- ✅ Hosting configured — `vercel.json`; see `docs/DEPLOY.md`
+- ✅ Absolute URLs resolve from the deployed origin, not a hard-coded domain
+- ✅ Preview deployments excluded from search (`robots.txt` returns `Disallow: /` when `VERCEL_ENV=preview`)
+- ✅ Performance budgets fail the deploy, not just the local build
+- ☐ Project connected on Vercel and first deploy green
+- ☐ `SITE_ORIGIN` set — *blocked on Q10*
+- ☐ `CONTENT_MODE=live` set — *blocked on the content register*
 
 ## The short version
 

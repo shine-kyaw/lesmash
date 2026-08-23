@@ -187,12 +187,33 @@ Popular category is how a menu starts contradicting itself.
 | `docs/CONTENT-REGISTER.md` | Everything the client still owes, who owns it, what it blocks |
 | `docs/LAUNCH-CHECKLIST.md` | PRD §32 as an actionable, signed-off checklist |
 | `docs/DECISIONS.md` | Where the implementation interpreted or departed from the PRD, and why |
+| `docs/DEPLOY.md` | Connecting Vercel, environment variables, headers, caching |
 | `sanity/README.md` | CMS schema mapping, setup, webhook, and the staff one-pager |
 
 ---
 
+## Deployment
+
+Configured for Vercel — `vercel.json` sets the build, security headers and
+caching; import the repo and it configures itself. Full instructions, including
+the two environment variables and the CSP caveat for analytics, are in
+`docs/DEPLOY.md`.
+
+Two things worth knowing before the first deploy:
+
+- **Absolute URLs follow the deployed origin.** Canonical tags, hreflang, the
+  sitemap and OG URLs resolve from `SITE_ORIGIN`, falling back to the Vercel
+  domain. Nothing hard-codes a domain nobody owns yet.
+- **Budget overruns fail the deploy.** `npm run build` runs the budget check
+  after Astro. On a ~5 Mbps connection a page-weight regression is a product
+  regression, and it stops a deploy the way a failing test would.
+
+Preview deployments serve `robots.txt` with `Disallow: /`, so a preview URL
+never competes with the real domain for the brand terms this project exists to
+win back.
+
 ## Stack
 
 Astro 5 (static output), zero UI framework, self-hosted subset font, JSON
-content collections, Sanity-ready schemas. Deploy as static files to any CDN;
-`CONTENT_MODE=live` is the only environment variable that changes behaviour.
+content collections, Sanity-ready schemas. No adapter and no serverless
+functions — the output is plain static files and will host anywhere.
