@@ -2,7 +2,7 @@
   "name": "lesmash-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Le SMASH Burgers & Co. — Yangon. Bilingual (EN/my) static site.",
+  "description": "Le SMASH Burgers & Co. \u2014 Yangon. Bilingual (EN/my) static site.",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -10,6 +10,7 @@
     "build": "astro build && node scripts/check-budgets.mjs",
     "build:only": "astro build",
     "preview": "astro preview",
+    "preview:bundle": "node scripts/build-preview-artifact.mjs",
     "check": "astro check",
     "content:report": "node scripts/content-report.mjs",
     "check:budgets": "node scripts/check-budgets.mjs",

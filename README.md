@@ -12,10 +12,14 @@ bilingual, searchable, useful and maintainable** — ahead of feature count.
 
 ```bash
 npm install
-npm run dev          # http://localhost:4321
-npm run build        # static output in dist/ + performance budget gate
-npm run preview      # serve the built site
+npm run dev            # http://localhost:4321
+npm run build          # static output in dist/ + performance budget gate
+npm run preview        # serve the built site
+npm run preview:bundle # regenerate the shareable single-file preview
 ```
+
+`preview/lesmash-preview.html` is the whole site folded into one self-contained
+file, for review before hosting exists. It is generated — see `preview/README.md`.
 
 Useful checks:
 
