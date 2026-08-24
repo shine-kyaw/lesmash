@@ -1,27 +1,25 @@
 ---
-import { COPY } from '../data/copy';
 import { href } from '../lib/href';
+import { COPY } from '../data/copy';
 
 /**
- * Fixed and transparent over the hero, filling in only once the reader has
- * left it — the film is never framed by a bar on first paint. The fill is
- * applied by script; without script it simply stays transparent, which is
- * legible either way because the page ground is dark.
+ * Wordmark left, navigation centred, nothing on the right.
+ *
+ * Two links only. There is no order button: delivery runs through Foodpanda,
+ * and the site's job is to tell people what is on the menu and where to find
+ * it, not to run a checkout.
  */
 interface Props { path: string }
 const { path } = Astro.props;
 
 const links = [
+  { href: '/', label: COPY.nav.home },
   { href: '/menu', label: COPY.nav.menu },
-  { href: '/#story', label: COPY.nav.story },
-  { href: '/#visit', label: COPY.nav.visit },
 ];
 ---
-<header class="hdr" data-header>
+<header class="hdr dark" data-header>
   <div class="wrap hdr__inner">
-    <a class="mark" href={href("/")} aria-label={`${'Le SMASH'} home`}>
-      <i>Le</i><b>SMASH</b>
-    </a>
+    <a class="mark" href={href('/')}><i>Le</i><b>SMASH</b></a>
 
     <nav class="hdr__nav" aria-label="Main">
       {links.map((l) => (
@@ -31,11 +29,6 @@ const links = [
       ))}
     </nav>
 
-    <a
-      class="btn btn--ember hdr__cta"
-      href={href("/menu")}
-      data-analytics="order_cta_click"
-      data-source="header"
-    >{COPY.cta.orderShort}</a>
+    <span class="hdr__spacer" aria-hidden="true"></span>
   </div>
 </header>

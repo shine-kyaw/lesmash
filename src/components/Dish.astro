@@ -1,56 +1,59 @@
 ---
 import { COPY } from '../data/copy';
 import { formatPrice, limitedToBranches, IS_PREVIEW, type Branch, type MenuItem } from '../lib/content';
+import Shot from './Shot.astro';
 
 /**
- * A dish, set as an editorial row rather than a photo card.
+ * A dish card: picture, name, price, and the portion facts.
  *
- * A uniform grid of photographed dishes is a delivery-app pattern; the dish
- * name doing the work is the restaurant pattern, and it happens to be the
- * honest one here since no photography exists.
- *
- * Patty count and portion sit on the row itself, never behind a tap. A
- * customer must be able to learn the size of what they are buying without
- * opening anything — that is the entire premise of this project.
+ * Patty count and portion sit on the card, never behind a tap. A customer must
+ * be able to learn the size of what they are buying without opening anything —
+ * that is the premise of this project.
  */
 interface Props {
   item: MenuItem;
   branches: Branch[];
-  /** One dish per course is promoted, so each section has a focal point. */
-  hero?: boolean;
   soldOut?: boolean;
 }
-const { item, branches, hero = false, soldOut = false } = Astro.props;
+const { item, branches, soldOut = false } = Astro.props;
 
 const price = formatPrice(item.price);
 const limited = limitedToBranches(item, branches);
 const unavailable = !item.isAvailable || soldOut;
 ---
 <li
-  class:list={['dish', { 'dish--hero': hero, 'dish--out': unavailable }]}
+  class:list={['dish', { 'dish--out': unavailable }]}
   data-tags={item.tags.join(' ')}
-  data-dietary={item.dietary.join(' ')}
 >
-  <div class="dish__row">
-    <h3 class="dish__name">{item.name}</h3>
-
-    {item.priceDisplay ? (
-      <span class="dish__price">{item.priceDisplay}</span>
-    ) : price ? (
-      <span class="dish__price">{price}</span>
+  <div class="dish__media">
+    {item.image ? (
+      <img src={item.image.src} alt={item.image.alt} width="640" height="480"
+           loading="lazy" decoding="async" />
     ) : (
-      /* No price on this site has been confirmed by the restaurant, so we say
-         so rather than printing a number nobody has stood behind. */
-      <span class="dish__price dish__price--unset">{COPY.state.priceUnset}</span>
+      <Shot ratio="4x3" />
     )}
+  </div>
+
+  <div class="dish__body">
+    <div class="dish__top">
+      <h3 class="dish__name">{item.name}</h3>
+
+      {item.priceDisplay ? (
+        <span class="dish__price">{item.priceDisplay}</span>
+      ) : price ? (
+        <span class="dish__price">{price}</span>
+      ) : (
+        /* No price on this site has been confirmed by the restaurant, so we
+           say so rather than printing a number nobody has stood behind. */
+        <span class="dish__price dish__price--unset">{COPY.state.priceUnset}</span>
+      )}
+    </div>
 
     {item.description && <p class="dish__desc">{item.description}</p>}
 
     <div class="dish__meta">
       {unavailable && (
-        <span class="fact fact--warn">
-          {soldOut ? COPY.state.soldOut : COPY.state.unavailable}
-        </span>
+        <span class="fact fact--warn">{soldOut ? COPY.state.soldOut : COPY.state.unavailable}</span>
       )}
       {item.pattyCount && <span class="fact fact--hot">{COPY.labels.patty(item.pattyCount)}</span>}
       {item.portionNote && <span class="fact">{item.portionNote}</span>}
@@ -61,9 +64,7 @@ const unavailable = !item.isAvailable || soldOut;
       )}
       {limited.map((b) => <span class="fact">{b.name} only</span>)}
       {IS_PREVIEW && !item.verified && (
-        <span class="fact fact--warn" title={item.sourceNote ?? undefined}>
-          {COPY.state.pending}
-        </span>
+        <span class="fact fact--warn" title={item.sourceNote ?? undefined}>{COPY.state.pending}</span>
       )}
     </div>
   </div>

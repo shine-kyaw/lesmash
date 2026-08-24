@@ -6,14 +6,11 @@
  * supplies it (PRD §17.1).
  */
 export const COPY = {
-  nav: { menu: 'Menu', visit: 'Visit', story: 'Story', order: 'Order' },
+  nav: { home: 'Home', menu: 'Menu' },
   cta: {
     menu: 'See the menu',
-    order: 'Order on Foodpanda',
-    orderShort: 'Order',
     directions: 'Directions',
     call: 'Call',
-    chooseBranch: 'Choose a branch',
   },
   state: {
     priceUnset: 'Ask in store',

@@ -1,58 +1,43 @@
 /*
  * Le SMASH — design tokens.
  *
- * Direction: a late-night bistro. Dark, close, confident. The room is dim, the
- * pass is hot. Everything is restrained except the type, which is where all the
- * boldness is spent.
+ * The site runs warm-light by default and switches to a dark register for the
+ * hero and the footer. Those two are bookends: you arrive in a dim room and
+ * leave through one, and everything you actually read — the menu, the story —
+ * sits on warm paper in between.
  *
- * The palette is warm-biased throughout — the near-black carries a trace of
- * blue so the ember reads hotter against it, and the whites are bone rather
- * than paper. Nothing here is a pure grey.
+ * Both registers use the SAME token names. A section marked `.dark` re-maps
+ * them, so every component works in either without knowing which it is in.
+ * That is the whole reason the palette is expressed as roles rather than
+ * colours.
  *
  * No brand identity assets were available (PRD Q9), so this is a considered
- * stand-in, token-driven so that adopting the real brand is a change to this
- * file alone.
+ * stand-in. Adopting the real brand is a change to this file alone.
  */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* --- Ground -------------------------------------------------------------
-   * Warm near-black, never #000. Pure black reads as an unstyled dark mode;
-   * a warm charcoal reads as a dim room, which is the whole idea.
-   * ---------------------------------------------------------------------- */
-  --void:   #12100e;   /* page ground                                        */
-  --char:   #1a1714;   /* raised surface, sticky bars                        */
-  --smoke:  #2a2521;   /* hairlines, dividers, inert fills                   */
+  /* --- Light register: warm parchment, never white ------------------------ */
+  --paper:   #f0e7db;   /* page ground                                       */
+  --paper-2: #e8ddcd;   /* raised surface, cards                             */
+  --paper-3: #dfd2be;   /* placeholder fill                                  */
+  --line:    #d2c3ad;   /* hairlines, dividers                               */
 
-  /* --- Ink ----------------------------------------------------------------
-   * Bone, not white. Pure white on a food site reads clinical.
-   * ---------------------------------------------------------------------- */
-  --bone:   #f2ede4;   /* primary text        on --void = 16.1:1            */
-  --ash:    #a2988b;   /* secondary / meta    on --void =  7.4:1            */
-  --dim:    #6e6459;   /* rules, tertiary     on --void =  3.4:1 (non-text) */
+  --ink:   #1c1613;     /* primary text     on --paper = 15.9:1              */
+  --ink-2: #4a3f37;     /* secondary text   on --paper =  7.8:1              */
+  --ink-3: #675a4d;     /* meta text        on --paper =  5.0:1              */
 
-  /* --- Heat ---------------------------------------------------------------
-   * One accent, one support. Ember is deep rust rather than a fast-food
-   * orange: at 3.5:1 it is a large-text and UI colour only, never small body
-   * text — brass carries anything small that needs to warm up.
-   * ---------------------------------------------------------------------- */
-  --ember:  #d24a1c;   /* sear — large display accents, buttons, rules      */
-  --ember-lift: #e35d2c;
-  --brass:  #c69b3c;   /* numerals, prices, labels   on --void = 7.3:1      */
-  --oxblood:#3d1109;   /* deep wash for gradients                           */
+  --ember: #b8401a;     /* the one hot accent  on --paper = 5.1:1            */
+  --ember-lift: #a53714;
+  --brass: #7d5f16;     /* labels, numerals    on --paper = 5.0:1            */
 
-  --focus:  #7fb2ff;   /* focus ring, ≥3:1 on every ground here              */
+  --focus: #1b4fd8;
 
   /* --- Type -------------------------------------------------------------- */
-  /* Didone display: editorial, French, unmistakably not a fast-food face.
-     Grotesk body for plain reading. Mono for prices and labels — the kitchen
-     ticket voice, and it keeps numerals aligned. */
   --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
   --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Fluid scale. Display runs deliberately large — at full width the wordmark
-     is the graphic, not a label sitting on one. */
   --t-hero:  clamp(3.25rem, 1.5rem + 11vw, 11rem);
   --t-xl:    clamp(2.5rem, 1.25rem + 5.5vw, 5.5rem);
   --t-lg:    clamp(1.875rem, 1rem + 3.2vw, 3.25rem);
@@ -80,9 +65,36 @@
   --measure: 60ch;
   --wide: 100rem;
 
-  --rule: 1px solid var(--smoke);
+  --rule: 1px solid var(--line);
   --tap: 44px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur: 620ms;
+}
+
+/*
+ * Dark register. Same roles, re-mapped — so a card, a badge or a button dropped
+ * into a dark section inverts correctly without a single component knowing it
+ * has moved.
+ */
+.dark {
+  color-scheme: dark;
+
+  --paper:   #17120f;
+  --paper-2: #211a15;
+  --paper-3: #2b221b;
+  --line:    #362b21;
+
+  --ink:   #f2eae0;     /* on --paper = 15.4:1 */
+  --ink-2: #cabcaa;     /* on --paper =  9.7:1 */
+  --ink-3: #9c8d7c;     /* on --paper =  5.7:1 */
+
+  --ember: #e05a28;     /* large text and UI only, on --paper = 4.9:1 */
+  --ember-lift: #ef6f3e;
+  --brass: #c9a227;     /* on --paper = 8.0:1 */
+
+  --focus: #8fbcff;
+
+  background: var(--paper);
+  color: var(--ink);
 }

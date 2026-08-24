@@ -5,8 +5,8 @@ import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { COPY } from '../data/copy';
-import { getBranches, orderableBranches, directionsUrl, IS_PREVIEW } from '../lib/content';
-import { href, asset } from '../lib/href';
+import { getBranches, IS_PREVIEW } from '../lib/content';
+import { asset } from '../lib/href';
 
 interface Props {
   path: string;
@@ -18,9 +18,6 @@ interface Props {
 const { path, title, description, noindex = false, schema = [] } = Astro.props;
 
 const branches = await getBranches();
-const orderable = orderableBranches(branches);
-const orderHref = orderable[0]?.foodpandaUrl ?? href('/menu');
-const directionsHref = branches[0] ? directionsUrl(branches[0]) : href('/menu');
 ---
 <!doctype html>
 <html lang="en">
@@ -48,20 +45,6 @@ const directionsHref = branches[0] ? directionsUrl(branches[0]) : href('/menu');
     </main>
 
     <Footer branches={branches} />
-
-    {/* Mobile only — two taps to order or find us, from anywhere. */}
-    <div class="bar">
-      <a class="btn btn--ember" href={orderHref}
-         target={orderable[0] ? '_blank' : undefined}
-         rel={orderable[0] ? 'noopener noreferrer' : undefined}
-         data-analytics={orderable[0] ? 'foodpanda_outbound' : 'order_cta_click'}
-         data-branch={orderable[0]?.slug ?? ''} data-source="bar">{COPY.cta.orderShort}</a>
-      <a class="btn btn--ghost" href={href("/menu")} data-source="bar">{COPY.nav.menu}</a>
-      <a class="btn btn--ghost" href={directionsHref} target="_blank" rel="noopener noreferrer"
-         data-analytics="directions_click" data-source="bar">{COPY.cta.directions}</a>
-    </div>
-
-    <div class="grain" aria-hidden="true"></div>
 
     <script src={asset('/scripts/app.js')} defer is:inline></script>
     <script src={asset('/scripts/ember.js')} defer is:inline></script>

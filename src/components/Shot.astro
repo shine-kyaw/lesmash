@@ -1,0 +1,24 @@
+---
+/**
+ * Picture placeholder.
+ *
+ * No photography has been supplied, and the two usual fallbacks are both wrong:
+ * a broken image looks unfinished, and stock food photography would recreate
+ * the exact gap between marketing and plate this project exists to close.
+ *
+ * So every picture slot renders a designed panel at the correct aspect ratio —
+ * nothing shifts when the real photograph replaces it.
+ */
+interface Props {
+  ratio?: '4x3' | '3x2' | '4x5';
+  caption?: string;
+  class?: string;
+}
+const { ratio = '4x3', caption = 'Photograph coming', class: className = '' } = Astro.props;
+---
+<div class={`shot shot--${ratio} ${className}`} role="img" aria-label={caption}>
+  <div>
+    <span class="shot__mark" aria-hidden="true">LS</span>
+    <span class="shot__cap">{caption}</span>
+  </div>
+</div>

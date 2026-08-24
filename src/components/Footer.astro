@@ -21,12 +21,15 @@ const socials = [
 
 const year = new Date().getFullYear();
 ---
-<footer class="ftr" id="visit-footer">
+<footer class="ftr dark" id="visit-footer">
+  <div class="grain" aria-hidden="true"></div>
   <div class="wrap">
     <div class="ftr__grid">
       <div>
         <a class="mark mark--lg" href={href("/")}><i>Le</i><b>SMASH</b></a>
-        <p class="lede" style="margin-top:var(--s4)">{COPY.footer.delivery}</p>
+        <p class="lede" style="margin-top:var(--s4)">
+          Smash burgers in {SITE.geo}. Two rooms, one way of cooking a patty.
+        </p>
       </div>
 
       <div>
@@ -65,10 +68,17 @@ const year = new Date().getFullYear();
                  data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
             </li>
           ))}
+        </ul>
+
+        <p class="label" style="margin-top:var(--s6)">Pages</p>
+        <ul class="ftr__list" style="margin-top:var(--s4)">
+          <li><a href={href("/")}>{COPY.nav.home}</a></li>
           <li><a href={href("/menu")}>{COPY.nav.menu}</a></li>
         </ul>
       </div>
     </div>
+
+    <p class="ftr__wordmark" aria-hidden="true">LE SMASH</p>
 
     <div class="ftr__bottom">
       <span>© {year} {SITE.brand.legal}</span>

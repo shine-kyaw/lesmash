@@ -18,16 +18,24 @@ const slot = (ref: string, owner: Slot['owner'], note: string, value: string | n
   ({ ref, owner, note, value });
 
 export const EDITORIAL = {
-  /** C-01 — the line across the hero. */
+  /**
+   * C-01 — the line across the hero.
+   *
+   * Interim agency wording, in place so the page reads as finished while the
+   * client decides. It states nothing that needs checking: no weights, no
+   * dates, no sourcing, no founder story. Replace it freely.
+   */
   heroLine: slot(
     'C-01',
     'agency draft, client approve',
-    'The line across the hero. Eight words at most. It has to be true.'
+    'The line across the hero. Eight words at most. It has to be true.',
+    'Pressed thin. Served hot.'
   ),
   heroPositioning: slot(
     'C-01',
     'agency draft, client approve',
-    'One sentence under the hero, twenty words at most. Must be verifiable.'
+    'One sentence under the hero, twenty words at most. Must be verifiable.',
+    'A French-leaning burger house in Yangon, with two rooms and one way of cooking a patty.'
   ),
 
   /** C-02 — three proof points. Must be true and verifiable. */
@@ -38,11 +46,19 @@ export const EDITORIAL = {
     value: [] as string[],
   },
 
-  /** C-08 — the flagship expectation-setting copy. */
+  /**
+   * C-08 — the flagship expectation-setting copy.
+   *
+   * Interim wording. It describes the smash method, which is true of the
+   * technique itself, and stops short of anything only the kitchen can
+   * confirm: no gram weights, no cooking times, no beef origin. Those are the
+   * details worth adding, and they are what will make this paragraph land.
+   */
   howWeSmash: slot(
     'C-08',
     'agency draft, client approve',
-    'A hundred words on what actually happens at the pass: the ball weight, the press, the sear, how big the finished burger really is. Needs process detail from the kitchen before it can be drafted.'
+    'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, how many patties come in each burger. Those numbers are what make this paragraph worth reading.',
+    'A smash burger is not a thick burger. A ball of beef goes onto a hot plancha and is pressed flat, once, hard — which is what builds the dark, lacy crust along the edge and why the patty comes out thin rather than tall. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people actually came for. It is a technique, not a size. So the menu tells you how many patties are in every burger before you order, and the pictures show the plate as it leaves the pass.'
   ),
 
   /** C-10 — brand story. */
@@ -52,11 +68,18 @@ export const EDITORIAL = {
     'Two hundred words on where Le SMASH came from. No founder story, opening date, award, sourcing claim or certification will be written for you.'
   ),
 
-  /** C-11 — the public commitment to accurate representation. */
+  /**
+   * C-11 — the public commitment to accurate representation.
+   *
+   * Interim wording, and the most important paragraph on the site: it is the
+   * promise the whole project is built to keep. Only publish it once the
+   * photography actually honours it.
+   */
   portionHonesty: slot(
     'C-11',
     'agency draft, client approve',
-    'Your public commitment that the photograph shows the portion actually served. Recommended, and the highest-value paragraph on the site.'
+    'Do not publish this until the photography honours it. A promise the pictures break is worse than no promise.',
+    'Every photograph here is the portion you are served, plated the way the kitchen plates it during service. Nothing is built taller for the camera, and nothing is in the frame that is not in the price. If a burger comes with two patties, you can count two patties in the picture.'
   ),
 
   /** C-07 — dine-in vs Foodpanda price context. Blocked on Q5. */
@@ -64,7 +87,7 @@ export const EDITORIAL = {
     'C-07',
     'client',
     'Whether published prices are dine-in or delivery, and whether the two differ.',
-    'No prices are published on this site yet. Check the current price on Foodpanda, or ask in store.'
+    'Prices are not published here yet. Ask in store for the current price.'
   ),
 
   /** C-14 — agency-authored, factual, ready. */

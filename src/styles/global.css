@@ -8,8 +8,8 @@ body {
   font-family: var(--font-body);
   font-size: var(--t-body);
   line-height: var(--lh-body);
-  color: var(--bone);
-  background: var(--void);
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -17,7 +17,7 @@ img, picture, svg, video, canvas { display: block; max-width: 100%; }
 img, video { height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
 p, li { overflow-wrap: break-word; }
-::selection { background: var(--ember); color: var(--bone); }
+::selection { background: var(--ember); color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -49,13 +49,14 @@ a { color: inherit; }
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: var(--track-label);
-  color: var(--ash);
+  color: var(--ink-3);
 }
 .label--ember { color: var(--ember); }
+.label--brass { color: var(--brass); }
 .lede {
   font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
   line-height: 1.5;
-  color: var(--ash);
+  color: var(--ink-2);
   max-width: 46ch;
 }
 .serif-em { font-family: var(--font-display); font-style: italic; }
@@ -64,7 +65,7 @@ a { color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm); }
 .skip-link {
   position: absolute; left: var(--s4); top: -120%; z-index: 200;
-  padding: var(--s3) var(--s5); background: var(--bone); color: var(--void);
+  padding: var(--s3) var(--s5); background: var(--ink); color: var(--paper);
   font-family: var(--font-mono); font-size: var(--t-xs); text-decoration: none;
 }
 .skip-link:focus { top: var(--s4); }
@@ -89,7 +90,7 @@ a { color: inherit; }
   display: flex; align-items: baseline; gap: var(--s5);
   flex-wrap: wrap; margin-bottom: var(--s7);
 }
-.sec-head__index { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--dim); }
+.sec-head__index { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink-3); }
 .sec-head__link { margin-left: auto; }
 
 /* --- Buttons ---------------------------------------------------------------- */
@@ -105,16 +106,16 @@ a { color: inherit; }
 }
 .btn--ember { background: var(--ember); color: #fff; }
 .btn--ember:hover { background: var(--ember-lift); transform: translateY(-1px); }
-.btn--bone { background: var(--bone); color: var(--void); }
-.btn--bone:hover { background: #fff; transform: translateY(-1px); }
-.btn--ghost { border-color: var(--dim); color: var(--bone); }
-.btn--ghost:hover { border-color: var(--bone); background: rgb(244 239 230 / 0.06); }
+.btn--solid { background: var(--ink); color: var(--paper); }
+.btn--solid:hover { background: var(--ember); color: #fff; transform: translateY(-1px); }
+.btn--ghost { border-color: var(--ink-3); color: var(--ink); }
+.btn--ghost:hover { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 8%, transparent); }
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); }
 
 /* A quiet text link that draws its rule on hover. */
 .tlink {
   font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase;
-  letter-spacing: var(--track-label); text-decoration: none; color: var(--bone);
+  letter-spacing: var(--track-label); text-decoration: none; color: var(--ink);
   padding-bottom: 3px; background-image: linear-gradient(var(--ember), var(--ember));
   background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 1px;
   transition: background-size 360ms var(--ease);
@@ -126,8 +127,8 @@ a { color: inherit; }
  * dark areas reading as flat digital black, and it costs one tiny tiled SVG.
  * -------------------------------------------------------------------------- */
 .grain {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  opacity: 0.055; mix-blend-mode: overlay;
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.05; mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
