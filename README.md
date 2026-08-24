@@ -234,13 +234,22 @@ npx vercel            # preview deployment
 npx vercel --prod     # production
 ```
 
-`.github/workflows/deploy.yml` is the CI alternative, for driving deployments
-from GitHub instead. It needs a `VERCEL_TOKEN` repository secret; without one it
-exits cleanly rather than failing, so an unset secret does not leave a red mark
-on every push.
+The build runs the performance budget gate, so a change that breaks the JS, CSS
+or font budget fails the deploy rather than shipping.
 
-Either way the build runs the performance budget gate, so a change that breaks
-the JS, CSS or font budget fails the deploy rather than shipping.
+### What `vercel.json` sets, and why
+
+Keep this file free of comments. Vercel validates it strictly and rejects any
+key outside the schema — including a `"//"` key used as a comment, which fails
+the deployment before the build even starts. The reasoning lives here instead.
+
+| Header | Value | Why |
+|---|---|---|
+| `Content-Security-Policy` | `default-src 'self'`, no third-party origins | The site loads nothing from anyone else, so the policy can be genuinely strict. `style-src` needs `'unsafe-inline'` only because Astro inlines the stylesheet to save a round trip on slow connections. The one inline script is `application/ld+json`, which is never executed and is still read from the DOM by crawlers. |
+| `Strict-Transport-Security` | 2 years, subdomains, **no `preload`** | Preload lists are slow to undo, so it waits until the canonical domain is settled. |
+| `Permissions-Policy` | geolocation, camera, microphone, payment all denied | The site asks for no device permissions. Geolocation is refused deliberately — branch choice is never prompted for. |
+| `Cache-Control` on `/fonts/` and `/_astro/` | 1 year, immutable | Content-hashed or changed by filename only. |
+| `Cache-Control` on `/scripts/` | must-revalidate | `app.js` is not content-hashed, so a fix would otherwise never reach returning visitors. |
 
 ### A note on the Content-Security-Policy
 

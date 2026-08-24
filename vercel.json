@@ -11,27 +11,20 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "//": "The site loads nothing from a third-party origin, so the policy can be genuinely strict. 'unsafe-inline' is needed for style-src only because Astro inlines the stylesheet to save a round trip on slow connections. Scripts are same-origin files; the one inline <script> is application/ld+json, which is never executed and is still read from the DOM by crawlers.",
           "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
         },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        {
-          "key": "Strict-Transport-Security",
-          "//": "Two years, subdomains included. Do not add 'preload' until the canonical domain is settled (PRD Q10) — preload lists are slow to undo.",
-          "value": "max-age=63072000; includeSubDomains"
-        },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
         { "key": "X-Frame-Options", "value": "DENY" },
         {
           "key": "Permissions-Policy",
-          "//": "The site asks for no device permissions at all. Geolocation is refused deliberately: branch choice is remembered client-side rather than prompted for (PRD Flow 4).",
-          "value": "geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()"
+          "value": "geolocation=(), camera=(), microphone=(), payment=()"
         }
       ]
     },
     {
       "source": "/fonts/(.*)",
-      "//": "Content-hashed by filename change only, so cache hard. This is the single largest asset on a Burmese page.",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     },
     {
@@ -40,7 +33,6 @@
     },
     {
       "source": "/scripts/(.*)",
-      "//": "Not content-hashed, so it must revalidate or a fix would not reach returning visitors.",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
     }
   ]
