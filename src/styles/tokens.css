@@ -2,53 +2,85 @@
  * Le SMASH — design tokens.
  *
  * The site runs warm-light by default and switches to a dark register for the
- * hero and the footer. Those two are bookends: you arrive in a dim room and
- * leave through one, and everything you actually read — the menu, the story —
- * sits on warm paper in between.
+ * hero and the footer. Those two are bookends: you arrive through one and leave
+ * through one, and everything you actually read — the menu, the story — sits on
+ * warm paper in between.
  *
  * Both registers use the SAME token names. A section marked `.dark` re-maps
  * them, so every component works in either without knowing which it is in.
  * That is the whole reason the palette is expressed as roles rather than
  * colours.
  *
- * No brand identity assets were available (PRD Q9), so this is a considered
- * stand-in. Adopting the real brand is a change to this file alone.
+ * Every colour here is now sampled from a real Le SMASH asset rather than
+ * chosen. The red, the black and the cream come out of the logo file; the deep
+ * red and the gold come out of the artwork on their own Facebook page. The
+ * earlier stand-in palette (PRD Q9 — no brand assets were reachable) is gone.
+ * See docs/DECISIONS.md §12.
  */
 :root {
   color-scheme: light;
 
+  /* --- Brand constants ----------------------------------------------------
+   * These do NOT re-map between registers. They are the logo, and the logo is
+   * the same colour in a dim room as it is in daylight.
+   *   --red    #d83536  the logo's field
+   *   --cream  #e1e8de  the "Le" script
+   *   --black  #0a0a0a  the SMASH lettering
+   * --------------------------------------------------------------------- */
+  --red:   #d83536;
+  --cream: #e1e8de;
+  --black: #0a0a0a;
+  --red-deep: #810704;   /* the field in their own social artwork */
+  --red-dark: #4e0708;   /* floor of the deep-red gradient        */
+
   /* --- Light register: warm parchment, never white ------------------------ */
-  --paper:   #f0e7db;   /* page ground                                       */
-  --paper-2: #e8ddcd;   /* raised surface, cards                             */
-  --paper-3: #dfd2be;   /* placeholder fill                                  */
-  --line:    #d2c3ad;   /* hairlines, dividers                               */
+  --paper:   #f4ece0;   /* page ground                                       */
+  --paper-2: #ebe0d0;   /* raised surface, cards                             */
+  --paper-3: #e0d3bf;   /* placeholder fill                                  */
+  --line:    #d3c4ae;   /* hairlines, dividers                               */
 
-  --ink:   #1c1613;     /* primary text     on --paper = 15.9:1              */
-  --ink-2: #4a3f37;     /* secondary text   on --paper =  7.8:1              */
-  --ink-3: #675a4d;     /* meta text        on --paper =  5.0:1              */
+  --ink:   #17120f;     /* primary text     on --paper = 16.5:1              */
+  --ink-2: #4a3f37;     /* secondary text   on --paper =  8.0:1              */
+  --ink-3: #675a4d;     /* meta text        on --paper =  5.2:1              */
 
-  --ember: #b8401a;     /* the one hot accent  on --paper = 5.1:1            */
-  --ember-lift: #a53714;
-  --brass: #7d5f16;     /* labels, numerals    on --paper = 5.0:1            */
+  /* The hot accent is the logo red, darkened just enough to carry text on
+     parchment. Pure --red is 3.8:1 here, so it is only ever a fill with white
+     or cream on top of it — never small red type. */
+  --ember: #c02427;     /* on --paper = 4.9:1                                */
+  --ember-lift: #a81d20;
+  --brass: #8a5a12;     /* labels, numerals  on --paper = 5.3:1              */
 
   --focus: #1b4fd8;
 
-  /* --- Type -------------------------------------------------------------- */
-  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
+  /* --- Type ---------------------------------------------------------------
+   * Both display faces are taken off the logo itself.
+   *
+   * Gasoek One is the closest widely-available match to the hand-cut SMASH
+   * lettering: the same extreme weight, the same wide proportion, the same
+   * tiny counters and flat terminals. Grand Hotel is the closest to the
+   * monoline "Le" script — even stroke weight, open looping ascender.
+   *
+   * Archivo carries the reading and IBM Plex Mono keeps prices and labels in
+   * the kitchen-ticket voice with aligned numerals.
+   * --------------------------------------------------------------------- */
+  --font-display: 'Gasoek One', 'Archivo Black', Impact, system-ui, sans-serif;
+  --font-script: 'Grand Hotel', 'Brush Script MT', cursive;
   --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --t-hero:  clamp(3.25rem, 1.5rem + 11vw, 11rem);
-  --t-xl:    clamp(2.5rem, 1.25rem + 5.5vw, 5.5rem);
-  --t-lg:    clamp(1.875rem, 1rem + 3.2vw, 3.25rem);
-  --t-md:    clamp(1.375rem, 1rem + 1.6vw, 2rem);
+  /* Dialled back from the didone these replaced. At Gasoek's weight the old
+     sizes read as shouting rather than as a wordmark. */
+  --t-hero:  clamp(2.75rem, 1rem + 8.5vw, 8rem);
+  --t-xl:    clamp(2rem, 1rem + 4vw, 4rem);
+  --t-lg:    clamp(1.625rem, 1rem + 2.4vw, 2.5rem);
+  --t-md:    clamp(1.25rem, 1rem + 1.2vw, 1.625rem);
   --t-body:  clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --t-numeral: clamp(3rem, 1rem + 7vw, 7rem);
+  --t-numeral: clamp(2.5rem, 1rem + 5vw, 5rem);
   --t-sm:    0.9375rem;
   --t-xs:    0.8125rem;
 
-  --lh-tight: 0.92;
-  --lh-head: 1.08;
+  --lh-tight: 0.95;
+  --lh-head: 1.06;
   --lh-body: 1.65;
   --track-label: 0.16em;
 
@@ -57,8 +89,10 @@
   --s5: 1.5rem;  --s6: 2rem;    --s7: 3rem;    --s8: 4.5rem;
   --s9: 7rem;    --s10: 10rem;
 
-  --r-sm: 2px;
-  --r: 4px;
+  /* The logo is a rounded square, so corners are soft rather than sharp. */
+  --r-sm: 3px;
+  --r: 8px;
+  --r-lg: 18px;
   --r-pill: 999px;
 
   --gutter: clamp(1.25rem, 5vw, 5rem);
@@ -73,28 +107,57 @@
 }
 
 /*
- * Dark register. Same roles, re-mapped — so a card, a badge or a button dropped
- * into a dark section inverts correctly without a single component knowing it
- * has moved.
+ * Dark register — the black field from their own cover art, where the red and
+ * the cream sit against near-black. Same roles, re-mapped, so a card, a badge
+ * or a button dropped into a dark section inverts correctly without a single
+ * component knowing it has moved.
  */
 .dark {
   color-scheme: dark;
 
-  --paper:   #17120f;
-  --paper-2: #211a15;
-  --paper-3: #2b221b;
-  --line:    #362b21;
+  --paper:   #100d0c;
+  --paper-2: #1b1614;
+  --paper-3: #26201d;
+  --line:    #362c27;
 
-  --ink:   #f2eae0;     /* on --paper = 15.4:1 */
-  --ink-2: #cabcaa;     /* on --paper =  9.7:1 */
-  --ink-3: #9c8d7c;     /* on --paper =  5.7:1 */
+  --ink:   #f2eae0;     /* on --paper = 17.0:1 */
+  --ink-2: #cabcaa;     /* on --paper = 10.7:1 */
+  --ink-3: #9c8d7c;     /* on --paper =  6.3:1 */
 
-  --ember: #e05a28;     /* large text and UI only, on --paper = 4.9:1 */
-  --ember-lift: #ef6f3e;
-  --brass: #c9a227;     /* on --paper = 8.0:1 */
+  --ember: #e8514f;     /* on --paper = 5.3:1 — the logo red, lifted to carry
+                           text against black */
+  --ember-lift: #f2665f;
+  --brass: #ffd9a7;     /* their gold. on --paper = 14.5:1 */
 
   --focus: #8fbcff;
 
   background: var(--paper);
+  color: var(--ink);
+}
+
+/*
+ * Red register — the deep-red field from their social artwork. Used for the
+ * hero and any full-bleed band that has to feel like the brand rather than
+ * like a dark room. Cream ink throughout; the accent becomes the gold, since a
+ * red accent on a red ground is no accent at all.
+ */
+.brand-red {
+  color-scheme: dark;
+
+  --paper:   #6e0c0b;
+  --paper-2: #85100e;
+  --paper-3: #9c1512;
+  --line:    #a8302c;
+
+  --ink:   #f4efe6;     /* on --paper = 10.6:1 */
+  --ink-2: #e6d6c6;     /* on --paper =  8.4:1 */
+  --ink-3: #d3bda9;     /* on --paper =  6.8:1 */
+
+  --ember: #ffd9a7;     /* on --paper = 9.2:1 */
+  --ember-lift: #ffe6c2;
+  --brass: #ffd9a7;
+
+  --focus: #ffd9a7;
+
   color: var(--ink);
 }

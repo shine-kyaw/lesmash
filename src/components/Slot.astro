@@ -24,13 +24,13 @@ const { slot, class: className = '', as: Tag = 'p' } = Astro.props;
 
 <style>
   .slot-empty {
-    border-left: 2px solid var(--brass);
+    border-left: 3px solid var(--brass);
     padding: var(--s3) var(--s4);
-    background: rgb(215 169 58 / 0.06);
+    background: color-mix(in srgb, var(--brass) 8%, transparent);
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 1.6;
-    color: var(--ash);
+    color: var(--ink-2);
     max-width: 46ch;
   }
   .slot-empty span {

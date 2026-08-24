@@ -1,4 +1,5 @@
 ---
+import Wordmark from './Wordmark.astro';
 import { href } from '../lib/href';
 import { COPY } from '../data/copy';
 
@@ -8,6 +9,9 @@ import { COPY } from '../data/copy';
  * Two links only. There is no order button: delivery runs through Foodpanda,
  * and the site's job is to tell people what is on the menu and where to find
  * it, not to run a checkout.
+ *
+ * The bar stays in the dark register at every scroll position, which is what
+ * lets the cream lockup be the only version of the logo the site needs.
  */
 interface Props { path: string }
 const { path } = Astro.props;
@@ -19,7 +23,7 @@ const links = [
 ---
 <header class="hdr dark" data-header>
   <div class="wrap hdr__inner">
-    <a class="mark" href={href('/')}><i>Le</i><b>SMASH</b></a>
+    <Wordmark size="bar" />
 
     <nav class="hdr__nav" aria-label="Main">
       {links.map((l) => (

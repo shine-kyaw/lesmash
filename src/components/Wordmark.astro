@@ -1,0 +1,45 @@
+---
+import { asset, href } from '../lib/href';
+
+/**
+ * The wordmark, as artwork.
+ *
+ * This is the restaurant's real lockup — the cream knockout lifted from their
+ * own artwork and keyed off its red ground — rather than the name re-set in a
+ * web font. Two hand-drawn faces sit in that logo and no free font matches
+ * either exactly, so anywhere the wordmark stands for the brand it is the
+ * artwork; the web faces carry headings, which the logo never has to do.
+ *
+ * Cream on red, cream on black. It is never placed on paper.
+ *
+ * The image is always alt="" — a linked mark takes its accessible name from
+ * the link's aria-label, and the unlinked hero mark is named by the page's h1.
+ * Alt text here as well would just read the brand twice.
+ */
+interface Props {
+  /** bar = header, lg = footer, hero = the opening. */
+  size?: 'bar' | 'lg' | 'hero';
+  /** Wraps the mark in a link home. Off for the hero, which is already home. */
+  link?: boolean;
+  class?: string;
+}
+const { size = 'bar', link = true, class: className = '' } = Astro.props;
+const isHero = size === 'hero';
+---
+{link ? (
+  <a class:list={['mark', `mark--${size}`, className]} href={href('/')} aria-label="Le SMASH — home">
+    <img
+      src={asset('/brand/logo-lockup-cream.png')}
+      alt="" width="460" height="260" decoding="async" loading="lazy"
+    />
+  </a>
+) : (
+  <div class:list={['mark', `mark--${size}`, className]}>
+    <img
+      src={asset('/brand/logo-lockup-cream.png')}
+      alt="" width="460" height="260" decoding="async"
+      fetchpriority={isHero ? 'high' : undefined}
+      loading={isHero ? undefined : 'lazy'}
+    />
+  </div>
+)}

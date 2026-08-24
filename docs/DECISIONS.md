@@ -82,6 +82,9 @@ now served an English-only site — but that was an explicit client decision.
 
 ## 5. Design direction
 
+> **Superseded by §11.** This records the reasoning behind the stand-in
+> identity, which stood only until the real brand assets could be recovered.
+
 Warm near-black rather than pure black, bone rather than white, one ember accent
 with brass as support. Bodoni Moda / Archivo / IBM Plex Mono.
 
@@ -121,6 +124,9 @@ placeholder.
 ---
 
 ## 7. Generative planes instead of stock photography
+
+> **Superseded by §11.** The planes are gone; the reasoning against stock
+> photography is not.
 
 No photography or footage was available, and the Facebook and Instagram accounts
 holding the brand's real images are unreachable from this environment.
@@ -169,13 +175,64 @@ config value plus one script tag. The ≤5KB analytics budget is currently unspe
 
 ---
 
+## 11. The palette, the type and the logo are the real brand
+
+Sections 5 and 7 are superseded by this one.
+
+The identity used to be invented, and the token file said so: no brand asset
+was reachable from the build environment, so a dark "late-night bistro" palette
+and Bodoni Moda stood in. The assets have since been recovered from Le SMASH's
+own Facebook page, and everything invented is now sampled:
+
+| Was | Is | Source |
+|---|---|---|
+| `--ember #b8401a` | `--red #d83536` | The logo file |
+| — | `--cream #e1e8de` | The "Le" script |
+| — | `--black #0a0a0a` | The SMASH lettering |
+| `--brass #7d5f16` | `--brass #ffd9a7` on dark | The gold in their own social artwork |
+| — | `--red-deep #810704`, `--red-dark #4e0708` | The field in that artwork |
+| Bodoni Moda | Gasoek One | Closest available match to the hand-cut SMASH lettering |
+| Bodoni Moda italic (`.serif-em`) | Grand Hotel | Closest match to the monoline "Le" script |
+
+The three-register structure is unchanged: light parchment for everything you
+read, a re-mapping under `.dark`, and now a third under `.brand-red` for the
+deep-red field. `--red`, `--cream` and `--black` are the exception — they do not
+re-map, because the logo is the same colour in a dim room as it is in daylight.
+
+**The wordmark is artwork, not type.** Both hands in that logo are drawn and no
+free font matches either exactly, so anywhere the wordmark stands for the brand
+it is the real lockup — the cream knockout keyed off its red ground
+(`src/components/Wordmark.astro`). The web faces carry headings only, which the
+logo never has to do. The header stays in the dark register at every scroll
+position, which is what lets one cream lockup serve the whole site.
+
+The hero is no longer a plane. It was a generative ember field standing in for
+footage nobody had shot; it is now a split — the lockup and the actions on the
+red, the burger photograph beside them at its native size. Nothing is upscaled
+and nothing has to buffer. `MediaPlane.astro` and `public/scripts/ember.js` went
+with it: the hero was their last call site, and shipping a canvas animation that
+can never run is a cost with no return. Picture slots that still have no
+photograph render `Shot.astro`, as they already did on the menu.
+
+Contrast was measured, not assumed. Pure `--red` is 3.8:1 on parchment, so it is
+only ever a fill with white or cream on it — never small red type; `--ember`
+(#c02427) is the same red darkened to 4.9:1 for text. White on `--red` is 4.7:1,
+which is what makes the primary button and the ticker legible at label size.
+
+Photography is a separate matter. The three stills in `public/media/` are the
+restaurant's own social posts, cropped — `burger.jpg` had promotional callouts
+cropped out of it. They unblock the layout and they close nothing; the shot
+brief and its acceptance criteria are in that folder's README, and C-08's last
+sentence promises photography the site cannot yet keep.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |
 |---|---|
-| Real logo and brand graphics | Facebook, Instagram and every image host are blocked by this environment's egress proxy. The wordmark is set in Bodoni Moda as a stand-in; drop the real logo in and swap the `.mark` markup |
-| Hero film, food and room photography | Same block. The drop-in contract is `public/media/README.md` |
+| Hero film | Not shot, and no longer needed — the hero is a photograph beside the lockup |
+| Commissioned food and room photography | Not shot. The three stills in `public/media/` are the client's own social posts, cropped, as a stopgap. That folder's README lists the acceptance criteria they do not meet |
 | Google Search Console / Business Profile | Requires client account access |
-| OG share image | Requires brand assets and photography |
 | Analytics provider | Requires a client decision on vendor |
 | Lighthouse against the PRD's 5 Mbps profile | Cannot be run from this environment; budgets are enforced statically instead |

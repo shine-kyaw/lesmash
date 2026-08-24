@@ -12,9 +12,9 @@
 }
 /* Over the hero the header borrows the dark register; once past it, the light. */
 .hdr.is-stuck {
-  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(14px);
-  border-bottom-color: var(--line);
+  border-bottom-color: var(--red);
 }
 .hdr__inner {
   display: grid; grid-template-columns: 1fr auto 1fr;
@@ -26,67 +26,65 @@
 }
 .hdr__spacer { grid-column: 3; }
 
-.mark {
-  grid-column: 1; justify-self: start;
-  font-family: var(--font-display); font-size: 1.375rem;
-  letter-spacing: -0.01em; text-decoration: none; color: inherit;
-  line-height: 1; white-space: nowrap;
-}
-.mark i { font-style: italic; font-size: 0.82em; opacity: 0.8; margin-right: 0.14em; }
-.mark b { font-weight: 700; letter-spacing: 0.02em; }
-.mark--lg { font-size: clamp(2rem, 4vw, 3rem); }
+/*
+ * Wordmark. The real lockup artwork, not the name re-set in a web font — see
+ * src/components/Wordmark.astro. Cream on dark or on red; never on paper.
+ */
+.mark { grid-column: 1; justify-self: start; display: block; text-decoration: none; line-height: 0; }
+.mark img { width: auto; height: 100%; }
+.mark--bar { height: 34px; }
+.mark--lg { height: clamp(58px, 8vw, 92px); }
+.mark--hero { height: clamp(76px, 15vw, 190px); }
 
 /* ===========================================================================
-   Hero — the film plane, in the dark register.
+   Hero — the brand's own deep-red field.
+
+   It used to be a generative ember plane standing in for footage nobody had
+   shot, graded down to a dim brown. Real product photography exists, so the
+   hero is now a two-track split: the lockup and the actions on the red, the
+   burger at its native size beside them. Nothing is upscaled and nothing has
+   to buffer on a 5 Mbps connection.
    ========================================================================= */
-.hero { position: relative; min-height: 100svh; display: grid; isolation: isolate; }
-.hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: var(--paper); }
-.hero__media > video, .hero__media > canvas, .hero__media > img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-}
-/* Two stacked washes rather than one flat scrim, so the plane reads as one
-   graded image instead of footage with a black box over it. */
-.hero__grade {
-  position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(to top, #17120f 2%, rgb(23 18 15 / 0.32) 46%, rgb(23 18 15 / 0.52) 100%),
-    linear-gradient(115deg, rgb(61 17 9 / 0.45), transparent 62%);
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: linear-gradient(152deg, #8e1a1b 0%, #6e0c0b 46%, #450607 100%);
 }
 .hero__inner {
-  position: relative; display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: 100svh; padding-block: 8rem var(--s8); gap: var(--s6);
+  position: relative; display: grid; gap: var(--s7);
+  padding-block: calc(68px + var(--s8)) var(--s8);
+  align-items: center;
 }
-.hero__title {
-  font-family: var(--font-display); font-size: var(--t-hero);
-  line-height: var(--lh-tight); letter-spacing: -0.035em; margin: 0; text-wrap: balance;
-}
-.hero__title i { font-style: italic; font-weight: 400; }
-.hero__title em { font-style: normal; color: var(--ember); }
-.hero__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s6); flex-wrap: wrap; }
-.hero__scroll { display: none; }
-@media (min-width: 54rem) {
-  .hero__scroll { display: flex; align-items: center; gap: var(--s3); }
-  .hero__scroll span { display: block; width: 46px; height: 1px; background: var(--ink-3); position: relative; overflow: hidden; }
-  .hero__scroll span::after {
-    content: ''; position: absolute; inset: 0; background: var(--ember);
-    transform: translateX(-100%); animation: sweep 2.6s var(--ease) infinite;
+@media (min-width: 60rem) {
+  .hero__inner {
+    grid-template-columns: 1fr minmax(0, 28rem);
+    gap: var(--s8); padding-block: calc(68px + var(--s9)) var(--s9);
   }
 }
-@keyframes sweep { 0% { transform: translateX(-100%);} 60%,100% { transform: translateX(100%);} }
+.hero__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s5); }
+.hero__foot { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s5); }
+/* Round-cornered like the logo tile, and it carries the photograph's own red
+   ground, so it seats into the field rather than sitting on top of it. */
+.hero__plate {
+  position: relative; border-radius: var(--r-lg); overflow: hidden;
+  box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.6);
+}
+.hero__plate img { width: 100%; height: auto; }
 
 /* ===========================================================================
    Ticker — slow, small, tracked, carrying information a customer needs.
+   Set on the logo's red with white on it (4.7:1), so the one band between the
+   hero and the reading is unmistakably the brand.
    ========================================================================= */
-.marquee { border-block: var(--rule); padding-block: var(--s3); overflow: hidden; white-space: nowrap; background: var(--paper-2); }
+.marquee { padding-block: var(--s3); overflow: hidden; white-space: nowrap; background: var(--red); }
 .marquee__track { display: inline-flex; animation: slide 68s linear infinite; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
 .marquee__item {
   display: inline-flex; align-items: center; gap: var(--s5);
-  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 600;
   text-transform: uppercase; letter-spacing: var(--track-label);
-  color: var(--ink-3); padding-right: var(--s5);
+  color: #fff; padding-right: var(--s5);
 }
-.marquee__item::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--ember); }
+.marquee__item::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--cream); }
 @keyframes slide { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
 
@@ -130,7 +128,7 @@
 .dish__media { border-bottom: var(--rule); }
 .dish__body { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); flex: 1; }
 .dish__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
-.dish__name { font-family: var(--font-display); font-size: var(--t-md); line-height: 1.15; letter-spacing: -0.015em; }
+.dish__name { font-family: var(--font-body); font-weight: 800; font-size: var(--t-md); line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
 .dish__price { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--brass); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .dish__price--unset { color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
 .dish__desc { color: var(--ink-2); font-size: var(--t-sm); max-width: none; }
@@ -145,7 +143,7 @@
   letter-spacing: 0.1em; color: var(--ink-3);
   padding: 3px 9px; border: 1px solid var(--line); border-radius: var(--r-pill);
 }
-.fact--hot { color: var(--ember); border-color: color-mix(in srgb, var(--ember) 45%, transparent); }
+.fact--hot { color: #fff; background: var(--red); border-color: var(--red); }
 .fact--warn { color: var(--brass); border-color: color-mix(in srgb, var(--brass) 40%, transparent); }
 
 /* ===========================================================================
@@ -184,11 +182,13 @@
 .figure > canvas, .figure > img, .figure > .shot { width: 100%; height: 100%; object-fit: cover; }
 .figure--tall { aspect-ratio: 4 / 5; }
 .figure--wide { aspect-ratio: 3 / 2; }
+/* Captions now sit over photographs rather than over a flat placeholder, so
+   the scrim is dark and the type is cream regardless of register. */
 .figure__cap {
   position: absolute; left: 0; right: 0; bottom: 0; padding: var(--s4);
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--ink-3);
-  background: linear-gradient(transparent, color-mix(in srgb, var(--paper) 92%, transparent));
+  text-transform: uppercase; color: var(--cream);
+  background: linear-gradient(transparent, rgb(10 10 10 / 0.78));
 }
 
 /* ===========================================================================
@@ -197,7 +197,7 @@
 .venues { display: grid; gap: var(--s6); }
 @media (min-width: 48rem) { .venues { grid-template-columns: repeat(2, 1fr); } }
 .venue { border-top: 1px solid var(--ink-3); padding-top: var(--s5); display: flex; flex-direction: column; gap: var(--s4); }
-.venue__name { font-family: var(--font-display); font-size: var(--t-md); }
+.venue__name { font-size: var(--t-md); }
 .venue__addr { color: var(--ink-2); font-size: var(--t-sm); font-style: normal; }
 .venue .btn-row { margin-top: auto; padding-top: var(--s3); }
 
@@ -227,9 +227,9 @@
    ========================================================================= */
 .prelaunch {
   position: fixed; top: 0; left: 0; right: 0; z-index: 70;
-  background: var(--brass); color: #17120a;
+  background: var(--black); color: #ffd9a7;
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
   padding: var(--s2) 0;
 }
 .prelaunch p { max-width: none; }
-.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; }
+.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; color: var(--cream); }

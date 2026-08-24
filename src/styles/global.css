@@ -28,11 +28,16 @@ p, li { overflow-wrap: break-word; }
 }
 
 /* --- Typography ------------------------------------------------------------- */
+/* Headings are set in the logo's display face, which is extremely heavy. That
+   buys two constraints: it is always uppercase — the lowercase is unusable at
+   this weight — and it is tracked in slightly, because Gasoek's sidebearings
+   were drawn for single words rather than for lines of text. */
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: var(--lh-head);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 h1 { font-size: var(--t-xl); }
@@ -59,7 +64,21 @@ a { color: inherit; }
   color: var(--ink-2);
   max-width: 46ch;
 }
-.serif-em { font-family: var(--font-display); font-style: italic; }
+/*
+ * The script voice, off the "Le" in the logo. It is the counterweight to all
+ * that display weight, and it is rationed hard — a phrase at a time, never a
+ * sentence, and never anything a reader has to work through.
+ *
+ * Kept under the old .serif-em name so every existing call site still works.
+ */
+.serif-em, .script {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
 
 /* --- Focus, skip ------------------------------------------------------------ */
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm); }
@@ -97,15 +116,17 @@ a { color: inherit; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s3);
   min-height: var(--tap); padding: 0.9rem var(--s6);
-  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 600;
   text-transform: uppercase; letter-spacing: var(--track-label);
-  text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  text-decoration: none; cursor: pointer; border: 2px solid transparent;
   border-radius: var(--r-pill); white-space: nowrap;
   transition: background-color 240ms var(--ease), color 240ms var(--ease),
               border-color 240ms var(--ease), transform 240ms var(--ease);
 }
-.btn--ember { background: var(--ember); color: #fff; }
-.btn--ember:hover { background: var(--ember-lift); transform: translateY(-1px); }
+.btn--ember { background: var(--red); color: #fff; border-color: var(--red); }
+.btn--ember:hover { background: #e8514f; border-color: #e8514f; transform: translateY(-1px); }
+.btn--cream { background: var(--cream); color: var(--black); border-color: var(--cream); }
+.btn--cream:hover { background: #fff; border-color: #fff; transform: translateY(-1px); }
 .btn--solid { background: var(--ink); color: var(--paper); }
 .btn--solid:hover { background: var(--ember); color: #fff; transform: translateY(-1px); }
 .btn--ghost { border-color: var(--ink-3); color: var(--ink); }
@@ -116,11 +137,11 @@ a { color: inherit; }
 .tlink {
   font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase;
   letter-spacing: var(--track-label); text-decoration: none; color: var(--ink);
-  padding-bottom: 3px; background-image: linear-gradient(var(--ember), var(--ember));
-  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 1px;
+  padding-bottom: 3px; background-image: linear-gradient(var(--red), var(--red));
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 2px;
   transition: background-size 360ms var(--ease);
 }
-.tlink:hover, .tlink:focus-visible { background-size: 100% 1px; }
+.tlink:hover, .tlink:focus-visible { background-size: 100% 2px; }
 
 /* --- Grain -----------------------------------------------------------------
  * A single fixed noise plane over the whole page. It is what stops large flat

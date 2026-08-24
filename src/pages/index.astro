@@ -1,10 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import MediaPlane from '../components/MediaPlane.astro';
-import Shot from '../components/Shot.astro';
+import Wordmark from '../components/Wordmark.astro';
 import Slot from '../components/Slot.astro';
 import Dish from '../components/Dish.astro';
-import { href } from '../lib/href';
+import { href, asset } from '../lib/href';
 import { COPY } from '../data/copy';
 import { EDITORIAL } from '../data/editorial';
 import { SITE } from '../lib/site.config.mjs';
@@ -33,32 +32,38 @@ const ticker = [
 ---
 <Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
   {/*
-    The hero is the dark bookend. The wordmark carries it: with no photography
-    supplied, the type is the image — and it is the stronger of the two hero
-    patterns that win in this category anyway.
+    The hero is the brand's own deep-red field, with the real lockup on it and
+    the burger beside it. It used to be a generative ember plane standing in
+    for footage nobody had shot; the photograph is the restaurant's own and is
+    used at its native size, so nothing is upscaled and nothing buffers.
   */}
-  <section class="hero dark">
-    <div class="hero__media">
-      <MediaPlane file="hero.mp4" poster="hero-poster.jpg" video ember="hero" alt="" />
-    </div>
-    <div class="hero__grade" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
-
+  <section class="hero brand-red">
     <div class="wrap hero__inner">
-      <p class="label label--ember">Smash burgers · {SITE.geo}, Myanmar</p>
+      <div class="hero__copy">
+        <p class="label label--ember">Smash burgers · {SITE.geo}, Myanmar</p>
 
-      <h1 class="hero__title" data-smash>
-        <i>Le</i><br /><em data-smash-word>SMASH</em>
-      </h1>
-
-      <Slot slot={EDITORIAL.heroPositioning} class="lede" />
-
-      <div class="hero__foot">
-        <div class="btn-row">
-          <a class="btn btn--solid" href={href('/menu')}>{COPY.cta.menu}</a>
-          <a class="btn btn--ghost" href="#visit">Find us</a>
+        <h1 class="visually-hidden">Le SMASH Burgers &amp; Co. — smash burgers in {SITE.geo}</h1>
+        <div data-smash-word style="transform-origin:0% 100%">
+          <Wordmark size="hero" link={false} />
         </div>
-        <p class="hero__scroll label" aria-hidden="true"><span></span>{COPY.labels.scroll}</p>
+
+        <Slot slot={EDITORIAL.heroPositioning} class="lede" />
+
+        <div class="hero__foot">
+          <div class="btn-row">
+            <a class="btn btn--cream" href={href('/menu')}>{COPY.cta.menu}</a>
+            <a class="btn btn--ghost" href="#visit">Find us</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__plate">
+        <img
+          src={asset('/media/burger.jpg')}
+          alt="A Le SMASH burger held in one hand, the patties visible in profile"
+          width="1008" height="976"
+          fetchpriority="high" decoding="async"
+        />
       </div>
     </div>
   </section>
@@ -92,7 +97,9 @@ const ticker = [
         </div>
 
         <div class="figure figure--tall reveal">
-          <Shot ratio="4x5" caption="A patty on the press" />
+          <img src={asset('/media/sear.jpg')} alt="A plate leaving the Le SMASH pass"
+               width="1000" height="1250" loading="lazy" decoding="async" />
+          <p class="figure__cap">Off the pass, plated as it is served</p>
         </div>
       </div>
     </div>
@@ -126,7 +133,9 @@ const ticker = [
       </div>
       <div class="split">
         <div class="figure figure--wide reveal">
-          <Shot ratio="3x2" caption="The room, evening" />
+          <img src={asset('/media/plate-01.jpg')} alt="A plate from the Le SMASH kitchen"
+               width="1500" height="1000" loading="lazy" decoding="async" />
+          <p class="figure__cap">From the Le SMASH kitchen</p>
         </div>
         <div class="stack-lg reveal">
           <h2>What you see is<br /><span class="serif-em">what arrives.</span></h2>

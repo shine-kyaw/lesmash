@@ -1,4 +1,5 @@
 ---
+import Wordmark from './Wordmark.astro';
 import { SITE } from '../lib/site.config.mjs';
 import { COPY } from '../data/copy';
 import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
@@ -26,7 +27,7 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="ftr__grid">
       <div>
-        <a class="mark mark--lg" href={href("/")}><i>Le</i><b>SMASH</b></a>
+        <Wordmark size="lg" />
         <p class="lede" style="margin-top:var(--s4)">
           Smash burgers in {SITE.geo}. Two rooms, one way of cooking a patty.
         </p>
@@ -39,10 +40,10 @@ const year = new Date().getFullYear();
             const phone = primaryPhone(branch);
             return (
               <li>
-                <strong style="display:block;font-family:var(--font-body);color:var(--bone)">
+                <strong style="display:block;font-family:var(--font-body);color:var(--ink)">
                   {branch.name}
                 </strong>
-                <span style="color:var(--ash);font-size:var(--t-sm)">
+                <span style="color:var(--ink-2);font-size:var(--t-sm)">
                   {branch.addressLine}, {branch.township}, {branch.city}
                 </span>
                 <span style="display:block;margin-top:6px">
@@ -78,7 +79,7 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <p class="ftr__wordmark" aria-hidden="true">LE SMASH</p>
+    <p class="ftr__wordmark" aria-hidden="true">SMASH</p>
 
     <div class="ftr__bottom">
       <span>© {year} {SITE.brand.legal}</span>

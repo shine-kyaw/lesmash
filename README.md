@@ -9,19 +9,25 @@ ahead of feature count.
 
 ## Design
 
-Warm near-black ground, bone text, one ember accent with brass as support.
-Bodoni Moda for display, Archivo for body, IBM Plex Mono for prices and labels.
-The menu is set as an editorial typographic list rather than a grid of photo
-cards — that is the restaurant pattern rather than the delivery-app one, and it
-means the page carries no weight it does not need on a slow phone.
+The restaurant's own brand, sampled rather than invented. Warm parchment for
+everything you read, with the hero on their deep red and the footer on their
+black as bookends. The logo's red is the one accent, and their gold carries the
+labels on the dark grounds. Gasoek One for display and Grand Hotel for the
+script are the closest available matches to the two hands in the logo; Archivo
+carries the body and IBM Plex Mono the prices. The wordmark itself is the real
+lockup artwork, never re-set in a web font. See `docs/DECISIONS.md` §11.
 
-The one orchestrated moment is the wordmark: on load `SMASH` takes a press,
+The menu is a grid of cards with a picture, a price and the portion facts on the
+face of each one, because patty counts are easier to scan on a card than in a
+list.
+
+The one orchestrated moment is the wordmark: on load it takes a press,
 compressing and springing back the way a ball of beef does on the plancha. It
 animates type that is already painted, so it delays nothing, and it is skipped
 entirely under `prefers-reduced-motion`.
 
-Design tokens live in `src/styles/tokens.css`. Adopting the real brand identity
-is a change to that one file.
+Design tokens live in `src/styles/tokens.css`, expressed as roles rather than
+colours, in three registers — light, `.dark`, and `.brand-red`.
 
 ---
 

@@ -121,7 +121,7 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 - ☐ DNS documented and handed over
 - ⛔ Privacy notice — the page was cut in the two-page scope reduction. It must come back before any form or analytics cookie exists (*C-18*)
 - ⛔ Trademark position acknowledged in writing — *the Dutch chain collision (R-02)*
-- ✅ No unlicensed imagery, fonts or content — the bundled faces are Bodoni Moda, Archivo and IBM Plex Mono, all SIL Open Font License; there is no imagery
+- ⚠ No unlicensed imagery, fonts or content — the bundled faces are Gasoek One, Grand Hotel, Archivo and IBM Plex Mono, all SIL Open Font License. **The logo artwork and the three stills in `public/media/` were taken from the client's own Facebook page.** They are the client's own material, but get that confirmed in writing before launch, and confirm the client holds the rights to the photographs themselves if an agency shot them
 
 ---
 

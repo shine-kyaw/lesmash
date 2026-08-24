@@ -57,8 +57,8 @@ export const EDITORIAL = {
   howWeSmash: slot(
     'C-08',
     'agency draft, client approve',
-    'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, how many patties come in each burger. Those numbers are what make this paragraph worth reading.',
-    'A smash burger is not a thick burger. A ball of beef goes onto a hot plancha and is pressed flat, once, hard — which is what builds the dark, lacy crust along the edge and why the patty comes out thin rather than tall. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people actually came for. It is a technique, not a size. So the menu tells you how many patties are in every burger before you order, and the pictures show the plate as it leaves the pass.'
+    'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, how many patties come in each burger. Those numbers are what make this paragraph worth reading. The last sentence also commits the site to honest photography — it cannot stand while the stills in public/media are social crops rather than a real shoot.',
+    'A smash burger is thin on purpose. A ball of beef hits a hot plancha and is pressed flat — once, hard — and that press is what builds the dark, lacy crust around the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people came for. It is a technique, not a size. So every burger here tells you its patty count before you order, and every picture shows the plate as it leaves the pass.'
   ),
 
   /** C-10 — brand story. */

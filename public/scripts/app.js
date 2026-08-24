@@ -78,8 +78,12 @@
     if (!hdr) return;
     // Fills in only once the reader has left the hero, so the film is never
     // framed by a bar on first paint.
+    // The hero is content-sized rather than a full viewport, so the fill point
+    // is measured off the hero itself and only falls back to the window.
     var mark = function () {
-      hdr.classList.toggle('is-stuck', window.scrollY > window.innerHeight * 0.72);
+      var hero = document.querySelector('.hero');
+      var trigger = hero ? hero.offsetHeight - 80 : window.innerHeight * 0.72;
+      hdr.classList.toggle('is-stuck', window.scrollY > trigger);
     };
     mark();
     window.addEventListener('scroll', mark, { passive: true });
@@ -121,32 +125,6 @@
       });
     }, { rootMargin: '-25% 0px -65% 0px' });
     sections.forEach(function (s) { io.observe(s); });
-  }
-
-  /* ----------------------------------------------------------- hero video */
-
-  /**
-   * The film is an enhancement, not the hero itself.
-   *
-   * A full-bleed autoplaying video is the most expensive thing this page could
-   * do, and the audience is on a median 5 Mbps mobile connection. So it is
-   * attached only on a wide viewport, and never when the browser has told us
-   * the connection is slow or the visitor has asked to save data. Everyone
-   * else keeps the canvas plane, which is already a finished hero.
-   */
-  function initVideo() {
-    var video = $('[data-video-src]');
-    if (!video) return;
-    if (!window.matchMedia('(min-width: 54rem)').matches) return;
-
-    var c = navigator.connection;
-    if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
-
-    video.src = video.dataset.videoSrc;
-    video.load();
-    var play = video.play();
-    if (play && play.catch) play.catch(function () { /* autoplay refused; canvas stands */ });
-    video.addEventListener('playing', function () { video.classList.add('is-playing'); }, { once: true });
   }
 
   /* ---------------------------------------------------------- the smash */
@@ -205,7 +183,6 @@
     initHeader();
     initReveal();
     initCourses();
-    initVideo();
     initSmash();
     initScrollDepth();
     track('page_view', { referrer_group: referrerGroup() });

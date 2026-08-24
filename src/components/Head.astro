@@ -5,13 +5,19 @@ import { asset } from '../lib/href';
 /*
  * The three faces are declared here rather than in the stylesheet because a
  * base path (GitHub Pages serves from /lesmash/) cannot be interpolated into a
- * static CSS file. Latin subsets, 94KB total, self-hosted — no third-party
- * origin sits on the critical path.
+ * static CSS file. Latin subsets, self-hosted — no third-party origin sits on
+ * the critical path, and the deployed CSP is font-src 'self'.
+ *
+ * Gasoek One and Grand Hotel are here because they are the closest available
+ * matches to the two hands in the real logo; see src/styles/tokens.css. They
+ * replaced Bodoni Moda, which was a stand-in chosen before any brand asset had
+ * been recovered. 89KB total, against a 150KB per-page font budget.
  */
 const faces = [
-  { family: 'Bodoni Moda', file: 'bodoni-moda-latin.woff2', weight: '400 700' },
+  { family: 'Gasoek One', file: 'gasoek-one-latin.woff2', weight: '400' },
+  { family: 'Grand Hotel', file: 'grand-hotel-latin.woff2', weight: '400' },
   { family: 'Archivo', file: 'archivo-latin.woff2', weight: '100 900' },
-  { family: 'IBM Plex Mono', file: 'plex-mono-latin.woff2', weight: '400 500' },
+  { family: 'IBM Plex Mono', file: 'plex-mono-latin.woff2', weight: '400 600' },
 ];
 const LATIN =
   'U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+2122, U+2212, U+FEFF, U+FFFD';
@@ -30,6 +36,7 @@ interface Props {
 }
 const { path, title, description, noindex = false, schema = [] } = Astro.props;
 const canonical = absoluteUrl(path);
+const ogImage = absoluteUrl('/og.jpg');
 const jsonLd = schema.length ? { '@context': 'https://schema.org', '@graph': schema } : null;
 ---
 <meta charset="utf-8" />
@@ -45,14 +52,21 @@ const jsonLd = schema.length ? { '@context': 'https://schema.org', '@graph': sch
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en_US" />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="The Le SMASH wordmark over a smash burger" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content={ogImage} />
 
-<meta name="theme-color" content="#0a0a0c" />
-<link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
+{/* The brand red, so the phone's browser chrome joins the header bar. */}
+<meta name="theme-color" content="#d83536" />
+<link rel="icon" href={asset('/favicon-32.png')} type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
 
 <style set:html={fontCss}></style>
 
 {/* The display face carries the hero, which is the LCP element. */}
-<link rel="preload" href={asset('/fonts/bodoni-moda-latin.woff2')} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={asset('/fonts/gasoek-one-latin.woff2')} as="font" type="font/woff2" crossorigin />
 
 {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
