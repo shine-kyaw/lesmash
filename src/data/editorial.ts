@@ -1,102 +1,77 @@
-import type { Locale } from '../lib/i18n';
-
 /**
- * Editorial copy — every block on this page makes a claim about the business,
- * so none of it may be written by the agency (PRD §17.1: "No invented facts").
+ * Editorial copy — every block here makes a claim about the business, so none
+ * of it may be written by the agency (PRD §17.1: "No invented facts").
  *
- * Each slot carries its content-register reference (C-xx) from PRD §17.2 and
- * stays `null` until the client supplies the text in writing. A null slot:
- *   - in preview builds, renders a visible, labelled placeholder;
- *   - in live builds (CONTENT_MODE=live), the block is omitted entirely.
- * Either way the site never states something unverified.
+ * Each slot carries its content-register reference and stays `null` until the
+ * client supplies the text. A null slot renders a labelled placeholder in
+ * preview builds and nothing at all in live builds. Either way the site never
+ * states something unverified.
  */
-
-export interface EditorialSlot {
-  ref: string; // content register id (PRD §17.2)
-  owner: 'client' | 'agency-draft-client-approve' | 'agency';
-  note: string; // what is needed, for whoever fills it in
-  value: Record<Locale, string | null>;
+export interface Slot {
+  ref: string;
+  owner: 'client' | 'agency draft, client approve' | 'agency';
+  note: string;
+  value: string | null;
 }
 
-const slot = (
-  ref: string,
-  owner: EditorialSlot['owner'],
-  note: string,
-  value: Record<Locale, string | null> = { en: null, my: null }
-): EditorialSlot => ({ ref, owner, note, value });
+const slot = (ref: string, owner: Slot['owner'], note: string, value: string | null = null): Slot =>
+  ({ ref, owner, note, value });
 
 export const EDITORIAL = {
-  /** C-01 — brand line (max 8 words) + positioning sentence (max 20 words). */
-  heroLine: slot('C-01', 'agency-draft-client-approve', 'Brand line, max 8 words.'),
+  /** C-01 — the line across the hero. */
+  heroLine: slot(
+    'C-01',
+    'agency draft, client approve',
+    'The line across the hero. Eight words at most. It has to be true.'
+  ),
   heroPositioning: slot(
     'C-01',
-    'agency-draft-client-approve',
-    'One positioning sentence, max 20 words. Must be true and verifiable.'
+    'agency draft, client approve',
+    'One sentence under the hero, twenty words at most. Must be verifiable.'
   ),
 
-  /** C-02 — three proof points. Must be true and verifiable; client supplies. */
+  /** C-02 — three proof points. Must be true and verifiable. */
   proofPoints: {
     ref: 'C-02',
     owner: 'client' as const,
-    note: 'Three proof points, max 6 words each. Each must be a fact the client can stand behind.',
-    value: { en: [] as string[], my: [] as string[] },
+    note: 'Three proof points, six words each. Each one must be a fact you can stand behind.',
+    value: [] as string[],
   },
 
-  /** C-08 — the flagship expectation-setting copy (PRD §11.5). */
+  /** C-08 — the flagship expectation-setting copy. */
   howWeSmash: slot(
     'C-08',
-    'agency-draft-client-approve',
-    '100–150 words describing the actual smashing process, patty weight and how big a Le SMASH burger really is. Needs process detail from the kitchen before it can be drafted.'
+    'agency draft, client approve',
+    'A hundred words on what actually happens at the pass: the ball weight, the press, the sear, how big the finished burger really is. Needs process detail from the kitchen before it can be drafted.'
   ),
 
-  /** C-09 — breakfast intro. */
-  breakfastIntro: slot(
-    'C-09',
-    'agency-draft-client-approve',
-    '150–250 unique words. Cannot be finalised until breakfast service hours are confirmed (DS-01).'
-  ),
-
-  /** C-10 — brand story. No founder narrative, dates, awards or sourcing may be invented. */
-  aboutStory: slot(
+  /** C-10 — brand story. */
+  story: slot(
     'C-10',
     'client',
-    '200–350 words. No founder story, opening date, awards, sourcing claims or certifications unless the client supplies them in writing.'
+    'Two hundred words on where Le SMASH came from. No founder story, opening date, award, sourcing claim or certification will be written for you.'
   ),
 
-  /** C-11 — the brand's public commitment to accurate representation. */
+  /** C-11 — the public commitment to accurate representation. */
   portionHonesty: slot(
     'C-11',
-    'agency-draft-client-approve',
-    "The brand's public commitment that photographs show the portion actually served."
+    'agency draft, client approve',
+    'Your public commitment that the photograph shows the portion actually served. Recommended, and the highest-value paragraph on the site.'
   ),
 
-  /** C-15 — seating / reservation policy (PRD §15.4). */
-  seatingPolicy: slot(
-    'C-15',
-    'client',
-    'Plain statement of the reservation policy and typical busy periods, so customers can self-select a quieter time.'
-  ),
-
-  /** C-07 — dine-in vs Foodpanda price context (MENU-13). Blocked on Q5. */
-  priceContextStatement: slot(
+  /** C-07 — dine-in vs Foodpanda price context. Blocked on Q5. */
+  priceContext: slot(
     'C-07',
     'client',
     'Whether published prices are dine-in or delivery, and whether the two differ.',
-    {
-      en: 'Prices are not yet published on this site. Please check the current price on Foodpanda, or ask in store.',
-      my: 'ဈေးနှုန်းများကို ဤဝက်ဘ်ဆိုက်တွင် မဖော်ပြရသေးပါ။ လက်ရှိဈေးနှုန်းကို Foodpanda တွင် စစ်ဆေးပါ သို့မဟုတ် ဆိုင်တွင် စုံစမ်းပါ။',
-    }
+    'No prices are published on this site yet. Check the current price on Foodpanda, or ask in store.'
   ),
 
-  /** C-14 — agency-authored, factual, ready (PRD §17.2). */
-  orderExplainer: slot('C-14', 'agency', 'Explains that delivery runs through Foodpanda.', {
-    en: 'Delivery and online payment are handled by Foodpanda. Choose your branch below and we will take you straight to its listing.',
-    my: 'ပို့ဆောင်မှုနှင့် အွန်လိုင်းငွေပေးချေမှုကို Foodpanda မှ ဆောင်ရွက်ပါသည်။ အောက်တွင် ဆိုင်ခွဲရွေးပါ၊ ထိုဆိုင်၏ စာမျက်နှာသို့ တိုက်ရိုက် ပို့ဆောင်ပေးပါမည်။',
-  }),
+  /** C-14 — agency-authored, factual, ready. */
+  orderExplainer: slot(
+    'C-14',
+    'agency',
+    'Explains that delivery runs through Foodpanda.',
+    'Delivery runs through Foodpanda. Pick your branch and we will take you straight to its listing.'
+  ),
 } as const;
-
-export type EditorialKey = keyof typeof EDITORIAL;
-
-export function editorialText(slotObj: EditorialSlot, locale: Locale): string | null {
-  return slotObj.value[locale] ?? slotObj.value.en ?? null;
-}

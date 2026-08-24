@@ -1,86 +1,88 @@
 /*
- * Design tokens.
+ * Le SMASH — design tokens.
  *
- * No brand identity assets were available when this was built (PRD Q9, R-18),
- * so this is a deliberately neutral premium-casual bistro palette chosen to
- * meet WCAG AA and to stay out of the food photography's way. It is token-driven
- * precisely so that adopting the real brand is a change to this file and nothing
- * else (PRD §25.3).
+ * Direction: a late-night bistro. Dark, close, confident. The room is dim, the
+ * pass is hot. Everything is restrained except the type, which is where all the
+ * boldness is spent.
  *
- * Every foreground/background pair below is AA-compliant; the ratios are noted
- * so a brand swap can be checked against the same bar.
+ * The palette is warm-biased throughout — the near-black carries a trace of
+ * blue so the ember reads hotter against it, and the whites are bone rather
+ * than paper. Nothing here is a pure grey.
+ *
+ * No brand identity assets were available (PRD Q9), so this is a considered
+ * stand-in, token-driven so that adopting the real brand is a change to this
+ * file alone.
  */
 :root {
-  /* --- Colour ------------------------------------------------------------ */
-  --ink: #17130f;           /* warm near-black       on --paper  = 15.9:1 */
-  --ink-2: #443b33;         /* secondary text        on --paper  =  9.0:1 */
-  --ink-3: #6b6058;         /* muted / meta text     on --paper  =  5.2:1 */
-  --paper: #fbf8f3;         /* warm off-white page ground              */
-  --paper-2: #f4efe6;       /* raised surface / cards                  */
-  --paper-3: #eae2d5;       /* borders, dividers, placeholder fill      */
+  color-scheme: dark;
 
-  --accent: #a8321c;        /* bistro brick red      on --paper  =  6.2:1 */
-  --accent-ink: #fbf8f3;    /* text on accent                    =  6.2:1 */
-  --accent-soft: #f6e7e2;   /* accent-tinted surface                   */
+  /* --- Ground -------------------------------------------------------------
+   * Warm near-black, never #000. Pure black reads as an unstyled dark mode;
+   * a warm charcoal reads as a dim room, which is the whole idea.
+   * ---------------------------------------------------------------------- */
+  --void:   #12100e;   /* page ground                                        */
+  --char:   #1a1714;   /* raised surface, sticky bars                        */
+  --smoke:  #2a2521;   /* hairlines, dividers, inert fills                   */
 
-  --positive: #2f6b45;      /* "open now"            on --paper  =  5.3:1 */
-  --positive-soft: #e4efe7;
-  --warn: #8a5a12;          /* unconfirmed / pending on --paper  =  5.1:1 */
-  --warn-soft: #f7eddb;
+  /* --- Ink ----------------------------------------------------------------
+   * Bone, not white. Pure white on a food site reads clinical.
+   * ---------------------------------------------------------------------- */
+  --bone:   #f2ede4;   /* primary text        on --void = 16.1:1            */
+  --ash:    #a2988b;   /* secondary / meta    on --void =  7.4:1            */
+  --dim:    #6e6459;   /* rules, tertiary     on --void =  3.4:1 (non-text) */
 
-  --focus: #1a4fd6;         /* focus ring, ≥3:1 against both grounds   */
+  /* --- Heat ---------------------------------------------------------------
+   * One accent, one support. Ember is deep rust rather than a fast-food
+   * orange: at 3.5:1 it is a large-text and UI colour only, never small body
+   * text — brass carries anything small that needs to warm up.
+   * ---------------------------------------------------------------------- */
+  --ember:  #d24a1c;   /* sear — large display accents, buttons, rules      */
+  --ember-lift: #e35d2c;
+  --brass:  #c69b3c;   /* numerals, prices, labels   on --void = 7.3:1      */
+  --oxblood:#3d1109;   /* deep wash for gradients                           */
+
+  --focus:  #7fb2ff;   /* focus ring, ≥3:1 on every ground here              */
 
   /* --- Type -------------------------------------------------------------- */
-  /* System serif — zero bytes, no request, no swap. See global.css for why. */
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
-                  'Noto Serif', 'Times New Roman', serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-my: 'Noto Sans Myanmar', 'Padauk', 'Myanmar Text', 'Noto Sans Myanmar UI', sans-serif;
+  /* Didone display: editorial, French, unmistakably not a fast-food face.
+     Grotesk body for plain reading. Mono for prices and labels — the kitchen
+     ticket voice, and it keeps numerals aligned. */
+  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
+  --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --step--1: 0.875rem;
-  --step-0: 1rem;
-  --step-1: 1.125rem;
-  --step-2: 1.375rem;
-  --step-3: 1.75rem;
-  --step-4: 2.125rem;
-  --step-5: 2.625rem;
+  /* Fluid scale. Display runs deliberately large — at full width the wordmark
+     is the graphic, not a label sitting on one. */
+  --t-hero:  clamp(3.25rem, 1.5rem + 11vw, 11rem);
+  --t-xl:    clamp(2.5rem, 1.25rem + 5.5vw, 5.5rem);
+  --t-lg:    clamp(1.875rem, 1rem + 3.2vw, 3.25rem);
+  --t-md:    clamp(1.375rem, 1rem + 1.6vw, 2rem);
+  --t-body:  clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --t-numeral: clamp(3rem, 1rem + 7vw, 7rem);
+  --t-sm:    0.9375rem;
+  --t-xs:    0.8125rem;
 
-  --lh-body: 1.6;
-  --lh-heading: 1.18;
-  --tracking-heading: -0.015em;
+  --lh-tight: 0.92;
+  --lh-head: 1.08;
+  --lh-body: 1.65;
+  --track-label: 0.16em;
 
-  /* --- Space, radius, shadow --------------------------------------------- */
-  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
-  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
+  /* --- Space, radius, rhythm --------------------------------------------- */
+  --s1: 0.25rem; --s2: 0.5rem;  --s3: 0.75rem; --s4: 1rem;
+  --s5: 1.5rem;  --s6: 2rem;    --s7: 3rem;    --s8: 4.5rem;
+  --s9: 7rem;    --s10: 10rem;
 
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 14px;
-  --radius-pill: 999px;
+  --r-sm: 2px;
+  --r: 4px;
+  --r-pill: 999px;
 
-  --shadow-1: 0 1px 2px rgb(23 19 15 / 0.06), 0 2px 6px rgb(23 19 15 / 0.04);
-  --shadow-2: 0 -1px 0 var(--paper-3), 0 -8px 24px rgb(23 19 15 / 0.06);
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+  --measure: 60ch;
+  --wide: 100rem;
 
-  /* --- Layout ------------------------------------------------------------ */
-  --measure: 62ch;
-  --container: 76rem;
-  --header-h: 56px;         /* PRD NAV-01: ≤56px on mobile */
-  --bar-h: 64px;            /* PRD NAV-04: ≤64px + safe area */
-  --tap: 44px;              /* PRD A11Y-06 minimum touch target */
-}
+  --rule: 1px solid var(--smoke);
+  --tap: 44px;
 
-/*
- * Burmese type is a separate specification, not a font swap (PRD §16.2).
- * Stacked diacritics need more vertical room; caps and letter-spacing are
- * prohibited because they break glyph clusters. This is an accessibility
- * requirement (A11Y-05), not a stylistic preference.
- */
-:root:lang(my),
-[lang='my'] {
-  --font-body: var(--font-my);
-  --font-display: var(--font-my);
-  --step-0: 1.0625rem;      /* ≥17px body */
-  --lh-body: 1.9;
-  --lh-heading: 1.45;
-  --tracking-heading: 0;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 620ms;
 }

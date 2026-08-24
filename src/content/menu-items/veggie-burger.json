@@ -1,6 +1,6 @@
 {
   "slug": "veggie-burger",
-  "name": { "en": "Vegetarian Burger", "my": null },
+  "name": "Vegetarian Burger",
   "description": null,
   "price": null,
   "priceDisplay": null,

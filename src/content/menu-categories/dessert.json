@@ -1,6 +1,6 @@
 {
   "slug": "dessert",
-  "name": { "en": "Dessert", "my": "အချိုပွဲများ" },
+  "name": "Dessert",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 70,

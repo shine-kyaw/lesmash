@@ -57,94 +57,99 @@ wrong. Without JavaScript the visitor still gets the full weekly hours table.
 
 ---
 
-## 4. No Latin webfont
+## 4. Scope cut to two pages, English only
 
-**The PRD budgets** ≤150KB of webfonts including the Myanmar subset (PERF-05)
-and anticipates falling back to a system Myanmar stack if the budget cannot be
-met (§16.2).
+The site was originally built to the PRD's nine-template bilingual spec. The
+client then cut it to a home page and a menu, in English.
 
-**What we found:** the Myanmar face is ~150KB before subsetting. Any Latin
-display face on top of that breaks the budget.
+Removed: the breakfast, burgers, locations, about, order and privacy pages, the
+entire `/my/` locale layer, the Myanmar webfont and its subsetting and shaping
+checks, the branch chooser, and the per-branch landing pages. Branch information
+moved into a section on the home page and the footer, which is where a
+two-branch restaurant's contact details belong anyway.
 
-**Decision:** drop the Latin webfont entirely and use a system serif stack. It
-costs zero bytes, paints on the first frame, and on the target mid-range Android
-maps to Noto Serif. English pages now make **no font request at all**, and the
-whole budget goes to Myanmar, where it is genuinely needed.
+**What this costs, so it is on the record:** the breakfast and burgers pages
+existed to win "breakfast Yangon" and "smash burger Yangon" — distinct search
+intents with their own landing pages. Folding them into one menu page means the
+site competes for those terms with a page that is not about them. The branch
+pages were the local-SEO surface for each township. If search visibility matters
+later, those are the first pages to bring back.
 
-**Reverses if** the brand's real typeface arrives (Q9) and the client accepts a
-Burmese page reaching ~170KB of fonts, or if that face subsets small enough.
-
----
-
-## 5. The Myanmar font keeps the whole Unicode block
-
-Subsetting to only the 62 codepoints currently on the site produces a 58KB file
-that shapes every existing string correctly — measured and verified.
-
-**We ship the 141KB whole-block build anyway.** This site is CMS-driven: a staff
-member adds a Burmese menu item name on a Friday evening, and if that name uses
-a codepoint outside the frozen subset, the customer sees an empty box in the
-middle of a dish name. Saving 83KB is not worth a font that is correct only for
-the copy that happened to exist when the subsetter last ran.
-
-`npm run check:shaping` runs every Burmese string through HarfBuzz and fails on
-a missing glyph. This exists because **headless browsers in CI have no Myanmar
-system font**, so screenshot review cannot catch the failure — during this build
-a correct medial-*ra* cluster was initially misread as a missing glyph, and a
-genuine missing-space glyph was initially missed.
+The Burmese removal is a larger reach question — Burmese-speaking customers are
+now served an English-only site — but that was an explicit client decision.
 
 ---
 
-## 6. Inline Burmese needs its own `font-family` declaration
+## 5. Design direction
 
-The language toggle sits in the header of English pages and is Burmese text.
+Warm near-black rather than pure black, bone rather than white, one ember accent
+with brass as support. Bodoni Moda / Archivo / IBM Plex Mono.
 
-Redefining `--font-body` under `[lang='my']` does **not** change it: `font-family`
-is inherited from `<body>` as an already-computed value, so a descendant
-redefining the variable has no effect unless it declares `font-family` itself.
+This was researched rather than assumed: award-winning restaurant sites cluster
+on warm-dark grounds with a single heat accent, and the typeface pairing sits in
+the "editorial premium" register those sites actually use. Two findings changed
+the build:
 
-Fixed in `global.css`. Worth knowing before anyone "tidies up" that rule — the
-symptom is subtle and only appears where Burmese is embedded in an English page.
+- **Full-bleed autoplaying hero video is now an LCP liability**, not a feature.
+  It is served only where it is affordable — see §6.
+- **Fast marquees of oversized display type now read as a 2021 signature.** The
+  ticker was rebuilt as a slow, small, tracked mono strip carrying real
+  information: branches, townships, how delivery works.
 
----
+The menu is an editorial typographic list, not a grid of photo cards. A uniform
+photo grid is a delivery-aggregator pattern; the dish name doing the work is the
+restaurant pattern — and it is the honest one here, since no photography exists.
 
-## 7. The sticky action bar is mobile-only
-
-**The PRD says** the bar is visible on 100% of pages (NAV-04), and separately
-describes a desktop navigation carrying a filled "Order Now" button (§9.5).
-
-**Decision:** below 62rem the sticky bar carries Order / Directions / Call.
-Above it, the header carries Order inline and the bar is hidden. Pinning a bar
-to the bottom of a 900px-tall desktop viewport covers content to solve a
-thumb-reach problem that does not exist there.
-
-The mobile guarantee the PRD actually cares about — two taps to Order,
-Directions or Call from any page — holds on every viewport.
+One dish per course is promoted to a larger size so each section has a focal
+point without needing a photograph of every item.
 
 ---
 
-## 8. Item detail is `<details>`, not a route
+## 6. The hero film is an enhancement, not the hero
 
-**The PRD specifies** in-page expansion rather than per-item URLs (§11.3),
-reasoning that 44 items × 2 locales would be 88 thin duplicated pages.
+The client asked for a hero film. It is built — but the canvas plane paints
+first and the film is attached over it only on a viewport wider than 54rem, and
+never when the browser reports a slow connection or the visitor has asked to
+save data.
 
-**Decision:** a native `<details>` element. No JavaScript, no layout shift, and
-it works with script disabled. `menu_item_expand` is still tracked, so the
-analytics that would justify promoting items to real URLs in Phase 2 accrues
-from launch.
-
----
-
-## 9. Directions degrade through three levels
-
-Without a Google Place ID (DS-09), a Directions link would otherwise be dead.
-`directionsUrl()` tries, in order: an explicit Maps URL → place ID → coordinates
-→ a name-and-address search. The last usually finds the right pin but is not
-guaranteed, which is why DS-09 is still tracked as a gap rather than closed.
+The audience is on a median 5 Mbps mobile connection. Shipping a full-bleed
+autoplaying video to that phone is the most expensive thing this page could do,
+and it would attack the one metric the whole project is judged on. Everyone who
+does not get the film gets a hero that is already complete rather than a
+placeholder.
 
 ---
 
-## 10. Structured data omits anything unconfirmed
+## 7. Generative planes instead of stock photography
+
+No photography or footage was available, and the Facebook and Instagram accounts
+holding the brand's real images are unreachable from this environment.
+
+Stock food photography was rejected outright: it would recreate the exact gap
+between marketing and plate that this project exists to close. A flat colour
+block reads as unfinished.
+
+So empty media planes render heat instead of food — soft blooms drifting like
+light off a grill, with sparks rising through them. It reads as a graded plate
+rather than a missing asset. Every plane is replaced the moment a real file
+lands in `public/media/`; the filenames are the only contract.
+
+---
+
+## 8. The one orchestrated moment
+
+On load the wordmark takes a press: `SMASH` compresses and springs back once,
+the way a ball of beef does on the plancha.
+
+It runs on type that is already painted, so it delays nothing, and it is skipped
+entirely under `prefers-reduced-motion`. It is the only animation on the site
+that exists for its own sake, and it is on the one word it belongs to. Everything
+else that moves — scroll reveals, the ticker, the ember field — is either
+carrying information or setting the room.
+
+---
+
+## 9. Structured data omits anything unconfirmed
 
 `priceRange`, `telephone`, `openingHoursSpecification`, `geo` and per-item
 `offers` are emitted **only** when the underlying value is confirmed. An empty
@@ -155,27 +160,12 @@ No `suitableForDiet` or halal-adjacent property is emitted at all pending Q15.
 
 ---
 
-## 11. Analytics is a queue, not a vendor
+## 10. Analytics is a queue, not a vendor
 
-The full PRD §20.2 event taxonomy fires today — including `foodpanda_outbound`
-before navigation, on `pointerdown`, so it is not lost to the unload.
-
-No vendor is configured, so events accumulate on `window.lesmashEvents`. Adding
-Plausible or Umami is one config value plus one script tag, and the events flow
-without touching any component. The ≤5KB analytics budget is currently unspent.
-
----
-
-## 12. Images are designed placeholders
-
-No photography exists. A broken image and a stock photograph are both explicitly
-rejected by the PRD, and stock food photography would recreate the exact
-expectation gap the project exists to close.
-
-Every image slot renders a branded placeholder at the correct aspect ratio, so
-there will be no layout shift when real photographs replace them. Compression
-targets when the shoot lands: menu card ≤35KB, hero ≤120KB, gallery ≤80KB,
-static map ≤60KB, all AVIF at 1× display width.
+The PRD §20.2 event taxonomy fires today, including outbound clicks on
+`pointerdown` so they are not lost to the unload. No vendor is configured, so
+events accumulate on `window.lesmashEvents`. Adding Plausible or Umami is one
+config value plus one script tag. The ≤5KB analytics budget is currently unspent.
 
 ---
 
@@ -183,11 +173,9 @@ static map ≤60KB, all AVIF at 1× display width.
 
 | Not built | Reason |
 |---|---|
-| Google Search Console / GBP verification | Requires client account access |
-| Static map images | Requires a Maps API key and confirmed coordinates |
-| OG share image | Requires brand assets (Q9) and photography |
-| Enquiry form | PRD makes it conditional on the client naming a monitored channel and a response-time commitment (§15.4) |
-| Homepage social-proof module | Requires DS-05 review data |
+| Real logo and brand graphics | Facebook, Instagram and every image host are blocked by this environment's egress proxy. The wordmark is set in Bodoni Moda as a stand-in; drop the real logo in and swap the `.mark` markup |
+| Hero film, food and room photography | Same block. The drop-in contract is `public/media/README.md` |
+| Google Search Console / Business Profile | Requires client account access |
+| OG share image | Requires brand assets and photography |
 | Analytics provider | Requires a client decision on vendor |
-| Lighthouse run against the PRD profile | Cannot be run from this environment; budgets are enforced statically instead |
-| Real-device Myanmar testing | Mandated by the PRD (A11Y-05) and cannot be substituted with emulation |
+| Lighthouse against the PRD's 5 Mbps profile | Cannot be run from this environment; budgets are enforced statically instead |

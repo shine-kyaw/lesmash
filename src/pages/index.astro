@@ -1,0 +1,225 @@
+---
+import Base from '../layouts/Base.astro';
+import MediaPlane from '../components/MediaPlane.astro';
+import Slot from '../components/Slot.astro';
+import Dish from '../components/Dish.astro';
+import { COPY } from '../data/copy';
+import { EDITORIAL } from '../data/editorial';
+import { SITE } from '../lib/site.config.mjs';
+import {
+  getBranches, getMenuItems, featuredItems, directionsUrl, primaryPhone, IS_PREVIEW,
+} from '../lib/content';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { organizationSchema, websiteSchema, restaurantSchema } from '../lib/schema';
+
+const branches = await getBranches();
+const items = await getMenuItems();
+const signatures = featuredItems(items, 4);
+
+const schema = [
+  organizationSchema(),
+  websiteSchema(),
+  ...branches.map((b) => restaurantSchema(b, { withMenu: true })),
+];
+
+/* The ticker carries information a customer actually needs, which is the only
+   reason a ticker still belongs on a restaurant site. Every line is a verified
+   fact; nothing here is filler. */
+const ticker = [
+  'Smashed to order',
+  `${branches.length} branches in ${SITE.geo}`,
+  ...branches.map((b) => b.township),
+  'Delivery via Foodpanda',
+  'Dine in · Takeaway',
+];
+---
+<Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
+  {/*
+    Hero: the wordmark is the image.
+    With no photography and no film supplied, the type carries the opening —
+    which is also the stronger of the two award-winning restaurant hero
+    patterns. The plane behind it is a generative ember field; a real film
+    drops into public/media/hero.mp4 and layers over it with no code change.
+  */}
+  <section class="hero">
+    <div class="hero__media">
+      <MediaPlane file="hero.mp4" poster="hero-poster.jpg" video ember="hero" alt="" />
+    </div>
+    <div class="hero__grade" aria-hidden="true"></div>
+
+    <div class="wrap hero__inner">
+      <p class="label label--ember" data-smash-eyebrow>
+        Smash burgers · {SITE.geo}, Myanmar
+      </p>
+
+      <h1 class="hero__title" data-smash>
+        <i>Le</i><br /><em data-smash-word>SMASH</em>
+      </h1>
+
+      <div class="hero__foot">
+        <div class="btn-row">
+          <a class="btn btn--bone" href="/menu">{COPY.cta.menu}</a>
+          <a class="btn btn--ghost" href="#visit">{COPY.nav.visit}</a>
+        </div>
+        <p class="hero__scroll label" aria-hidden="true">
+          <span></span>{COPY.labels.scroll}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      {[0, 1].map(() => (
+        <div style="display:inline-flex">
+          {ticker.map((line) => <span class="marquee__item">{line}</span>)}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/*
+    The thesis section. This is the one thing this website can do that no other
+    channel does: say plainly how much food arrives. It gets the editorial
+    treatment and sits above everything except the menu.
+  */}
+  <section class="section" id="story">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">The pass</p>
+        <p class="track__numeral" aria-hidden="true">01</p>
+      </div>
+
+      <div class="split split--wide-left">
+        <div class="stack-lg reveal">
+          <h2>Every patty is<br /><span class="serif-em">pressed to order.</span></h2>
+          <Slot slot={EDITORIAL.heroPositioning} class="lede" />
+          <Slot slot={EDITORIAL.howWeSmash} />
+          <Slot slot={EDITORIAL.portionHonesty} />
+          <a class="tlink" href="/menu">See what is on the pass</a>
+        </div>
+
+        <div class="figure figure--tall reveal">
+          <MediaPlane file="sear.jpg" ember="sear" alt="" />
+          <p class="figure__cap">
+            {IS_PREVIEW
+              ? 'Awaiting photography — a patty on the press, patties countable in profile'
+              : 'On the press'}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {signatures.length > 0 && (
+    <section class="section rule-top">
+      <div class="wrap track">
+        <div class="track__rail">
+          <p class="label">Signatures</p>
+          <p class="track__numeral" aria-hidden="true">02</p>
+        </div>
+
+        <div>
+          <div class="sec-head">
+            <h2>What people order</h2>
+            <a class="tlink sec-head__link" href="/menu">Full menu</a>
+          </div>
+          <ul class="dishes reveal">
+            {signatures.map((item, i) => (
+              <Dish item={item} branches={branches} hero={i === 0} />
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section rule-top">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">The room</p>
+        <p class="track__numeral" aria-hidden="true">03</p>
+      </div>
+
+      <div class="split">
+        <div class="figure figure--wide reveal">
+          <MediaPlane file="room-01.jpg" ember="room" alt="" />
+          <p class="figure__cap">
+            {IS_PREVIEW ? 'Awaiting photography — the room, evening' : 'The room'}
+          </p>
+        </div>
+        <div class="stack-lg reveal">
+          <h2>A bistro that<br /><span class="serif-em">happens to smash.</span></h2>
+          <Slot slot={EDITORIAL.story} class="lede" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section rule-top" id="visit">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">Visit</p>
+        <p class="track__numeral" aria-hidden="true">04</p>
+      </div>
+
+      <div>
+        <div class="sec-head"><h2>Two rooms in {SITE.geo}</h2></div>
+
+        <div class="venues">
+          {branches.map((branch) => {
+            const phone = primaryPhone(branch);
+            const services = [
+              { on: branch.hasDineIn, label: COPY.labels.dineIn },
+              { on: branch.hasDelivery, label: COPY.labels.delivery },
+              { on: branch.hasTakeaway, label: COPY.labels.takeaway },
+            ];
+            return (
+              <article class="venue reveal">
+                <h3 class="venue__name">{branch.name}</h3>
+                <address class="venue__addr">
+                  {branch.addressLine}<br />{branch.township}, {branch.city}
+                </address>
+
+                <div class="dish__meta">
+                  {/* Hours and dine-in status are shown as unknown rather than
+                      guessed — a wrong answer here sends someone across Yangon
+                      for nothing. */}
+                  <span class="fact fact--warn">{COPY.state.hoursUnknown}</span>
+                  {services.map((s) =>
+                    s.on === true ? <span class="fact">{s.label}</span>
+                    : s.on === null ? <span class="fact fact--warn">{s.label}: {COPY.state.unconfirmed}</span>
+                    : null
+                  )}
+                </div>
+
+                <div class="btn-row">
+                  <a class="btn btn--ghost" href={directionsUrl(branch)}
+                     target="_blank" rel="noopener noreferrer"
+                     data-analytics="directions_click" data-branch={branch.slug} data-source="visit">
+                    {COPY.cta.directions}
+                  </a>
+                  {phone && (
+                    <a class="btn btn--ghost" href={`tel:${phone.e164}`}
+                       data-analytics="phone_click" data-branch={branch.slug} data-source="visit">
+                      {COPY.cta.call}
+                    </a>
+                  )}
+                  {branch.foodpandaUrl && (
+                    <a class="btn btn--ember" href={branch.foodpandaUrl}
+                       target="_blank" rel="noopener noreferrer"
+                       data-analytics="foodpanda_outbound" data-branch={branch.slug} data-source="visit">
+                      {COPY.cta.orderShort}
+                    </a>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <p class="lede" style="margin-top:var(--s7)">{EDITORIAL.orderExplainer.value}</p>
+      </div>
+    </div>
+  </section>
+</Base>

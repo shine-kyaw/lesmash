@@ -1,6 +1,6 @@
 {
   "slug": "grilled-chicken",
-  "name": { "en": "Grilled Chicken", "my": null },
+  "name": "Grilled Chicken",
   "description": null,
   "price": null,
   "priceDisplay": null,

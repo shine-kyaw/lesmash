@@ -1,18 +1,16 @@
-import type { Locale } from './i18n';
-import { absoluteUrl, localePath, SITE } from './i18n';
-import { L, directionsUrl, formatPrice, type Branch, type MenuCategory, type MenuItem } from './content';
+import { SITE, absoluteUrl } from './site.config.mjs';
+import { directionsUrl, type Branch, type MenuCategory, type MenuItem, refSlug } from './content';
 import { toSchemaHours, hasConfirmedHours } from './hours';
 
 /**
- * Structured data (PRD §19.4, SEO-03).
+ * Structured data (PRD §19.4).
  *
- * Rule applied throughout: a property is emitted only when the underlying value
- * is confirmed. An empty `telephone` or a guessed `priceRange` is worse than an
- * absent one — it is a claim we cannot stand behind, and Google will surface it.
- * `suitableForDiet` and any halal-adjacent property are never emitted without
- * written client confirmation (PRD §19.4, R-20).
+ * A property is emitted only when the underlying value is confirmed. An empty
+ * `telephone` or a guessed `priceRange` is worse than an absent one — Google
+ * will surface it, and it becomes a claim we cannot stand behind. No
+ * `suitableForDiet` or halal-adjacent property is emitted at all pending a
+ * written policy from the client (PRD Q15).
  */
-
 function clean<T extends Record<string, unknown>>(obj: T): T {
   for (const key of Object.keys(obj)) {
     const v = obj[key];
@@ -21,42 +19,43 @@ function clean<T extends Record<string, unknown>>(obj: T): T {
   return obj;
 }
 
-export function organizationSchema(locale: Locale) {
-  const sameAs = [SITE.social.facebook, SITE.social.instagram, SITE.social.tiktok].filter(Boolean);
+const sameAs = () =>
+  [SITE.social.facebook, SITE.social.instagram, SITE.social.tiktok].filter(Boolean) as string[];
+
+export function organizationSchema() {
   return clean({
     '@type': 'Organization',
     '@id': absoluteUrl('/#organization'),
     name: SITE.brand.legal,
     alternateName: SITE.brand.display,
-    url: absoluteUrl(localePath(locale, '/')),
-    sameAs,
+    url: absoluteUrl('/'),
+    sameAs: sameAs(),
     areaServed: 'Yangon, Myanmar',
   });
 }
 
-export function websiteSchema(locale: Locale) {
+export function websiteSchema() {
   return {
     '@type': 'WebSite',
     '@id': absoluteUrl('/#website'),
     name: SITE.brand.legal,
-    url: absoluteUrl(localePath(locale, '/')),
-    inLanguage: locale === 'my' ? 'my-MM' : 'en',
+    url: absoluteUrl('/'),
+    inLanguage: 'en',
     publisher: { '@id': absoluteUrl('/#organization') },
   };
 }
 
-export function restaurantSchema(branch: Branch, locale: Locale, opts: { withMenu?: boolean } = {}) {
-  const url = absoluteUrl(localePath(locale, `/locations/${branch.slug}`));
+export function restaurantSchema(branch: Branch, opts: { withMenu?: boolean } = {}) {
   return clean({
     '@type': 'Restaurant',
-    '@id': `${absoluteUrl(`/locations/${branch.slug}`)}#restaurant`,
-    name: `${SITE.brand.legal} — ${L(branch.name, locale)}`,
-    url,
+    '@id': absoluteUrl(`/#${branch.slug}`),
+    name: `${SITE.brand.legal} — ${branch.name}`,
+    url: absoluteUrl('/'),
     address: clean({
       '@type': 'PostalAddress',
-      streetAddress: L(branch.addressLine, locale),
-      addressLocality: L(branch.township, locale),
-      addressRegion: L(branch.city, locale),
+      streetAddress: branch.addressLine,
+      addressLocality: branch.township,
+      addressRegion: branch.city,
       postalCode: branch.postalCode,
       addressCountry: 'MM',
     }),
@@ -66,33 +65,26 @@ export function restaurantSchema(branch: Branch, locale: Locale, opts: { withMen
         : null,
     telephone: branch.phone[0]?.e164 ?? null,
     servesCuisine: ['Burgers', 'American', 'Western'],
-    // priceRange deliberately omitted until prices are confirmed (DS-04).
     openingHoursSpecification: hasConfirmedHours(branch.openingHours)
       ? toSchemaHours(branch.openingHours)
       : [],
-    hasMap: directionsUrl(branch, locale),
-    hasMenu: opts.withMenu ? absoluteUrl(localePath(locale, '/menu')) : null,
+    hasMap: directionsUrl(branch),
+    hasMenu: opts.withMenu ? absoluteUrl('/menu') : null,
     parentOrganization: { '@id': absoluteUrl('/#organization') },
-    sameAs: [SITE.social.facebook, SITE.social.instagram].filter(Boolean),
+    sameAs: sameAs(),
   });
 }
 
-export function menuSchema(
-  categories: MenuCategory[],
-  items: MenuItem[],
-  locale: Locale,
-  categorySlug?: string
-) {
+export function menuSchema(categories: MenuCategory[], items: MenuItem[]) {
   const sections = categories
-    .filter((c) => !categorySlug || c.slug === categorySlug)
     .map((category) => {
-      const sectionItems = items
-        .filter((i) => refId(i.category) === category.slug)
+      const hasMenuItem = items
+        .filter((i) => refSlug(i.category) === category.slug)
         .map((item) =>
           clean({
             '@type': 'MenuItem',
-            name: L(item.name, locale),
-            description: L(item.description, locale),
+            name: item.name,
+            description: item.description,
             // An offer is emitted only for a confirmed price. No price, no offer.
             offers:
               item.price !== null
@@ -102,9 +94,9 @@ export function menuSchema(
         );
       return clean({
         '@type': 'MenuSection',
-        name: L(category.name, locale),
-        description: L(category.description, locale),
-        hasMenuItem: sectionItems,
+        name: category.name,
+        description: category.description,
+        hasMenuItem,
       });
     })
     .filter((s) => (s.hasMenuItem as unknown[])?.length);
@@ -113,38 +105,19 @@ export function menuSchema(
     '@type': 'Menu',
     '@id': absoluteUrl('/menu#menu'),
     name: `${SITE.brand.legal} Menu`,
-    inLanguage: locale === 'my' ? 'my-MM' : 'en',
+    inLanguage: 'en',
     hasMenuSection: sections,
   });
 }
 
-export function breadcrumbSchema(trail: { name: string; path: string }[], locale: Locale) {
+export function breadcrumbSchema(trail: { name: string; path: string }[]) {
   return {
     '@type': 'BreadcrumbList',
     itemListElement: trail.map((crumb, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       name: crumb.name,
-      item: absoluteUrl(localePath(locale, crumb.path)),
+      item: absoluteUrl(crumb.path),
     })),
   };
 }
-
-export function branchListSchema(branches: Branch[], locale: Locale) {
-  return {
-    '@type': 'ItemList',
-    itemListElement: branches.map((branch, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      item: restaurantSchema(branch, locale),
-    })),
-  };
-}
-
-function refId(ref: unknown): string {
-  if (typeof ref === 'string') return ref;
-  if (ref && typeof ref === 'object' && 'id' in ref) return String((ref as { id: string }).id);
-  return '';
-}
-
-export { formatPrice };

@@ -1,6 +1,6 @@
 {
   "slug": "smoothies",
-  "name": { "en": "Smoothies", "my": "စမူသီများ" },
+  "name": "Smoothies",
   "description": null,
   "displayGroup": "drinks",
   "sortOrder": 90,

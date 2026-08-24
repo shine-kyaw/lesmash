@@ -1,6 +1,6 @@
 {
   "slug": "burger-combo",
-  "name": { "en": "Burger Combo", "my": "ဘာဂါ ကွန်ဘို" },
+  "name": "Burger Combo",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 20,

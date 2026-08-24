@@ -1,6 +1,6 @@
 {
   "slug": "appetizer",
-  "name": { "en": "Appetizer", "my": "အစားမြိန်စာများ" },
+  "name": "Appetizer",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 50,

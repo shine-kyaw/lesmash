@@ -1,6 +1,6 @@
 {
   "slug": "french-fries",
-  "name": { "en": "French Fries", "my": null },
+  "name": "French Fries",
   "description": null,
   "price": null,
   "priceDisplay": null,

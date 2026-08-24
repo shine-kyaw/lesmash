@@ -1,6 +1,6 @@
 {
   "slug": "chicken-burger",
-  "name": { "en": "Chicken Burger", "my": null },
+  "name": "Chicken Burger",
   "description": null,
   "price": null,
   "priceDisplay": null,

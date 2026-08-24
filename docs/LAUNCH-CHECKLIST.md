@@ -10,7 +10,7 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## Content
 
-- ⛔ All menu items published with accurate names, descriptions and prices, EN and MY — *DS-03/DS-04*
+- ⛔ All menu items published with accurate names, descriptions and prices — *DS-03/DS-04*
 - ⛔ Patty counts populated for every applicable item
 - ⛔ Portion notes / weights populated wherever confirmed
 - ⛔ Combo contents itemised exactly
@@ -19,22 +19,9 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 - ⛔ Price-context statement published and approved — *Q5*
 - ⛔ Seating / reservation policy statement published — *Q16*
 
-## Bilingual QA
-
-- ✅ Every page renders in both locales with no empty blocks
-- ⚙️ All Burmese content is Unicode, zero Zawgyi — `npm run check:zawgyi`
-- ⚙️ Every Burmese string shapes without a missing glyph — `npm run check:shaping`
-- ☐ Burmese reviewed by a native speaker, not machine translation — *UI strings are drafted and need review; menu names do not exist yet*
-- ✅ Burmese typography spec applied (≥17px body, ≥1.9 line-height, no caps, no letter-spacing, no fixed-height text containers)
-- ☐ Verified on ≥3 real Myanmar-market Android devices — *cannot be emulated*
-- ✅ Language switcher preserves the current page from every page
-- ✅ hreflang reciprocal and validating; x-default present
-- ☐ Longest real Burmese strings tested in nav, chips and buttons — *pending real menu names*
-- ✅ Numeral policy applied consistently (Western; one config value to change)
-
 ## Menu
 
-- ✅ Renders correctly with JavaScript disabled — all 29 items are server-rendered in both locales
+- ✅ Renders correctly with JavaScript disabled — all 29 items are server-rendered
 - ✅ Category anchors work; filters apply client-side and restore from the URL
 - ✅ Unavailable items dimmed and labelled, not hidden
 - ✅ Branch-limited items badged
@@ -43,7 +30,7 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## Branches
 
-- ✅ Both branch pages live in both locales
+- ✅ Both branches published on the home page and in the footer
 - ☐ Addresses verified against reality and Google Business Profile
 - ⛔ Hours verified with the client within 7 days of launch — *DS-01*
 - ✅ Open-now correct at open, at close, and across midnight in Asia/Yangon — *logic verified; needs real hours as input*
@@ -61,14 +48,14 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## SEO and schema
 
-- ✅ Unique geo-qualified title and meta description on every page, both locales
+- ✅ Unique geo-qualified title and meta description on every page
 - ✅ One H1 per page; heading order logical — audited across all 21 pages
 - ✅ Restaurant / Menu / Organization / WebSite / BreadcrumbList / ItemList schema emitted and parsing
 - ☐ Schema validated in Google's Rich Results Test — *needs a public URL*
-- ✅ `sitemap.xml` complete with locale alternates
+- ✅ `sitemap.xml` complete
 - ☐ Sitemap submitted to Search Console — *needs client account access*
 - ✅ `robots.txt` correct; `/order` disallowed
-- ✅ Self-referencing canonicals; no cross-locale canonicalisation
+- ✅ Self-referencing canonicals
 - ☐ NAP identical across site, both GBP listings, Facebook, Instagram and both Foodpanda listings
 - ☐ OG previews verified in Facebook, Viber and Telegram — *needs a public URL and an OG image*
 
@@ -77,7 +64,7 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 - ✅ Full event taxonomy firing, including `foodpanda_outbound` before navigation
 - ⛔ Analytics provider chosen and connected — *events currently queue on `window.lesmashEvents`*
 - ✅ Analytics payload ≤5KB, non-blocking — *0KB today; budget unspent*
-- ☐ Search Console verified for both locales
+- ☐ Search Console verified
 
 ## Accessibility
 
@@ -94,7 +81,8 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 
 ## Performance
 
-- ☐ LCP <2.5s on `/`, `/menu`, `/locations/{slug}` and `/my/` equivalents under the agreed profile — *cannot be measured here*
+- ☐ LCP <2.5s on `/` and `/menu` under the agreed profile — *cannot be measured here*
+- ☐ Hero film compressed inside the budget in `public/media/README.md` — *no film supplied yet*
 - ☐ CLS <0.1, INP <200ms
 - ⚙️ Page-weight, JS, CSS and font budgets met — `npm run check:budgets`, wired into `npm run build`
 - ✅ Zero render-blocking third-party requests
@@ -131,9 +119,9 @@ Status keys: **✅ done** · **⚙️ automated** (a script enforces it) ·
 - ⛔ Canonical domain live; variants 301-redirecting — *Q10. Deployment is wired; set `SITE_ORIGIN` once the domain exists*
 - ⛔ Domain registered to the client with client-held access
 - ☐ DNS documented and handed over
-- ✅ Privacy notice published in both locales — ⛔ pending legal review (*C-18*)
+- ⛔ Privacy notice — the page was cut in the two-page scope reduction. It must come back before any form or analytics cookie exists (*C-18*)
 - ⛔ Trademark position acknowledged in writing — *the Dutch chain collision (R-02)*
-- ✅ No unlicensed imagery, fonts or content — the only bundled font is Noto Sans Myanmar (SIL Open Font License); there is no imagery
+- ✅ No unlicensed imagery, fonts or content — the bundled faces are Bodoni Moda, Archivo and IBM Plex Mono, all SIL Open Font License; there is no imagery
 
 ---
 
@@ -157,6 +145,6 @@ The fastest unblock, in order:
 
 1. The menu — names, prices, and whether dine-in and Foodpanda prices differ
 2. Opening hours and phone numbers per branch
-3. The photography shoot, to the §18 spec, at both branches
+3. The hero film, the photography, and the real logo — see `public/media/README.md`
 4. Domain and canonical brand name
 5. Google Business Profile access

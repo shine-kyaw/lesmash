@@ -1,0 +1,44 @@
+---
+import { IS_PREVIEW } from '../lib/content';
+import type { Slot } from '../data/editorial';
+
+/**
+ * Renders client-supplied copy if it exists. If it does not:
+ *  - preview build → a labelled placeholder naming the reference and who owes
+ *    it, so a review meeting can act on it;
+ *  - live build → nothing renders at all.
+ *
+ * What never happens is the agency writing a claim to fill the gap.
+ */
+interface Props { slot: Slot; class?: string; as?: 'p' | 'div' }
+const { slot, class: className = '', as: Tag = 'p' } = Astro.props;
+---
+{slot.value ? (
+  <Tag class={className} set:text={slot.value} />
+) : IS_PREVIEW ? (
+  <div class="slot-empty">
+    <span>{slot.ref} · {slot.owner}</span>
+    {slot.note}
+  </div>
+) : null}
+
+<style>
+  .slot-empty {
+    border-left: 2px solid var(--brass);
+    padding: var(--s3) var(--s4);
+    background: rgb(215 169 58 / 0.06);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ash);
+    max-width: 46ch;
+  }
+  .slot-empty span {
+    display: block;
+    color: var(--brass);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+</style>

@@ -1,6 +1,6 @@
 {
   "slug": "breakfast-sandwich",
-  "name": { "en": "Breakfast Sandwich", "my": null },
+  "name": "Breakfast Sandwich",
   "description": null,
   "price": null,
   "priceDisplay": null,

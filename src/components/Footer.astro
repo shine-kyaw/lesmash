@@ -1,65 +1,54 @@
 ---
-import { localePath, LOCALE_LABEL, otherLocale, SITE, type Locale } from '../lib/i18n';
-import { navItems } from '../lib/nav';
-import { t } from '../data/copy';
-import { L, primaryPhone, type Branch } from '../lib/content';
+import { SITE } from '../lib/site.config.mjs';
+import { COPY } from '../data/copy';
+import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
 
 /**
- * The footer carries the full NAP for every branch. That is deliberate: it is
- * what lets us drop a separate /contact page (PRD §9.4), and it is the thing a
- * customer needs when Facebook is unreachable (PRD §5.3).
- *
- * Social links go outward only — no SDK, no embed, no pixel (SOC-01).
+ * Carries the full name, address and phone for every branch. That is what
+ * lets the site drop a separate contact page, and it is what a customer needs
+ * when Facebook is unreachable. Social links go outward only — no SDK, no
+ * embed, no pixel.
  */
-interface Props { locale: Locale; branches: Branch[]; route: string }
-const { locale, branches, route } = Astro.props;
-const c = t(locale);
-const other = otherLocale(locale);
+interface Props { branches: Branch[] }
+const { branches } = Astro.props;
+
 const socials = [
-  { label: 'Facebook', href: SITE.social.facebook },
   { label: 'Instagram', href: SITE.social.instagram },
+  { label: 'Facebook', href: SITE.social.facebook },
   { label: 'TikTok', href: SITE.social.tiktok },
 ].filter((s) => s.href);
+
 const year = new Date().getFullYear();
 ---
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
+<footer class="ftr" id="visit-footer">
+  <div class="wrap">
+    <div class="ftr__grid">
       <div>
-        <h2>{SITE.brand.legal}</h2>
-        <p style="color:#c3b7a7;font-size:var(--step--1)">{c.footer.deliveryVia}</p>
-        {socials.length > 0 && (
-          <>
-            <h2 style="margin-top:1.5rem;font-size:var(--step-0)">{c.footer.followUs}</h2>
-            <ul class="footer-list">
-              {socials.map((s) => (
-                <li>
-                  <a href={s.href!} target="_blank" rel="noopener noreferrer"
-                     data-analytics="social_click" data-platform={s.label.toLowerCase()}>
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+        <a class="mark mark--lg" href="/"><i>Le</i><b>SMASH</b></a>
+        <p class="lede" style="margin-top:var(--s4)">{COPY.footer.delivery}</p>
       </div>
 
       <div>
-        <h2>{c.labels.branches}</h2>
-        <ul class="footer-list">
+        <p class="label">{COPY.labels.branches}</p>
+        <ul class="ftr__list" style="margin-top:var(--s4)">
           {branches.map((branch) => {
             const phone = primaryPhone(branch);
             return (
               <li>
-                <a href={localePath(locale, `/locations/${branch.slug}`)}>
-                  <strong>{L(branch.name, locale)}</strong>
-                </a>
-                <div style="color:#c3b7a7">
-                  {L(branch.addressLine, locale)}, {L(branch.township, locale)}, {L(branch.city, locale)}
-                </div>
-                {phone && <a href={`tel:${phone.e164}`} data-analytics="phone_click"
-                   data-branch={branch.slug} data-source="footer">{phone.display}</a>}
+                <strong style="display:block;font-family:var(--font-body);color:var(--bone)">
+                  {branch.name}
+                </strong>
+                <span style="color:var(--ash);font-size:var(--t-sm)">
+                  {branch.addressLine}, {branch.township}, {branch.city}
+                </span>
+                <span style="display:block;margin-top:6px">
+                  <a href={directionsUrl(branch)} target="_blank" rel="noopener noreferrer"
+                     data-analytics="directions_click" data-branch={branch.slug} data-source="footer">
+                    {COPY.cta.directions}
+                  </a>
+                  {phone && <> · <a href={`tel:${phone.e164}`} data-analytics="phone_click"
+                     data-branch={branch.slug} data-source="footer">{phone.display}</a></>}
+                </span>
               </li>
             );
           })}
@@ -67,25 +56,22 @@ const year = new Date().getFullYear();
       </div>
 
       <div>
-        <h2>{c.a11y.mainNav}</h2>
-        {/* Every route appears here, which is what keeps the whole site
-            reachable with JavaScript disabled (NAV-05). */}
-        <ul class="footer-list">
-          <li><a href={localePath(locale, '/')}>{c.nav.home}</a></li>
-          {navItems(locale).map((item) => (
-            <li><a href={localePath(locale, item.route)}>{item.label}</a></li>
+        <p class="label">{COPY.footer.follow}</p>
+        <ul class="ftr__list" style="margin-top:var(--s4)">
+          {socials.map((s) => (
+            <li>
+              <a href={s.href!} target="_blank" rel="noopener noreferrer"
+                 data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
+            </li>
           ))}
-          <li><a href={localePath(locale, '/order')}>{c.nav.order}</a></li>
-          <li><a href={localePath(locale, '/legal/privacy')}>{c.footer.privacy}</a></li>
+          <li><a href="/menu">{COPY.nav.menu}</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="footer-bottom">
-      <span>© {year} {SITE.brand.legal}. {c.footer.rights}</span>
-      <a href={localePath(other, route)} lang={other} hreflang={other} rel="alternate">
-        {LOCALE_LABEL[other]}
-      </a>
+    <div class="ftr__bottom">
+      <span>© {year} {SITE.brand.legal}</span>
+      <span>{SITE.geo}, Myanmar</span>
     </div>
   </div>
 </footer>

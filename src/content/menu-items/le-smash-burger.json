@@ -1,6 +1,6 @@
 {
   "slug": "le-smash-burger",
-  "name": { "en": "Le Smash Burger", "my": "Le Smash Burger" },
+  "name": "Le Smash Burger",
   "description": null,
   "price": null,
   "priceDisplay": null,
@@ -15,7 +15,9 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": ["popular"],
+  "tags": [
+    "popular"
+  ],
   "modifiers": [],
   "addons": [],
   "isFeatured": true,

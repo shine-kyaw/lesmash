@@ -1,43 +1,31 @@
 {
   "slug": "junction-square",
-  "name": { "en": "Junction Square", "my": "Junction Square" },
-  "addressLine": {
-    "en": "Crystal Tower Residence, Ground Floor, Junction Square",
-    "my": "Crystal Tower Residence၊ မြေညီထပ်၊ Junction Square"
-  },
-  "township": { "en": "Kamayut Township", "my": "ကမာရွတ်မြို့နယ်" },
-  "city": { "en": "Yangon", "my": "ရန်ကုန်" },
+  "name": "Junction Square",
+  "addressLine": "Crystal Tower Residence, Ground Floor, Junction Square",
+  "township": "Kamayut Township",
+  "city": "Yangon",
   "postalCode": null,
-
   "phone": [],
   "viber": null,
   "telegram": null,
-
   "latitude": null,
   "longitude": null,
   "googlePlaceId": null,
   "googleMapsUrl": null,
-
   "foodpandaUrl": "https://www.foodpanda.com.mm/en/restaurant/e01b/le-smash-burgers-and-co-junction-square",
-
   "openingHours": [],
   "specialHours": [],
   "breakfastHoursNote": null,
-
   "hasDineIn": null,
   "hasDelivery": true,
   "hasTakeaway": null,
   "servesBreakfast": null,
-
   "seatingNote": null,
   "branchNote": null,
-
   "soldOutItems": [],
   "images": [],
-
   "seoTitle": null,
   "seoDescription": null,
-
   "sortOrder": 1,
   "isPublished": true
 }

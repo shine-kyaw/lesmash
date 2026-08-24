@@ -24,8 +24,7 @@ export interface SpecialHours {
   isClosed?: boolean;
   open?: string;
   close?: string;
-  noteEn?: string;
-  noteMy?: string;
+  note?: string;
 }
 
 export const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;

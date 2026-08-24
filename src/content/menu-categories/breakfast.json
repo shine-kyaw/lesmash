@@ -1,6 +1,6 @@
 {
   "slug": "breakfast",
-  "name": { "en": "Breakfast", "my": "မနက်စာ" },
+  "name": "Breakfast",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 30,

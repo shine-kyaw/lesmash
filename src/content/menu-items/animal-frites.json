@@ -1,6 +1,6 @@
 {
   "slug": "animal-frites",
-  "name": { "en": "Animal Frites", "my": null },
+  "name": "Animal Frites",
   "description": null,
   "price": null,
   "priceDisplay": null,
@@ -15,7 +15,9 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": ["popular"],
+  "tags": [
+    "popular"
+  ],
   "modifiers": [],
   "addons": [],
   "isFeatured": true,

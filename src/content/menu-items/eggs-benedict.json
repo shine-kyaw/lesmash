@@ -1,6 +1,6 @@
 {
   "slug": "eggs-benedict",
-  "name": { "en": "Eggs Benedict", "my": null },
+  "name": "Eggs Benedict",
   "description": null,
   "price": null,
   "priceDisplay": null,

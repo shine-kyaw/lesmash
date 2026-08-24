@@ -1,6 +1,6 @@
 {
   "slug": "steak-frites",
-  "name": { "en": "Steak Frites", "my": null },
+  "name": "Steak Frites",
   "description": null,
   "price": null,
   "priceDisplay": null,
@@ -15,7 +15,9 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": ["chef-pick"],
+  "tags": [
+    "chef-pick"
+  ],
   "modifiers": [],
   "addons": [],
   "isFeatured": true,

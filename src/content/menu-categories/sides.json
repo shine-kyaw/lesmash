@@ -1,6 +1,6 @@
 {
   "slug": "sides",
-  "name": { "en": "Sides", "my": "ဘေးတွဲ အစားအစာများ" },
+  "name": "Sides",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 60,

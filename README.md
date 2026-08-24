@@ -1,10 +1,27 @@
 # Le SMASH Burgers & Co. — website
 
-A bilingual (English + Burmese), statically generated, CMS-ready website for a
-two-branch smash burger restaurant in Yangon, built to the project PRD.
+A statically generated, CMS-ready website for a two-branch smash burger
+restaurant in Yangon.
 
-The site's job, in the PRD's own priority order, is to be **fast, honest,
-bilingual, searchable, useful and maintainable** — ahead of feature count.
+Two pages: a film-led home page and the menu. Dark, type-led, English only.
+The site's job is to be **fast, honest, searchable, useful and maintainable** —
+ahead of feature count.
+
+## Design
+
+Warm near-black ground, bone text, one ember accent with brass as support.
+Bodoni Moda for display, Archivo for body, IBM Plex Mono for prices and labels.
+The menu is set as an editorial typographic list rather than a grid of photo
+cards — that is the restaurant pattern rather than the delivery-app one, and it
+means the page carries no weight it does not need on a slow phone.
+
+The one orchestrated moment is the wordmark: on load `SMASH` takes a press,
+compressing and springing back the way a ball of beef does on the plancha. It
+animates type that is already painted, so it delays nothing, and it is skipped
+entirely under `prefers-reduced-motion`.
+
+Design tokens live in `src/styles/tokens.css`. Adopting the real brand identity
+is a change to that one file.
 
 ---
 
@@ -26,8 +43,6 @@ Useful checks:
 ```bash
 npm run content:report    # what the client still owes us, mapped to PRD slots
 npm run check:budgets     # performance budgets against dist/
-npm run check:zawgyi      # Burmese must be Unicode, never Zawgyi
-npm run check:shaping     # every Burmese string shapes without a missing glyph
 npm run check:links       # Foodpanda / Maps / social URLs still resolve
 npm run verify            # all of the above, in order
 ```
@@ -46,6 +61,10 @@ through DS-04, Q6/Q7/Q14).
 Nothing has been invented to paper over that. Instead:
 
 - **No price is published anywhere.** Every item renders "Ask in store".
+- **No photography exists.** Every image plane renders a generative ember field
+  rather than stock imagery, which would recreate the exact expectation gap this
+  site is built to close. Drop real files into `public/media/` and they appear —
+  see `public/media/README.md`.
 - **Menu records are marked `verified: false`** and carry a `sourceNote`
   explaining where the name came from. Names either surfaced in public customer
   and creator posts, or are generic category placeholders.
@@ -73,22 +92,13 @@ build fails rather than publishing something untrue.
 
 ## What was built
 
-Nine templates × two locales = 21 routes, all static HTML.
+Two pages, plus a 404.
 
 | Route | Purpose |
 |---|---|
-| `/` | Comprehension in one screen for a cold arrival from social |
-| `/menu` | The canonical menu: categories, anchors, filters, portion facts |
-| `/breakfast` | Own the breakfast daypart in search; answer "when and where" |
-| `/burgers` | Own "smash burger Yangon"; carries the "How we smash" explainer |
-| `/locations` | Branch comparison; also absorbs the contact page's job |
-| `/locations/{slug}` | Local-SEO landing page per branch |
-| `/about` | Justify the price point; carry the rooms as a brand asset |
-| `/order` | Thin, `noindex`; exists for QR codes, bio links and measurement |
-| `/legal/privacy` | Short, plain, bilingual |
+| `/` | The film-led opening, the portion thesis, signatures, the room, the branches |
+| `/menu` | The full menu: sticky course rail, oversized course numerals, portion facts on every row |
 | `/404` | Useful, not cute |
-
-Burmese mirrors every route under `/my/`.
 
 ### The decisions that shaped the code
 
@@ -107,10 +117,9 @@ zero pixels, no interactive map iframe, no webfont from someone else's origin.
 The site is fully functional with Facebook and Instagram blocked at the network
 level, and renders its core content with JavaScript disabled.
 
-**Bilingual is architectural, not a translation layer.** Burmese has its own
-type scale, line-height, URL namespace, metadata and QA pass. `my: null` on any
-field is a legitimate state meaning "not translated yet" — it falls back to
-English and is reported, so bilingual content cannot decay silently.
+**Portion facts sit on the row.** Patty count and portion note render in the
+list, never behind a tap. A customer must be able to learn the size of what
+they are buying without opening anything — that is the premise of the project.
 
 ---
 
@@ -126,9 +135,9 @@ Current build, worst page:
 |---|---|---|
 | JavaScript (gzipped) | ≤ 75 KB | **4.5 KB** |
 | CSS (gzipped) | ≤ 30 KB | **4.0 KB** |
-| Fonts | ≤ 150 KB | **141 KB** (Burmese pages only; English pages request **no font**) |
-| Total transfer, `/` | ≤ 500 KB | ~135 KB |
-| Total transfer, `/menu` | ≤ 800 KB | ~136 KB |
+| Fonts | ≤ 150 KB | **94 KB** (three faces, Latin subsets) |
+| Total transfer, `/` | ≤ 500 KB | ~111 KB |
+| Total transfer, `/menu` | ≤ 800 KB | ~111 KB |
 | Third-party render-blocking requests | 0 | **0** |
 
 Those totals do not yet include photography, which is the single biggest
@@ -139,23 +148,9 @@ these numbers when the shoot lands.
 > a real Myanmar mobile network, are both still outstanding. They cannot be run
 > from this environment.
 
-### Fonts
-
-No Latin webfont ships at all — display type uses a system serif stack, which
-costs zero bytes and paints on the first frame. That frees the whole font budget
-for the Myanmar face, which genuinely needs it.
-
-The Myanmar font is self-hosted, subset, and scoped by `unicode-range` so an
-English page never downloads it. Regenerate after changing Burmese copy:
-
-```bash
-npm run fonts:subset && npm run check:shaping
-```
-
-`check:shaping` runs every Burmese string in the source through HarfBuzz and
-fails if any would render a missing glyph. This matters because headless
-browsers in CI have no Myanmar system font, so screenshots cannot catch it —
-and the failure appears as an empty box in the middle of a dish name.
+Those figures exclude photography and the hero film, which are the biggest
+remaining weight. `public/media/README.md` carries the compression targets that
+keep them inside these budgets.
 
 ---
 
@@ -171,7 +166,7 @@ src/content/branches/          two branch records
 src/content/menu-categories/   ten categories
 src/content/menu-items/        29 provisional item records
 src/content/modifier-groups/   display-only modifiers
-src/data/copy.ts               bilingual UI strings
+src/data/copy.ts               UI strings
 src/data/editorial.ts          client-supplied copy slots (mostly empty by design)
 ```
 

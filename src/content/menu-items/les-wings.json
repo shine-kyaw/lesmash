@@ -1,6 +1,6 @@
 {
   "slug": "les-wings",
-  "name": { "en": "Les Wings", "my": null },
+  "name": "Les Wings",
   "description": null,
   "price": null,
   "priceDisplay": null,
@@ -15,7 +15,9 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": ["popular"],
+  "tags": [
+    "popular"
+  ],
   "modifiers": [],
   "addons": [],
   "isFeatured": false,

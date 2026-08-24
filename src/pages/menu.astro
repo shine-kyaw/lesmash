@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import Dish from '../components/Dish.astro';
+import Slot from '../components/Slot.astro';
+import { COPY } from '../data/copy';
+import { EDITORIAL } from '../data/editorial';
+import { SITE } from '../lib/site.config.mjs';
+import { getBranches, getCategories, getMenuItems, itemsInCategory } from '../lib/content';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { menuSchema, breadcrumbSchema } from '../lib/schema';
+
+const branches = await getBranches();
+const categories = await getCategories();
+const items = await getMenuItems();
+
+const courses = categories
+  .map((category) => ({ category, dishes: itemsInCategory(items, category.slug) }))
+  .filter((c) => c.dishes.length > 0);
+
+const schema = [
+  menuSchema(categories, items),
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Menu', path: '/menu' }]),
+];
+
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+<Base path="/menu" title={title('Menu & Prices')} description={DESCRIPTIONS.menu} schema={schema}>
+  <section class="section" style="padding-bottom:var(--s6)">
+    <div class="wrap">
+      <p class="label label--ember">The menu</p>
+      <h1 style="margin-top:var(--s4)">
+        Everything we<br /><span class="serif-em">put on the pass.</span>
+      </h1>
+      <div style="margin-top:var(--s5);max-width:46ch">
+        <Slot slot={EDITORIAL.priceContext} class="lede" />
+      </div>
+    </div>
+  </section>
+
+  {/* A sticky rail rather than tabs: one continuous document lets a reader feel
+      how much menu is left, which tabbed views destroy. */}
+  <nav class="menu-nav" aria-label="Courses">
+    <div class="wrap menu-nav__scroll">
+      {courses.map(({ category }) => (
+        <a href={`#${category.slug}`} data-course-link={category.slug}
+           data-analytics="menu_category_select" data-category={category.slug}>
+          {category.name}
+        </a>
+      ))}
+    </div>
+  </nav>
+
+  <div class="wrap">
+    {courses.map(({ category, dishes }, i) => (
+      <section class="course track" id={category.slug}>
+        <div class="track__rail">
+          <p class="track__numeral">
+            <span class="visually-hidden">Course </span>{pad(i)}
+          </p>
+        </div>
+
+        <div>
+          <div class="course__head">
+            <h2 class="course__title">{category.name}</h2>
+            {category.serviceHours && <span class="fact">{category.serviceHours}</span>}
+          </div>
+          {category.description && <p class="lede" style="margin-bottom:var(--s5)">{category.description}</p>}
+
+          <ul class="dishes">
+            {dishes.map((item, j) => (
+              <Dish
+                item={item}
+                branches={branches}
+                hero={j === 0 && dishes.length > 2}
+                soldOut={branches.length > 0 && branches.every((b) => b.soldOutItems.includes(item.slug))}
+              />
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="label">Allergens</p>
+      <p class="lede" style="margin-top:var(--s4)">
+        Allergen information is published only where the restaurant has confirmed it in writing.
+        If you have an allergy, ask staff before ordering.
+      </p>
+      <p class="label" style="margin-top:var(--s6)">Prices are shown in {SITE.currency}</p>
+    </div>
+  </section>
+</Base>

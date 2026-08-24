@@ -4,56 +4,81 @@ import '../styles/components.css';
 import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import ActionBar from '../components/ActionBar.astro';
-import BranchChooser from '../components/BranchChooser.astro';
-import PreLaunchNotice from '../components/PreLaunchNotice.astro';
-import { HTML_LANG, type Locale } from '../lib/i18n';
-import { t } from '../data/copy';
-import { getBranches, type Branch } from '../lib/content';
+import { COPY } from '../data/copy';
+import { getBranches, orderableBranches, directionsUrl, IS_PREVIEW } from '../lib/content';
 
 interface Props {
-  locale: Locale;
-  route: string;
+  path: string;
   title: string;
   description: string;
   noindex?: boolean;
   schema?: unknown[];
-  /** Branch context for the sticky bar, on branch pages. */
-  branch?: Branch | null;
 }
-const {
-  locale, route, title, description, noindex = false, schema = [], branch = null,
-} = Astro.props;
+const { path, title, description, noindex = false, schema = [] } = Astro.props;
 
-const c = t(locale);
 const branches = await getBranches();
+const orderable = orderableBranches(branches);
+const orderHref = orderable[0]?.foodpandaUrl ?? '/menu';
+const directionsHref = branches[0] ? directionsUrl(branches[0]) : '/menu';
 ---
 <!doctype html>
-<html lang={HTML_LANG[locale]}>
+<html lang="en">
   <head>
-    <Head
-      locale={locale}
-      route={route}
-      title={title}
-      description={description}
-      noindex={noindex}
-      schema={schema}
-    />
+    <Head path={path} title={title} description={description} noindex={noindex} schema={schema} />
   </head>
   <body>
-    <a class="skip-link" href="#main">{c.labels.skipToContent}</a>
-    <PreLaunchNotice locale={locale} />
-    <Header locale={locale} route={route} />
+    <a class="skip-link" href="#main">{COPY.labels.skip}</a>
+
+    {IS_PREVIEW && (
+      <div class="prelaunch" data-banner>
+        <div class="wrap">
+          <p>
+            <b>Preview</b> — menu names, prices, hours and phone numbers are not confirmed by the
+            restaurant yet. No photography has been supplied.
+          </p>
+        </div>
+      </div>
+    )}
+
+    <Header path={path} />
 
     <main id="main">
       <slot />
     </main>
 
-    <Footer locale={locale} branches={branches} route={route} />
-    <ActionBar locale={locale} branches={branches} branch={branch} />
-    <BranchChooser locale={locale} branches={branches} />
+    <Footer branches={branches} />
 
-    {/* Deferred, non-blocking, and entirely optional — see public/scripts/app.js. */}
+    {/* Mobile only — two taps to order or find us, from anywhere. */}
+    <div class="bar">
+      <a class="btn btn--ember" href={orderHref}
+         target={orderable[0] ? '_blank' : undefined}
+         rel={orderable[0] ? 'noopener noreferrer' : undefined}
+         data-analytics={orderable[0] ? 'foodpanda_outbound' : 'order_cta_click'}
+         data-branch={orderable[0]?.slug ?? ''} data-source="bar">{COPY.cta.orderShort}</a>
+      <a class="btn btn--ghost" href="/menu" data-source="bar">{COPY.nav.menu}</a>
+      <a class="btn btn--ghost" href={directionsHref} target="_blank" rel="noopener noreferrer"
+         data-analytics="directions_click" data-source="bar">{COPY.cta.directions}</a>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+
+    {/* The preview bar is fixed, so the header and every sticky offset below it
+        need its real height — which wraps to two lines on a narrow phone. */}
+    {IS_PREVIEW && (
+      <script is:inline>
+        (function () {
+          var bar = document.querySelector('[data-banner]');
+          if (!bar) return;
+          var set = function () {
+            document.documentElement.style.setProperty('--banner-h', bar.offsetHeight + 'px');
+          };
+          set();
+          window.addEventListener('resize', set);
+        })();
+      </script>
+    )}
+
     <script src="/scripts/app.js" defer is:inline></script>
+    <script src="/scripts/ember.js" defer is:inline></script>
   </body>
 </html>

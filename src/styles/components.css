@@ -1,237 +1,289 @@
-/* --- Header ---------------------------------------------------------------
- * Sticky, ≤56px, and never overlays the LCP element on load (NAV-01).
- * "Menu" is a direct link, not hidden behind the drawer trigger (NAV-02).
- * -------------------------------------------------------------------------- */
-.site-header {
-  position: sticky; top: 0; z-index: 40;
-  height: var(--header-h);
-  display: flex; align-items: center;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--paper-3);
+/* ===========================================================================
+   Header — a hairline that gets out of the way.
+   Transparent over the hero, then fills in once the reader leaves it, so the
+   film is never framed by a bar on first paint.
+   ========================================================================= */
+.hdr {
+  position: fixed; left: 0; right: 0; z-index: 60;
+  /* Sits below the preview bar when one is present; flush to the top when the
+     site is live and the bar is gone. */
+  top: var(--banner-h, 0px);
+  display: flex; align-items: center; height: 68px;
+  transition: background-color 400ms var(--ease), border-color 400ms var(--ease);
+  border-bottom: 1px solid transparent;
 }
-.site-header__inner { display: flex; align-items: center; gap: var(--sp-3); width: 100%; }
-.brandmark {
-  font-family: var(--font-display); font-weight: 600; font-size: var(--step-1);
-  letter-spacing: -0.02em; text-decoration: none; margin-right: auto; white-space: nowrap;
+.hdr.is-stuck {
+  background: rgb(10 10 12 / 0.86);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--smoke);
 }
-.brandmark em { font-style: normal; color: var(--accent); }
-.header-nav { display: none; }
-@media (min-width: 62rem) {
-  .header-nav { display: flex; align-items: center; gap: var(--sp-5); margin-right: var(--sp-4); }
-  .header-nav a { text-decoration: none; font-size: var(--step-0); padding-block: var(--sp-2); }
-  .header-nav a:hover, .header-nav a[aria-current='page'] { text-decoration: underline; text-underline-offset: 0.4em; }
-}
-.header-order { display: none; }
-@media (min-width: 62rem) {
-  .header-order { display: inline-flex; margin-left: var(--sp-3); }
-}
-.header-link {
-  text-decoration: none; font-weight: 600; padding: var(--sp-2) var(--sp-3);
-  min-height: var(--tap); display: inline-flex; align-items: center;
-}
-.lang-toggle {
-  display: inline-flex; align-items: center; min-height: var(--tap);
-  padding: var(--sp-2) var(--sp-3); border: 1px solid var(--paper-3);
-  border-radius: var(--radius-pill); text-decoration: none;
-  font-size: var(--step--1); font-weight: 600; white-space: nowrap;
-}
-.lang-toggle:hover { border-color: var(--ink-3); }
-.drawer-toggle {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: var(--tap); height: var(--tap);
-  background: none; border: 0; border-radius: var(--radius); cursor: pointer;
-}
-/* Declared after the base rule so it actually wins: above this breakpoint the
-   full navigation is inline and a drawer trigger would be redundant. The close
-   button inside the open drawer is exempt. */
-@media (min-width: 62rem) {
-  .site-header .drawer-toggle { display: none; }
-}
+.hdr__inner { display: flex; align-items: center; gap: var(--s5); width: 100%; }
+.hdr__nav { display: none; margin-left: auto; gap: var(--s6); }
+@media (min-width: 54rem) { .hdr__nav { display: flex; align-items: center; } }
+.hdr__cta { margin-left: auto; }
+@media (min-width: 54rem) { .hdr__cta { margin-left: var(--s5); } }
 
-/* Drawer. Progressive enhancement: without JS it is a link to the sitemap-ish
-   footer, so navigation never depends on script (NAV-05). */
-.drawer[hidden] { display: none; }
-.drawer {
-  position: fixed; inset: 0; z-index: 50;
-  background: var(--paper);
-  padding: var(--sp-4);
-  overflow-y: auto;
+/* Wordmark. Set in the didone with the SMASH carrying the weight — the "Le"
+   is a whisper, the smash is the shout. */
+.mark {
+  font-family: var(--font-display);
+  font-size: 1.375rem; letter-spacing: -0.01em; text-decoration: none;
+  color: var(--bone); line-height: 1; white-space: nowrap;
 }
-.drawer__head { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); }
-.drawer__nav { display: flex; flex-direction: column; margin-top: var(--sp-4); }
-.drawer__nav a {
-  padding: var(--sp-4) 0; border-bottom: 1px solid var(--paper-3);
-  text-decoration: none; font-family: var(--font-display); font-size: var(--step-2);
-}
-.drawer__foot { margin-top: var(--sp-5); display: grid; gap: var(--sp-3); }
+.mark i { font-style: italic; font-size: 0.82em; opacity: 0.8; margin-right: 0.14em; }
+.mark b { font-weight: 700; letter-spacing: 0.02em; }
+.mark--lg { font-size: clamp(2rem, 4vw, 3rem); }
 
-/* --- Sticky action bar ----------------------------------------------------
- * The single most important navigational element on the site (PRD §9.5):
- * guarantees Order / Directions / Call are one tap from anywhere.
- * -------------------------------------------------------------------------- */
-/* Mobile only. Above this breakpoint the header carries Order inline and the
-   viewport is not short enough to need a persistent thumb-reach bar, so pinning
-   one would just cover content (PRD §9.5 desktop navigation). */
-@media (min-width: 62rem) {
-  .action-bar { display: none; }
-  body { padding-bottom: 0; }
+/* ===========================================================================
+   Hero — the film plane.
+   ========================================================================= */
+.hero { position: relative; min-height: 100svh; display: grid; isolation: isolate; }
+.hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: var(--void); }
+.hero__media > video,
+.hero__media > canvas,
+.hero__media > img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
 }
-.action-bar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
-  background: var(--paper);
-  box-shadow: var(--shadow-2);
-  padding: var(--sp-2) var(--sp-3) calc(var(--sp-2) + env(safe-area-inset-bottom, 0px));
+/*
+ * Two stacked washes rather than one flat scrim: a warm bottom-up gradient to
+ * seat the type, and a low-opacity oxblood tint so the footage reads as one
+ * graded image instead of a video with a black box on it.
+ */
+.hero__grade {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(to top, var(--void) 2%, rgb(10 10 12 / 0.35) 45%, rgb(10 10 12 / 0.55) 100%),
+    linear-gradient(115deg, rgb(61 17 9 / 0.5), transparent 60%);
 }
-.action-bar__inner {
-  display: flex; align-items: stretch; gap: var(--sp-2);
-  max-width: var(--container); margin-inline: auto;
-}
-.action-bar .btn { flex: 1 1 auto; padding-inline: var(--sp-3); font-size: var(--step--1); }
-.action-bar .btn--icon { flex: 0 0 var(--tap); padding-inline: 0; }
-.action-bar__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-[lang='my'] .action-bar .btn { font-size: 0.8125rem; }
-
-/* --- Hero -----------------------------------------------------------------
- * No animation, no carousel, no video. First screen must be meaningful before
- * any lazy asset resolves (HOME-01, HOME-02).
- * -------------------------------------------------------------------------- */
-.hero { background: var(--ink); color: var(--paper); }
 .hero__inner {
-  display: grid; gap: var(--sp-5);
-  padding-block: var(--sp-6) var(--sp-7);
+  position: relative; display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 100svh; padding-block: 8rem var(--s8); gap: var(--s6);
 }
-@media (min-width: 56rem) {
-  .hero__inner { grid-template-columns: 1.05fr 1fr; align-items: center; gap: var(--sp-7); padding-block: var(--sp-8); }
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--t-hero); line-height: var(--lh-tight);
+  letter-spacing: -0.035em; margin: 0;
+  text-wrap: balance;
 }
-.hero h1 { font-size: var(--step-5); color: var(--paper); }
-@media (min-width: 56rem) { .hero h1 { font-size: 3.25rem; } }
-[lang='my'] .hero h1 { font-size: var(--step-4); }
-.hero__positioning { font-size: var(--step-1); color: #ded5c8; max-width: 42ch; }
-.hero__branches { font-size: var(--step--1); color: #c3b7a7; }
-.hero__branches a { color: inherit; }
-.hero .ph { background: repeating-linear-gradient(135deg, #241e18 0 10px, #2c251d 10px 20px); color: #9d9182; border-radius: var(--radius-lg); }
-.hero .ph__mark { color: #c3b7a7; }
-
-/* --- Proof strip ----------------------------------------------------------- */
-.proof { border-block: 1px solid var(--paper-3); background: var(--paper-2); }
-.proof__list { display: grid; gap: var(--sp-4); padding-block: var(--sp-5); list-style: none; padding-inline: 0; }
-@media (min-width: 48rem) { .proof__list { grid-template-columns: repeat(3, 1fr); } }
-.proof__list li { font-weight: 600; }
-
-/* --- Menu -----------------------------------------------------------------
- * Category chips scroll-anchor rather than navigate; they degrade to plain
- * anchor links with no JS (MENU-05).
- * -------------------------------------------------------------------------- */
-.chips {
-  position: sticky; top: var(--header-h); z-index: 30;
-  background: var(--paper);
-  border-bottom: 1px solid var(--paper-3);
-  margin-inline: calc(var(--sp-4) * -1);
-  padding: var(--sp-3) var(--sp-4);
+.hero__title i { font-style: italic; font-weight: 400; }
+.hero__title em { font-style: normal; color: var(--ember); }
+.hero__foot {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--s6); flex-wrap: wrap;
 }
-.chips__scroll {
-  display: flex; gap: var(--sp-2); overflow-x: auto; scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+.hero__scroll { display: none; }
+@media (min-width: 54rem) {
+  .hero__scroll { display: flex; align-items: center; gap: var(--s3); }
+  .hero__scroll span { display: block; width: 46px; height: 1px; background: var(--dim); position: relative; overflow: hidden; }
+  .hero__scroll span::after {
+    content: ''; position: absolute; inset: 0; background: var(--ember);
+    transform: translateX(-100%); animation: sweep 2.6s var(--ease) infinite;
+  }
 }
-.chips__scroll::-webkit-scrollbar { display: none; }
-.chip {
-  flex: 0 0 auto; display: inline-flex; align-items: center;
-  min-height: 40px; padding: var(--sp-2) var(--sp-4);
-  border: 1px solid var(--paper-3); border-radius: var(--radius-pill);
-  background: var(--paper); text-decoration: none;
-  font-size: var(--step--1); font-weight: 600; white-space: nowrap;
+@keyframes sweep { 0% { transform: translateX(-100%);} 60%,100% { transform: translateX(100%);} }
+
+/* Shown when no film has been supplied — see MediaPlane.astro. */
+.hero__note {
+  position: absolute; right: var(--gutter); top: 92px; z-index: 2;
+  max-width: 22rem; padding: var(--s4);
+  border: 1px dashed var(--dim); border-radius: var(--r);
+  background: rgb(10 10 12 / 0.75); backdrop-filter: blur(6px);
+  font-family: var(--font-mono); font-size: 11px; line-height: 1.55; color: var(--ash);
 }
-.chip[aria-current='true'], .chip.is-active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.hero__note b { color: var(--brass); display: block; margin-bottom: 4px; letter-spacing: 0.1em; }
 
-.menu-section { scroll-margin-top: calc(var(--header-h) + 64px); padding-top: var(--sp-6); }
-.menu-section__head { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
-.menu-list { list-style: none; padding: 0; display: grid; gap: var(--sp-4); }
-@media (min-width: 40rem) { .menu-list { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 64rem) { .menu-list { grid-template-columns: repeat(3, 1fr); } }
-
-.item { display: flex; flex-direction: column; height: 100%; }
-.item__media { border-bottom: 1px solid var(--paper-3); }
-.item__body { padding: var(--sp-4); display: flex; flex-direction: column; gap: var(--sp-2); flex: 1; }
-.item__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); }
-.item__name { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; line-height: 1.25; }
-[lang='my'] .item__name { line-height: 1.5; }
-.item__price { font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.item__price--unset { color: var(--ink-3); font-weight: 600; font-size: var(--step--1); white-space: normal; }
-.item__desc { font-size: var(--step--1); color: var(--ink-2); }
-/* Portion facts sit on the card, never behind a tap — the whole point of the
-   project is that the customer learns the size before they commit (§5.1). */
-.item__facts { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-top: auto; padding-top: var(--sp-2); }
-.item--unavailable { opacity: 0.62; }
-.item--unavailable .item__media { filter: grayscale(1); }
-.item__details { margin-top: var(--sp-2); font-size: var(--step--1); }
-.item__details summary {
-  cursor: pointer; font-weight: 600; color: var(--ink-2);
-  min-height: var(--tap); display: flex; align-items: center;
+/* ===========================================================================
+   Marquee — a continuous ticker of what the kitchen actually does.
+   One direction, slow, pausable on hover, frozen under reduced motion.
+   ========================================================================= */
+.marquee {
+  border-block: var(--rule); padding-block: var(--s3);
+  overflow: hidden; white-space: nowrap; background: var(--char);
 }
-.item__details[open] summary { margin-bottom: var(--sp-2); }
-.item__details dl { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-1) var(--sp-3); margin: 0; }
-.item__details dt { color: var(--ink-3); }
-.item__details dd { margin: 0; }
-
-/* --- Branch card ----------------------------------------------------------- */
-.branch-card { padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); height: 100%; }
-.branch-card__name { font-family: var(--font-display); font-size: var(--step-2); }
-.branch-card__addr { font-size: var(--step--1); color: var(--ink-2); }
-.branch-card .btn-row { margin-top: auto; padding-top: var(--sp-2); }
-.branch-card .btn { flex: 1 1 auto; }
-
-.hours-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
-.hours-table th, .hours-table td { text-align: start; padding: var(--sp-2) 0; border-bottom: 1px solid var(--paper-3); }
-.hours-table th { font-weight: 600; color: var(--ink-2); }
-.hours-table td { font-variant-numeric: tabular-nums; }
-.hours-table tr[data-today] { background: var(--paper-2); }
-
-/* --- Branch chooser -------------------------------------------------------
- * A <dialog> when JS is available; the same markup is a plain server-rendered
- * page at /order, so ordering never depends on script (ORD-02).
- * -------------------------------------------------------------------------- */
-.chooser::backdrop { background: rgb(23 19 15 / 0.55); }
-.chooser {
-  border: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: var(--sp-5); width: 100%; max-width: 34rem;
-  margin: auto auto 0; background: var(--paper); color: var(--ink);
+/* Slow enough to actually read. A fast ticker of oversized display type is a
+   2021 signature; a slow tracked mono strip carrying opening information is
+   the form that still earns its place. */
+.marquee__track { display: inline-flex; animation: slide 68s linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__item {
+  display: inline-flex; align-items: center; gap: var(--s5);
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  text-transform: uppercase; letter-spacing: var(--track-label);
+  color: var(--ash); padding-right: var(--s5);
 }
-@media (min-width: 40rem) { .chooser { border-radius: var(--radius-lg); margin: auto; } }
-.chooser__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-4); }
-.chooser__list { display: grid; gap: var(--sp-3); list-style: none; padding: 0; }
-.chooser__option {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
-  width: 100%; padding: var(--sp-4); text-align: start;
-  border: 1px solid var(--paper-3); border-radius: var(--radius); background: var(--paper);
-  text-decoration: none; min-height: var(--tap);
-}
-.chooser__option:hover { border-color: var(--ink); }
-.chooser__option strong { font-family: var(--font-display); font-size: var(--step-1); }
+.marquee__item::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--ember); }
+@keyframes slide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
 
-/* --- Footer ---------------------------------------------------------------- */
-.site-footer { background: var(--ink); color: #ded5c8; padding-block: var(--sp-7); margin-top: var(--sp-8); }
-.site-footer a { color: var(--paper); }
-.site-footer h2 { color: var(--paper); font-size: var(--step-1); margin-bottom: var(--sp-3); }
-.footer-grid { display: grid; gap: var(--sp-6); }
-@media (min-width: 48rem) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
-.footer-list { list-style: none; padding: 0; display: grid; gap: var(--sp-2); font-size: var(--step--1); }
-.footer-bottom {
-  margin-top: var(--sp-6); padding-top: var(--sp-4);
-  border-top: 1px solid #3a322a; font-size: var(--step--1);
-  display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: space-between;
+/* ===========================================================================
+   Menu — an editorial list, not photo cards.
+   Award-winning restaurant menus are typographic: the dish name is the image.
+   This also means the page carries no weight it does not need on a slow phone.
+   ========================================================================= */
+.menu-nav {
+  position: sticky; top: calc(68px + var(--banner-h, 0px)); z-index: 40;
+  background: rgb(10 10 12 / 0.92); backdrop-filter: blur(14px);
+  border-bottom: var(--rule);
+}
+.menu-nav__scroll { display: flex; gap: var(--s5); overflow-x: auto; padding-block: var(--s4); scrollbar-width: none; }
+.menu-nav__scroll::-webkit-scrollbar { display: none; }
+.menu-nav a {
+  flex: 0 0 auto; font-family: var(--font-mono); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: var(--track-label);
+  color: var(--ash); text-decoration: none; padding-block: 2px;
+  border-bottom: 1px solid transparent; transition: color 240ms var(--ease), border-color 240ms var(--ease);
+}
+.menu-nav a:hover { color: var(--bone); }
+.menu-nav a.is-active { color: var(--ember); border-bottom-color: var(--ember); }
+
+.course { scroll-margin-top: calc(150px + var(--banner-h, 0px)); padding-block: var(--s8) 0; }
+.course__head { display: flex; align-items: baseline; gap: var(--s4); margin-bottom: var(--s6); }
+.course__num { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--brass); }
+.course__title { font-size: var(--t-lg); }
+
+.dishes { list-style: none; padding: 0; margin: 0; border-top: var(--rule); max-width: 62rem; }
+.dish { border-bottom: var(--rule); }
+.dish__row {
+  display: grid; grid-template-columns: 1fr auto; align-items: baseline;
+  gap: var(--s4) var(--s5); padding-block: var(--s5);
+  transition: padding-inline 400ms var(--ease);
+}
+@media (min-width: 54rem) {
+  .dish:hover .dish__row { padding-inline: var(--s4); }
+}
+.dish__name {
+  font-family: var(--font-display); font-size: clamp(1.375rem, 2.6vw, 2rem);
+  line-height: 1.15; letter-spacing: -0.015em;
+}
+.dish__price {
+  font-family: var(--font-mono); font-size: var(--t-sm); color: var(--brass);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.dish__price--unset { color: var(--dim); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.1em; }
+.dish__meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
+.dish__desc { grid-column: 1 / -1; color: var(--ash); font-size: var(--t-sm); max-width: 52ch; }
+.dish--out .dish__row { opacity: 0.45; }
+
+/* Facts sit on the row, never behind a tap: patty count and portion are the
+   whole reason this project exists. */
+.fact {
+  font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--ash);
+  padding: 3px 9px; border: 1px solid var(--smoke); border-radius: var(--r-pill);
+}
+.fact--hot { color: var(--ember); border-color: rgb(255 77 25 / 0.45); }
+.fact--warn { color: var(--brass); border-color: rgb(215 169 58 / 0.4); }
+
+/* ===========================================================================
+   Split — a two-column editorial block (the story, the room).
+   ========================================================================= */
+.split { display: grid; gap: var(--s7); align-items: center; }
+@media (min-width: 54rem) { .split { grid-template-columns: 1fr 1fr; gap: var(--s9); } }
+.split--wide-left { }
+@media (min-width: 54rem) { .split--wide-left { grid-template-columns: 1.15fr 0.85fr; } }
+
+.figure { position: relative; overflow: hidden; background: var(--char); border-radius: var(--r); }
+.figure > canvas, .figure > img { width: 100%; height: 100%; object-fit: cover; }
+.figure--tall { aspect-ratio: 4 / 5; }
+.figure--wide { aspect-ratio: 3 / 2; }
+.figure--square { aspect-ratio: 1; }
+.figure__cap {
+  position: absolute; left: 0; bottom: 0; right: 0; padding: var(--s4);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  color: var(--ash); background: linear-gradient(transparent, rgb(10 10 12 / 0.85));
 }
 
-/* --- Pre-launch banner ----------------------------------------------------
- * Only rendered in preview builds. It states plainly that content is not yet
- * confirmed, so no one mistakes placeholder data for published fact.
- * -------------------------------------------------------------------------- */
+/* ===========================================================================
+   Stat row — three plain numbers, mono, hairline separated.
+   ========================================================================= */
+.stats { display: grid; gap: var(--s6); }
+@media (min-width: 42rem) { .stats { grid-template-columns: repeat(3, 1fr); } }
+.stat { border-top: 1px solid var(--dim); padding-top: var(--s4); }
+.stat__n { font-family: var(--font-display); font-size: var(--t-md); color: var(--bone); }
+.stat__l { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ash); margin-top: var(--s2); }
+
+/* ===========================================================================
+   Visit — the branches.
+   ========================================================================= */
+.venues { display: grid; gap: var(--s6); }
+@media (min-width: 48rem) { .venues { grid-template-columns: repeat(2, 1fr); } }
+.venue { border-top: 1px solid var(--dim); padding-top: var(--s5); display: flex; flex-direction: column; gap: var(--s4); }
+.venue__name { font-family: var(--font-display); font-size: var(--t-md); }
+.venue__addr { color: var(--ash); font-size: var(--t-sm); font-style: normal; }
+.venue .btn-row { margin-top: auto; padding-top: var(--s3); }
+
+/* ===========================================================================
+   Footer.
+   ========================================================================= */
+.ftr { border-top: var(--rule); padding-block: var(--s8) var(--s6); }
+.ftr__grid { display: grid; gap: var(--s7); }
+@media (min-width: 54rem) { .ftr__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
+.ftr__list { list-style: none; padding: 0; display: grid; gap: var(--s3); }
+.ftr__list a { text-decoration: none; color: var(--ash); font-size: var(--t-sm); }
+.ftr__list a:hover { color: var(--bone); }
+.ftr__bottom {
+  margin-top: var(--s8); padding-top: var(--s4); border-top: var(--rule);
+  display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between;
+  font-family: var(--font-mono); font-size: 11px; color: var(--dim); letter-spacing: 0.06em;
+}
+
+/* ===========================================================================
+   Sticky action bar — mobile only. Two taps to order or find us, anywhere.
+   ========================================================================= */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+  display: flex; gap: var(--s2);
+  padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom, 0px));
+  background: rgb(20 19 23 / 0.94); backdrop-filter: blur(14px);
+  border-top: var(--rule);
+}
+.bar .btn { flex: 1; padding-inline: var(--s3); }
+@media (min-width: 54rem) { .bar { display: none; } }
+body { padding-bottom: 84px; }
+@media (min-width: 54rem) { body { padding-bottom: 0; } }
+
+/* ===========================================================================
+   Pre-launch notice — preview builds only.
+   ========================================================================= */
 .prelaunch {
-  background: var(--warn); color: #fff;
-  font-size: var(--step--1); padding: var(--sp-3) 0;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 70;
+  background: var(--brass); color: #17130a;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
+  padding: var(--s2) 0;
 }
-.prelaunch strong { font-weight: 700; }
-.prelaunch a { color: #fff; }
 .prelaunch p { max-width: none; }
-.prelaunch__more { display: none; }
-@media (min-width: 48rem) { .prelaunch__more { display: inline; } }
+.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; }
+
+
+/* ===========================================================================
+   Two-track layout — a narrow rail of labels and numerals against a wide
+   content track. One deliberate asymmetry, rather than many small ones.
+   ========================================================================= */
+.track { display: grid; gap: var(--s5); }
+@media (min-width: 62rem) {
+  .track { grid-template-columns: minmax(9rem, 15%) 1fr; gap: var(--s7); align-items: start; }
+}
+.track__rail { position: sticky; top: calc(150px + var(--banner-h, 0px)); }
+@media (max-width: 61.99rem) { .track__rail { position: static; } }
+.track__numeral {
+  font-family: var(--font-display); font-size: var(--t-numeral);
+  line-height: 0.8; color: var(--smoke); letter-spacing: -0.04em;
+}
+
+/*
+ * Section hero dish — one item per course is visibly promoted rather than the
+ * whole list running at a uniform weight. It gives each course a focal point
+ * without needing a photograph of every dish.
+ */
+.dish--hero .dish__row { padding-block: var(--s6); }
+.dish--hero .dish__name { font-size: clamp(1.75rem, 1rem + 3vw, 3rem); }
+.dish--hero .dish__desc { color: var(--bone); font-size: var(--t-body); max-width: 46ch; }
+
+/* Giant wordmark footer, cut by a fade. Scales with the container and is
+   decorative — the real navigation sits above it. */
+.ftr__wordmark {
+  margin-top: var(--s8); font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(4rem, 17vw, 17rem); line-height: 0.78; letter-spacing: -0.045em;
+  color: var(--bone); opacity: 0.09; user-select: none; pointer-events: none;
+  white-space: nowrap; overflow: hidden;
+}

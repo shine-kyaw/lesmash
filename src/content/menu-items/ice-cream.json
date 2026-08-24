@@ -1,6 +1,6 @@
 {
   "slug": "ice-cream",
-  "name": { "en": "Ice Cream", "my": null },
+  "name": "Ice Cream",
   "description": null,
   "price": null,
   "priceDisplay": null,

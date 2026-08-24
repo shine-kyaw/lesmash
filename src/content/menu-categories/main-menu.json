@@ -1,6 +1,6 @@
 {
   "slug": "main-menu",
-  "name": { "en": "Main Menu", "my": "အဓိက အစားအစာများ" },
+  "name": "Main Menu",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 40,

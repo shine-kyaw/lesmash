@@ -1,6 +1,6 @@
 {
   "slug": "non-coffee",
-  "name": { "en": "Non Coffee", "my": "ကော်ဖီမဟုတ်သော အဖျော်ယမကာများ" },
+  "name": "Non Coffee",
   "description": null,
   "displayGroup": "drinks",
   "sortOrder": 80,

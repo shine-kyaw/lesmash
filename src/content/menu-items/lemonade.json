@@ -1,6 +1,6 @@
 {
   "slug": "lemonade",
-  "name": { "en": "Lemonade", "my": null },
+  "name": "Lemonade",
   "description": null,
   "price": null,
   "priceDisplay": null,

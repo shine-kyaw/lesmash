@@ -13,7 +13,7 @@ actual content files.
 
 | Ref | What we need | Why it blocks | Owner |
 |---|---|---|---|
-| **DS-03 / Q14** | Exact menu item names, English, all items | Every item record is currently a placeholder marked `verified: false` | Client |
+| **DS-03 / Q14** | Exact menu item names, all items | Every item record is currently a placeholder marked `verified: false` | Client |
 | **DS-04 / Q5** | Prices, and whether dine-in and Foodpanda prices differ | No price is published anywhere today; every item reads "Ask in store" | Client |
 | **DS-01 / Q6** | Opening hours per branch, per day, plus any breakfast window | Branch pages, `/breakfast`, opening-hours schema, and the entire open-now feature | Client |
 | **DS-02 / Q7** | Phone number per branch | Tap-to-call renders nowhere; the sticky bar's call button falls back to the locations page | Client |
@@ -37,7 +37,8 @@ actual content files.
 
 | Ref | What we need | Effect today |
 |---|---|---|
-| **Photography (PRD §18)** | Food shots with countable patties and a scale reference; exterior shots for wayfinding; interiors | Every image slot renders a designed placeholder. This is the single highest-leverage deliverable in the project, and the one most likely to fix the complaint the whole site is built around |
+| **Hero film + photography** | A silent hero loop, plus food shots with countable patties and a scale reference, and the rooms | Every media plane renders a generative ember field. This is the single highest-leverage deliverable in the project. Filenames and compression targets: `public/media/README.md` |
+| **The real logo** | The Le SMASH logo files | The wordmark is currently set in Bodoni Moda as a stand-in. Facebook and every image host are blocked from this environment, so it could not be retrieved |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
 | **C-11** | Portion-honesty statement | Recommended; high value; drafted only once the client approves the principle |
 | **C-09** | Breakfast intro, 150–250 words | `/breakfast` has no unique intro copy, which weakens it for search |
@@ -45,8 +46,6 @@ actual content files.
 | **C-06 / Q18** | Allergen data and approved disclaimer wording | A scope disclaimer renders; no allergen data does. Nothing will be published without written confirmation |
 | **Q15** | Halal / pork-handling policy | No dietary indicator and no `suitableForDiet` schema is emitted. This will not change without a written statement |
 | **DS-05** | Review scores and volumes | The homepage social-proof module is not built; it would render as static text, never a third-party widget |
-| **DS-10 / Q13** | Burmese terms customers actually use for the brand and dishes | Burmese UI strings are written and Unicode-clean, but menu names have no Burmese at all, and the Burmese keyword targets are directional rather than validated |
-| **Q25** | Western or Myanmar numerals for prices | Currently Western, applied consistently sitewide; one line in `site.config.mjs` changes it |
 | **Q12** | Who maintains the site after launch | Determines whether the Sanity studio is stood up and who is trained |
 
 ---
@@ -60,7 +59,6 @@ actual content files.
 | Phone not set | No `tel:` link renders at all |
 | `hasDineIn: null` | "Dine-in: not yet confirmed" |
 | No photograph | A branded placeholder at the correct aspect ratio, labelled "Photograph coming soon" |
-| Burmese field empty | English text, and the field appears in the missing-translation report |
 | Item not client-confirmed | A "Content pending" badge in preview builds; the item does not render at all in live builds |
 | Editorial slot empty | A labelled slot naming its reference and owner in preview; nothing at all in live builds |
 

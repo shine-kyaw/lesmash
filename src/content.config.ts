@@ -2,21 +2,14 @@ import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 /**
- * Content collections mirror the CMS data model in PRD §13 and §14 one-for-one.
+ * Content collections mirror the CMS data model in PRD §13 and §14.
  *
- * Localised strings are stored as a `{ en, my }` pair. That is the storage form
- * of the PRD's `nameEn` / `nameMy` field pairs — keeping them in one object is
- * what makes the missing-translation report (LANG-08) possible, and stops a
- * value from being duplicated per locale and silently diverging (PRD §16.4).
- *
- * `my: null` is a legitimate, expected state: it means "not translated yet",
- * renders the English fallback, and is picked up by `npm run content:report`.
+ * The site is English-only. Text fields are plain strings; an optional field
+ * that is `null` means the value is genuinely not known yet, and the UI renders
+ * an honest empty state rather than inventing one.
  */
-const localised = z.object({ en: z.string(), my: z.string().nullable().default(null) });
-const localisedOptional = z
-  .object({ en: z.string().nullable().default(null), my: z.string().nullable().default(null) })
-  .nullable()
-  .default(null);
+const localised = z.string();
+const localisedOptional = z.string().nullable().default(null);
 
 const hoursEntry = z.object({
   day: z.number().int().min(0).max(6),

@@ -73,7 +73,7 @@ capabilities confirmed before it can be pointed anywhere (DS-08).
 
 ## After the first deploy
 
-- Submit the sitemap in Google Search Console for both locales
+- Submit the sitemap in Google Search Console
 - Check the OG preview in Facebook, Viber and Telegram
 - Run Lighthouse against the PRD's throttled profile — 5 Mbps, 4× CPU
 - Test on a real Myanmar mobile network, which nothing here can substitute for

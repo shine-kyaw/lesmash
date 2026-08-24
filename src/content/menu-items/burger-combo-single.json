@@ -1,6 +1,6 @@
 {
   "slug": "burger-combo-single",
-  "name": { "en": "Single Smash Combo", "my": null },
+  "name": "Single Smash Combo",
   "description": null,
   "price": null,
   "priceDisplay": null,
@@ -15,7 +15,9 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": ["value"],
+  "tags": [
+    "value"
+  ],
   "modifiers": [],
   "addons": [],
   "isFeatured": true,

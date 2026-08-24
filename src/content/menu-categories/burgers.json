@@ -1,6 +1,6 @@
 {
   "slug": "burgers",
-  "name": { "en": "Burgers", "my": "ဘာဂါများ" },
+  "name": "Burgers",
   "description": null,
   "displayGroup": "food",
   "sortOrder": 10,

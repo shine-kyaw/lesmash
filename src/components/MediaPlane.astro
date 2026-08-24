@@ -1,0 +1,69 @@
+---
+import { existsSync } from 'node:fs';
+
+/**
+ * A media plane that resolves at build time.
+ *
+ * Drop a file into public/media and this renders it. Until then it renders the
+ * generative ember field, which is designed to read as a graded plate rather
+ * than a missing asset (see public/scripts/ember.js).
+ *
+ * Video is deliberately not served to everyone. A full-bleed autoplaying hero
+ * is now an LCP liability, and on a 5 Mbps Yangon connection it is the single
+ * most expensive thing the page could do. So the canvas paints immediately as
+ * the base layer, and the film is attached over it only on a wide viewport
+ * with a connection that has not asked us to save data (see app.js). Everyone
+ * else keeps a hero that is already complete.
+ */
+interface Props {
+  /** File under public/media, e.g. "hero.mp4" or "room-01.jpg". */
+  file?: string | null;
+  poster?: string | null;
+  ember?: 'hero' | 'room' | 'sear' | 'ash';
+  alt?: string;
+  video?: boolean;
+  class?: string;
+}
+
+const {
+  file = null, poster = null, ember = 'hero', alt = '',
+  video = false, class: className = '',
+} = Astro.props;
+
+const mediaUrl = (name: string) => `/media/${name}`;
+const onDisk = (name: string | null) =>
+  !!name && existsSync(new URL(`../../public/media/${name}`, import.meta.url));
+
+const hasFile = onDisk(file);
+const hasPoster = onDisk(poster);
+---
+{hasFile && video ? (
+  <>
+    <canvas class={className} data-ember={ember} aria-hidden="true"></canvas>
+    <video
+      class={`${className} plane-video`}
+      data-video-src={mediaUrl(file!)}
+      poster={hasPoster ? mediaUrl(poster!) : undefined}
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-label={alt || undefined}
+    ></video>
+  </>
+) : hasFile ? (
+  <img class={className} src={mediaUrl(file!)} alt={alt} loading="lazy" decoding="async" />
+) : (
+  /* Decorative: the plane carries mood, not information. Everything a reader
+     needs is in the text beside it. */
+  <canvas class={className} data-ember={ember} aria-hidden="true"></canvas>
+)}
+
+<style is:global>
+  .plane-video {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .plane-video.is-playing { opacity: 1; }
+</style>
