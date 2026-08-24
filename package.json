@@ -13,7 +13,6 @@
     "build": "astro build && node scripts/check-budgets.mjs",
     "build:only": "astro build",
     "preview": "astro preview",
-    "preview:bundle": "node scripts/build-preview-artifact.mjs",
     "check": "astro check",
     "content:report": "node scripts/content-report.mjs",
     "check:budgets": "node scripts/check-budgets.mjs",

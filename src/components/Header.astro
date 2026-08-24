@@ -1,5 +1,6 @@
 ---
 import { COPY } from '../data/copy';
+import { href } from '../lib/href';
 
 /**
  * Fixed and transparent over the hero, filling in only once the reader has
@@ -18,13 +19,13 @@ const links = [
 ---
 <header class="hdr" data-header>
   <div class="wrap hdr__inner">
-    <a class="mark" href="/" aria-label={`${'Le SMASH'} home`}>
+    <a class="mark" href={href("/")} aria-label={`${'Le SMASH'} home`}>
       <i>Le</i><b>SMASH</b>
     </a>
 
     <nav class="hdr__nav" aria-label="Main">
       {links.map((l) => (
-        <a class="tlink" href={l.href} aria-current={path === l.href ? 'page' : undefined}>
+        <a class="tlink" href={href(l.href)} aria-current={path === l.href ? 'page' : undefined}>
           {l.label}
         </a>
       ))}
@@ -32,7 +33,7 @@ const links = [
 
     <a
       class="btn btn--ember hdr__cta"
-      href="/menu"
+      href={href("/menu")}
       data-analytics="order_cta_click"
       data-source="header"
     >{COPY.cta.orderShort}</a>

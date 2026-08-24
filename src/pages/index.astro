@@ -11,6 +11,7 @@ import {
 } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { organizationSchema, websiteSchema, restaurantSchema } from '../lib/schema';
+import { href } from '../lib/href';
 
 const branches = await getBranches();
 const items = await getMenuItems();
@@ -58,7 +59,7 @@ const ticker = [
 
       <div class="hero__foot">
         <div class="btn-row">
-          <a class="btn btn--bone" href="/menu">{COPY.cta.menu}</a>
+          <a class="btn btn--bone" href={href("/menu")}>{COPY.cta.menu}</a>
           <a class="btn btn--ghost" href="#visit">{COPY.nav.visit}</a>
         </div>
         <p class="hero__scroll label" aria-hidden="true">
@@ -96,7 +97,7 @@ const ticker = [
           <Slot slot={EDITORIAL.heroPositioning} class="lede" />
           <Slot slot={EDITORIAL.howWeSmash} />
           <Slot slot={EDITORIAL.portionHonesty} />
-          <a class="tlink" href="/menu">See what is on the pass</a>
+          <a class="tlink" href={href("/menu")}>See what is on the pass</a>
         </div>
 
         <div class="figure figure--tall reveal">
@@ -122,7 +123,7 @@ const ticker = [
         <div>
           <div class="sec-head">
             <h2>What people order</h2>
-            <a class="tlink sec-head__link" href="/menu">Full menu</a>
+            <a class="tlink sec-head__link" href={href("/menu")}>Full menu</a>
           </div>
           <ul class="dishes reveal">
             {signatures.map((item, i) => (

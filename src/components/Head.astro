@@ -1,5 +1,25 @@
 ---
 import { SITE, absoluteUrl } from '../lib/site.config.mjs';
+import { asset } from '../lib/href';
+
+/*
+ * The three faces are declared here rather than in the stylesheet because a
+ * base path (GitHub Pages serves from /lesmash/) cannot be interpolated into a
+ * static CSS file. Latin subsets, 94KB total, self-hosted — no third-party
+ * origin sits on the critical path.
+ */
+const faces = [
+  { family: 'Bodoni Moda', file: 'bodoni-moda-latin.woff2', weight: '400 700' },
+  { family: 'Archivo', file: 'archivo-latin.woff2', weight: '100 900' },
+  { family: 'IBM Plex Mono', file: 'plex-mono-latin.woff2', weight: '400 500' },
+];
+const LATIN =
+  'U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+2122, U+2212, U+FEFF, U+FFFD';
+const fontCss = faces
+  .map(
+    (f) => `@font-face{font-family:'${f.family}';src:url('${asset('/fonts/' + f.file)}') format('woff2');font-weight:${f.weight};font-style:normal;font-display:swap;unicode-range:${LATIN};}`
+  )
+  .join('');
 
 interface Props {
   path: string;
@@ -28,9 +48,11 @@ const jsonLd = schema.length ? { '@context': 'https://schema.org', '@graph': sch
 <meta name="twitter:card" content="summary_large_image" />
 
 <meta name="theme-color" content="#0a0a0c" />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href={asset('/favicon.svg')} type="image/svg+xml" />
+
+<style set:html={fontCss}></style>
 
 {/* The display face carries the hero, which is the LCP element. */}
-<link rel="preload" href="/fonts/bodoni-moda-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={asset('/fonts/bodoni-moda-latin.woff2')} as="font" type="font/woff2" crossorigin />
 
 {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

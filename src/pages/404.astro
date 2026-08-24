@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { COPY } from '../data/copy';
 import { title, DESCRIPTIONS } from '../lib/seo';
+import { href } from '../lib/href';
 ---
 <Base path="/404" title={title('Page not found')} description={DESCRIPTIONS.notFound} noindex>
   <section class="section" style="min-height:70svh;display:flex;align-items:center">
@@ -14,8 +15,8 @@ import { title, DESCRIPTIONS } from '../lib/seo';
         That page does not exist. The menu is where most people are heading.
       </p>
       <div class="btn-row" style="margin-top:var(--s6)">
-        <a class="btn btn--bone" href="/menu">{COPY.cta.menu}</a>
-        <a class="btn btn--ghost" href="/">Home</a>
+        <a class="btn btn--bone" href={href("/menu")}>{COPY.cta.menu}</a>
+        <a class="btn btn--ghost" href={href("/")}>Home</a>
       </div>
     </div>
   </section>

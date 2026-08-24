@@ -32,11 +32,7 @@ npm install
 npm run dev            # http://localhost:4321
 npm run build          # static output in dist/ + performance budget gate
 npm run preview        # serve the built site
-npm run preview:bundle # regenerate the shareable single-file preview
 ```
-
-`preview/lesmash-preview.html` is the whole site folded into one self-contained
-file, for review before hosting exists. It is generated — see `preview/README.md`.
 
 Useful checks:
 
@@ -217,6 +213,25 @@ functions — the output is plain static files and will host anywhere.
 
 ## Deploying
 
+### GitHub Pages (live now)
+
+`.github/workflows/pages.yml` builds and publishes on every push to the default
+branch. Pages serves the repo from a subpath, so the workflow passes
+`BASE_PATH` and `SITE_ORIGIN` into the build and every internal link and asset
+URL is resolved through `src/lib/href.ts` — a hard-coded `/menu` would work
+locally and 404 once deployed, which is the worst kind of bug.
+
+The workflow turns Pages on itself (`configure-pages` with `enablement: true`).
+If the first run fails on permissions, enable it once by hand:
+**Settings → Pages → Source: GitHub Actions**, then re-run the workflow.
+
+The build step is `npm run build`, which includes the performance budget gate —
+a change that breaks the JS, CSS or font budget fails the deploy rather than
+shipping.
+
+### Vercel
+
+A root deployment leaves `BASE_PATH` unset, so everything resolves from `/`.
 `vercel.json` is committed and configures the build, cache headers and a strict
 Content-Security-Policy. The CSP is genuinely strict — `default-src 'self'` with
 no third-party origins allowed — because the site loads nothing from anyone

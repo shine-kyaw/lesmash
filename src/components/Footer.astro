@@ -2,6 +2,7 @@
 import { SITE } from '../lib/site.config.mjs';
 import { COPY } from '../data/copy';
 import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
+import { href } from '../lib/href';
 
 /**
  * Carries the full name, address and phone for every branch. That is what
@@ -24,7 +25,7 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="ftr__grid">
       <div>
-        <a class="mark mark--lg" href="/"><i>Le</i><b>SMASH</b></a>
+        <a class="mark mark--lg" href={href("/")}><i>Le</i><b>SMASH</b></a>
         <p class="lede" style="margin-top:var(--s4)">{COPY.footer.delivery}</p>
       </div>
 
@@ -64,7 +65,7 @@ const year = new Date().getFullYear();
                  data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
             </li>
           ))}
-          <li><a href="/menu">{COPY.nav.menu}</a></li>
+          <li><a href={href("/menu")}>{COPY.nav.menu}</a></li>
         </ul>
       </div>
     </div>

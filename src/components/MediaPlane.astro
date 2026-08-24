@@ -1,5 +1,6 @@
 ---
 import { existsSync } from 'node:fs';
+import { asset } from '../lib/href';
 
 /**
  * A media plane that resolves at build time.
@@ -30,7 +31,7 @@ const {
   video = false, class: className = '',
 } = Astro.props;
 
-const mediaUrl = (name: string) => `/media/${name}`;
+const mediaUrl = (name: string) => asset(`/media/${name}`);
 const onDisk = (name: string | null) =>
   !!name && existsSync(new URL(`../../public/media/${name}`, import.meta.url));
 

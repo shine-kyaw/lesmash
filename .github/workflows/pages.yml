@@ -1,0 +1,64 @@
+# Builds the site and publishes it to GitHub Pages.
+#
+# Pages serves this repo from a subpath (/lesmash/), so BASE_PATH and
+# SITE_ORIGIN are set here rather than hard-coded — a root deployment (a custom
+# domain, or Vercel) leaves them unset and everything resolves from /.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [claude/le-smash-burgers-prd-k1p4cx]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; never cancel a run that is mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Turns Pages on if it is not already enabled, so this does not need
+          # a separate trip through repository settings.
+          enablement: true
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        # `npm run build` also runs the performance budget gate, so a change
+        # that breaks the JS, CSS or font budget fails the deploy.
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
