@@ -1,69 +1,84 @@
 /*
  * Le SMASH — design tokens.
  *
- * Direction: a late-night bistro. Dark, close, confident. The room is dim, the
- * pass is hot. Everything is restrained except the type, which is where all the
- * boldness is spent.
+ * Direction: the restaurant's own brand, adopted wholesale.
  *
- * The palette is warm-biased throughout — the near-black carries a trace of
- * blue so the ember reads hotter against it, and the whites are bone rather
- * than paper. Nothing here is a pure grey.
+ * Every colour below was sampled from a real Le SMASH asset rather than
+ * chosen. The red, the black and the cream come straight out of the logo file;
+ * the deep red and the gold come out of the artwork on their own Facebook
+ * page. The previous build shipped an invented dark "late-night bistro"
+ * palette because no brand assets had been supplied (PRD Q9). They have since
+ * been recovered, so the stand-in is gone.
  *
- * No brand identity assets were available (PRD Q9), so this is a considered
- * stand-in, token-driven so that adopting the real brand is a change to this
- * file alone.
+ * The ground is paper, not charcoal. This is a burger shop whose logo is a
+ * bright red tile with hand-cut lettering — a dim room was the wrong read.
  */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* --- Ground -------------------------------------------------------------
-   * Warm near-black, never #000. Pure black reads as an unstyled dark mode;
-   * a warm charcoal reads as a dim room, which is the whole idea.
-   * ---------------------------------------------------------------------- */
-  --void:   #12100e;   /* page ground                                        */
-  --char:   #1a1714;   /* raised surface, sticky bars                        */
-  --smoke:  #2a2521;   /* hairlines, dividers, inert fills                   */
+  /* --- Brand ---------------------------------------------------------------
+   * Sampled values. Do not nudge these to taste; they are the logo.
+   *   --red    #d83536  the logo's field
+   *   --ink    #0a0a0a  the SMASH lettering
+   *   --cream  #e1e8de  the "Le" script
+   * --------------------------------------------------------------------- */
+  --red:       #d83536;
+  --red-lift:  #e8514f;   /* hover only                                     */
+  --red-deep:  #810704;   /* the field in their own social artwork          */
+  --red-dark:  #4e0708;   /* floor of the deep-red gradient                 */
+  --ink:       #0a0a0a;
+  --cream:     #e1e8de;
+  --gold:      #ffd9a7;   /* their accent — legible on dark grounds only    */
 
-  /* --- Ink ----------------------------------------------------------------
-   * Bone, not white. Pure white on a food site reads clinical.
-   * ---------------------------------------------------------------------- */
-  --bone:   #f2ede4;   /* primary text        on --void = 16.1:1            */
-  --ash:    #a2988b;   /* secondary / meta    on --void =  7.4:1            */
-  --dim:    #6e6459;   /* rules, tertiary     on --void =  3.4:1 (non-text) */
+  /* --- Page ---------------------------------------------------------------
+   * Warm paper rather than white: it sits with the cream in the logo, and it
+   * keeps large flat areas from glaring on a phone in daylight.
+   * --------------------------------------------------------------------- */
+  --paper:     #f8f5ec;   /* page ground                                    */
+  --paper-2:   #f0ebdd;   /* raised surface, cards                          */
+  --paper-3:   #e6dfcd;   /* inert fills                                    */
 
-  /* --- Heat ---------------------------------------------------------------
-   * One accent, one support. Ember is deep rust rather than a fast-food
-   * orange: at 3.5:1 it is a large-text and UI colour only, never small body
-   * text — brass carries anything small that needs to warm up.
-   * ---------------------------------------------------------------------- */
-  --ember:  #d24a1c;   /* sear — large display accents, buttons, rules      */
-  --ember-lift: #e35d2c;
-  --brass:  #c69b3c;   /* numerals, prices, labels   on --void = 7.3:1      */
-  --oxblood:#3d1109;   /* deep wash for gradients                           */
+  /* Ink scale. Contrast on --paper:
+   *   --ink 19.0:1   --ink-2 8.8:1   --ink-3 4.3:1 (rules, non-text only) */
+  --ink-2:     #4a443c;
+  --ink-3:     #7d7466;
+  --line:      #dcd4c0;
 
-  --focus:  #7fb2ff;   /* focus ring, ≥3:1 on every ground here              */
+  /* --red is 4.3:1 on paper — large text, buttons and rules only. Anything
+     set small and red uses --red-deep, which is 9.8:1. */
+  --warn:      #8a5a12;   /* 5.4:1 on paper                                 */
 
-  /* --- Type -------------------------------------------------------------- */
-  /* Didone display: editorial, French, unmistakably not a fast-food face.
-     Grotesk body for plain reading. Mono for prices and labels — the kitchen
-     ticket voice, and it keeps numerals aligned. */
-  --font-display: 'Bodoni Moda', 'Didot', 'Bodoni MT', Georgia, serif;
+  --focus:     #1d4ed8;
+
+  /* --- Type ---------------------------------------------------------------
+   * Both display faces are taken off the logo itself.
+   *
+   * Gasoek One is the closest widely-available match to the hand-cut SMASH
+   * lettering: the same extreme weight, the same wide proportion, the same
+   * tiny counters and flat terminals. Grand Hotel is the closest to the
+   * monoline "Le" script — even stroke weight, open looping ascender.
+   *
+   * Archivo carries the reading, and IBM Plex Mono keeps prices and labels in
+   * the kitchen-ticket voice with aligned numerals.
+   * --------------------------------------------------------------------- */
+  --font-display: 'Gasoek One', 'Archivo Black', Impact, system-ui, sans-serif;
+  --font-script: 'Grand Hotel', 'Brush Script MT', cursive;
   --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Fluid scale. Display runs deliberately large — at full width the wordmark
-     is the graphic, not a label sitting on one. */
-  --t-hero:  clamp(3.25rem, 1.5rem + 11vw, 11rem);
-  --t-xl:    clamp(2.5rem, 1.25rem + 5.5vw, 5.5rem);
-  --t-lg:    clamp(1.875rem, 1rem + 3.2vw, 3.25rem);
-  --t-md:    clamp(1.375rem, 1rem + 1.6vw, 2rem);
+  /* Fluid scale, dialled back from the didone it replaces. At Gasoek's weight
+     the old sizes read as shouting rather than as a wordmark. */
+  --t-hero:  clamp(2.75rem, 1rem + 8.5vw, 8rem);
+  --t-xl:    clamp(2rem, 1rem + 4vw, 4rem);
+  --t-lg:    clamp(1.625rem, 1rem + 2.4vw, 2.5rem);
+  --t-md:    clamp(1.25rem, 1rem + 1.2vw, 1.625rem);
   --t-body:  clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --t-numeral: clamp(3rem, 1rem + 7vw, 7rem);
+  --t-numeral: clamp(2.5rem, 1rem + 5vw, 5rem);
   --t-sm:    0.9375rem;
   --t-xs:    0.8125rem;
 
-  --lh-tight: 0.92;
-  --lh-head: 1.08;
+  --lh-tight: 0.95;
+  --lh-head: 1.06;
   --lh-body: 1.65;
   --track-label: 0.16em;
 
@@ -72,15 +87,17 @@
   --s5: 1.5rem;  --s6: 2rem;    --s7: 3rem;    --s8: 4.5rem;
   --s9: 7rem;    --s10: 10rem;
 
-  --r-sm: 2px;
-  --r: 4px;
+  /* The logo is a rounded square, so corners here are soft rather than sharp. */
+  --r-sm: 3px;
+  --r: 8px;
+  --r-lg: 18px;
   --r-pill: 999px;
 
   --gutter: clamp(1.25rem, 5vw, 5rem);
   --measure: 60ch;
   --wide: 100rem;
 
-  --rule: 1px solid var(--smoke);
+  --rule: 1px solid var(--line);
   --tap: 44px;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);

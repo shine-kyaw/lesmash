@@ -22,7 +22,8 @@ export const EDITORIAL = {
   heroLine: slot(
     'C-01',
     'agency draft, client approve',
-    'The line across the hero. Eight words at most. It has to be true.'
+    'The line across the hero. Eight words at most. It has to be true.',
+    'Pressed once, hard.'
   ),
   heroPositioning: slot(
     'C-01',
@@ -42,7 +43,8 @@ export const EDITORIAL = {
   howWeSmash: slot(
     'C-08',
     'agency draft, client approve',
-    'A hundred words on what actually happens at the pass: the ball weight, the press, the sear, how big the finished burger really is. Needs process detail from the kitchen before it can be drafted.'
+    'What actually happens at the pass, in a hundred words or fewer: the press, the crust, and how big the finished burger really is. Client to confirm the kitchen detail before this goes live.',
+    'A smash burger is thin on purpose. A ball of beef hits a hot plancha and is pressed flat — once, hard — and that press is what builds the dark, lacy crust around the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people came for. It is a technique, not a size. So every burger here tells you how many patties it holds before you order, and every photograph shows the plate as it leaves the pass.'
   ),
 
   /** C-10 — brand story. */

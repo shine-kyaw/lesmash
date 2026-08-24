@@ -1,104 +1,90 @@
 /* ===========================================================================
-   Header — a hairline that gets out of the way.
-   Transparent over the hero, then fills in once the reader leaves it, so the
-   film is never framed by a bar on first paint.
+   Header — the red bar.
+   The logo is a red tile, so the header is the same red tile stretched across
+   the top and the wordmark sits in it as a cream knockout. That removes the
+   old transparent-over-the-film behaviour and the light/dark logo swap it
+   would now need: one bar, one lockup, legible on every page from first paint.
    ========================================================================= */
 .hdr {
   position: fixed; left: 0; right: 0; z-index: 60;
   /* Sits below the preview bar when one is present; flush to the top when the
      site is live and the bar is gone. */
   top: var(--banner-h, 0px);
-  display: flex; align-items: center; height: 68px;
-  transition: background-color 400ms var(--ease), border-color 400ms var(--ease);
-  border-bottom: 1px solid transparent;
+  display: flex; align-items: center; height: 64px;
+  background: var(--red);
+  transition: box-shadow 400ms var(--ease);
 }
-.hdr.is-stuck {
-  background: rgb(10 10 12 / 0.86);
-  backdrop-filter: blur(14px);
-  border-bottom-color: var(--smoke);
-}
+.hdr.is-stuck { box-shadow: 0 2px 18px rgb(10 10 10 / 0.28); }
 .hdr__inner { display: flex; align-items: center; gap: var(--s5); width: 100%; }
 .hdr__nav { display: none; margin-left: auto; gap: var(--s6); }
 @media (min-width: 54rem) { .hdr__nav { display: flex; align-items: center; } }
+.hdr__nav .tlink { color: var(--cream); background-image: linear-gradient(var(--cream), var(--cream)); }
 .hdr__cta { margin-left: auto; }
 @media (min-width: 54rem) { .hdr__cta { margin-left: var(--s5); } }
 
-/* Wordmark. Set in the didone with the SMASH carrying the weight — the "Le"
-   is a whisper, the smash is the shout. */
-.mark {
-  font-family: var(--font-display);
-  font-size: 1.375rem; letter-spacing: -0.01em; text-decoration: none;
-  color: var(--bone); line-height: 1; white-space: nowrap;
-}
-.mark i { font-style: italic; font-size: 0.82em; opacity: 0.8; margin-right: 0.14em; }
-.mark b { font-weight: 700; letter-spacing: 0.02em; }
-.mark--lg { font-size: clamp(2rem, 4vw, 3rem); }
+/* ===========================================================================
+   Wordmark.
+   The real logo artwork, not type. The cream knockout was lifted from the
+   restaurant's own social artwork, so the letterforms on the site are the
+   letterforms on their signage rather than a near-match set in a web font.
+   ========================================================================= */
+.mark { display: block; text-decoration: none; line-height: 0; }
+.mark img { width: auto; height: 100%; }
+.mark--bar { height: 38px; }
+.mark--lg { height: clamp(64px, 9vw, 104px); }
+.mark--hero { height: clamp(88px, 17vw, 210px); }
 
 /* ===========================================================================
-   Hero — the film plane.
+   Hero — the burger, and the wordmark beside it.
+   The previous hero was a generative ember field standing in for footage that
+   had never been shot. Real product photography exists on their Facebook page,
+   so the hero is now a two-track split: the lockup and the actions on the
+   brand's deep red, the burger at native resolution beside it. No upscaling,
+   no video, nothing to buffer on a 5 Mbps connection.
    ========================================================================= */
-.hero { position: relative; min-height: 100svh; display: grid; isolation: isolate; }
-.hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: var(--void); }
-.hero__media > video,
-.hero__media > canvas,
-.hero__media > img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-}
-/*
- * Two stacked washes rather than one flat scrim: a warm bottom-up gradient to
- * seat the type, and a low-opacity oxblood tint so the footage reads as one
- * graded image instead of a video with a black box on it.
- */
-.hero__grade {
-  position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(to top, var(--void) 2%, rgb(10 10 12 / 0.35) 45%, rgb(10 10 12 / 0.55) 100%),
-    linear-gradient(115deg, rgb(61 17 9 / 0.5), transparent 60%);
+.hero {
+  position: relative;
+  background: linear-gradient(150deg, var(--red-deep) 0%, var(--red-dark) 62%, #2e0405 100%);
+  color: var(--cream);
+  overflow: hidden;
 }
 .hero__inner {
-  position: relative; display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: 100svh; padding-block: 8rem var(--s8); gap: var(--s6);
+  display: grid; gap: var(--s7);
+  padding-block: calc(64px + var(--s8)) var(--s8);
+  align-items: center;
 }
-.hero__title {
-  font-family: var(--font-display);
-  font-size: var(--t-hero); line-height: var(--lh-tight);
-  letter-spacing: -0.035em; margin: 0;
-  text-wrap: balance;
-}
-.hero__title i { font-style: italic; font-weight: 400; }
-.hero__title em { font-style: normal; color: var(--ember); }
-.hero__foot {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: var(--s6); flex-wrap: wrap;
-}
-.hero__scroll { display: none; }
-@media (min-width: 54rem) {
-  .hero__scroll { display: flex; align-items: center; gap: var(--s3); }
-  .hero__scroll span { display: block; width: 46px; height: 1px; background: var(--dim); position: relative; overflow: hidden; }
-  .hero__scroll span::after {
-    content: ''; position: absolute; inset: 0; background: var(--ember);
-    transform: translateX(-100%); animation: sweep 2.6s var(--ease) infinite;
+@media (min-width: 60rem) {
+  .hero__inner {
+    grid-template-columns: 1fr minmax(0, 30rem);
+    gap: var(--s8);
+    padding-block: calc(64px + var(--s9)) var(--s9);
   }
 }
-@keyframes sweep { 0% { transform: translateX(-100%);} 60%,100% { transform: translateX(100%);} }
-
-/* Shown when no film has been supplied — see MediaPlane.astro. */
-.hero__note {
-  position: absolute; right: var(--gutter); top: 92px; z-index: 2;
-  max-width: 22rem; padding: var(--s4);
-  border: 1px dashed var(--dim); border-radius: var(--r);
-  background: rgb(10 10 12 / 0.75); backdrop-filter: blur(6px);
-  font-family: var(--font-mono); font-size: 11px; line-height: 1.55; color: var(--ash);
+.hero__copy { display: flex; flex-direction: column; gap: var(--s5); align-items: flex-start; }
+.hero__line {
+  font-family: var(--font-script);
+  font-size: clamp(1.75rem, 1rem + 3.4vw, 3.25rem);
+  line-height: 1.15; color: var(--gold); margin: 0; max-width: 22ch;
 }
-.hero__note b { color: var(--brass); display: block; margin-bottom: 4px; letter-spacing: 0.1em; }
+.hero__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s5); }
+/* The plate is round-cornered like the logo tile, and it carries the photo's
+   own red ground, so it reads as part of the field rather than pasted on it. */
+.hero__plate {
+  position: relative; border-radius: var(--r-lg); overflow: hidden;
+  box-shadow: 0 30px 70px -30px rgb(0 0 0 / 0.65);
+}
+.hero__plate img { width: 100%; height: auto; }
 
 /* ===========================================================================
    Marquee — a continuous ticker of what the kitchen actually does.
-   One direction, slow, pausable on hover, frozen under reduced motion.
+   Black ground with cream type and red bullets, which is the pairing on their
+   own cover art. One direction, slow, pausable on hover, frozen under
+   reduced motion.
    ========================================================================= */
 .marquee {
-  border-block: var(--rule); padding-block: var(--s3);
-  overflow: hidden; white-space: nowrap; background: var(--char);
+  padding-block: var(--s3);
+  overflow: hidden; white-space: nowrap;
+  background: var(--ink); color: var(--cream);
 }
 /* Slow enough to actually read. A fast ticker of oversized display type is a
    2021 signature; a slow tracked mono strip carrying opening information is
@@ -109,80 +95,91 @@
   display: inline-flex; align-items: center; gap: var(--s5);
   font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
   text-transform: uppercase; letter-spacing: var(--track-label);
-  color: var(--ash); padding-right: var(--s5);
+  color: rgb(225 232 222 / 0.85); padding-right: var(--s5);
 }
-.marquee__item::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--ember); }
+.marquee__item::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
 @keyframes slide { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee__track { animation: none; } }
 
 /* ===========================================================================
    Menu — an editorial list, not photo cards.
-   Award-winning restaurant menus are typographic: the dish name is the image.
-   This also means the page carries no weight it does not need on a slow phone.
+   The dish name is set in the body face at its heaviest rather than in the
+   display face: forty rows of Gasoek is a wall, and the name has to be read,
+   not shouted.
    ========================================================================= */
 .menu-nav {
-  position: sticky; top: calc(68px + var(--banner-h, 0px)); z-index: 40;
-  background: rgb(10 10 12 / 0.92); backdrop-filter: blur(14px);
+  position: sticky; top: calc(64px + var(--banner-h, 0px)); z-index: 40;
+  background: rgb(248 245 236 / 0.94); backdrop-filter: blur(14px);
   border-bottom: var(--rule);
 }
 .menu-nav__scroll { display: flex; gap: var(--s5); overflow-x: auto; padding-block: var(--s4); scrollbar-width: none; }
 .menu-nav__scroll::-webkit-scrollbar { display: none; }
 .menu-nav a {
-  flex: 0 0 auto; font-family: var(--font-mono); font-size: var(--t-xs);
+  flex: 0 0 auto; font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
   text-transform: uppercase; letter-spacing: var(--track-label);
-  color: var(--ash); text-decoration: none; padding-block: 2px;
-  border-bottom: 1px solid transparent; transition: color 240ms var(--ease), border-color 240ms var(--ease);
+  color: var(--ink-2); text-decoration: none; padding-block: 2px;
+  border-bottom: 2px solid transparent; transition: color 240ms var(--ease), border-color 240ms var(--ease);
 }
-.menu-nav a:hover { color: var(--bone); }
-.menu-nav a.is-active { color: var(--ember); border-bottom-color: var(--ember); }
+.menu-nav a:hover { color: var(--ink); }
+.menu-nav a.is-active { color: var(--red-deep); border-bottom-color: var(--red); }
 
-.course { scroll-margin-top: calc(150px + var(--banner-h, 0px)); padding-block: var(--s8) 0; }
+.course { scroll-margin-top: calc(146px + var(--banner-h, 0px)); padding-block: var(--s8) 0; }
 .course__head { display: flex; align-items: baseline; gap: var(--s4); margin-bottom: var(--s6); }
-.course__num { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--brass); }
+.course__num { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--red-deep); }
 .course__title { font-size: var(--t-lg); }
 
-.dishes { list-style: none; padding: 0; margin: 0; border-top: var(--rule); max-width: 62rem; }
+.dishes { list-style: none; padding: 0; margin: 0; border-top: 2px solid var(--ink); max-width: 62rem; }
 .dish { border-bottom: var(--rule); }
 .dish__row {
   display: grid; grid-template-columns: 1fr auto; align-items: baseline;
   gap: var(--s4) var(--s5); padding-block: var(--s5);
-  transition: padding-inline 400ms var(--ease);
+  transition: padding-inline 400ms var(--ease), background-color 400ms var(--ease);
 }
 @media (min-width: 54rem) {
-  .dish:hover .dish__row { padding-inline: var(--s4); }
+  .dish:hover .dish__row { padding-inline: var(--s4); background: var(--paper-2); }
 }
 .dish__name {
-  font-family: var(--font-display); font-size: clamp(1.375rem, 2.6vw, 2rem);
-  line-height: 1.15; letter-spacing: -0.015em;
+  font-family: var(--font-body); font-weight: 800;
+  font-size: clamp(1.125rem, 1.6vw, 1.4375rem);
+  line-height: 1.2; letter-spacing: -0.01em; text-transform: none;
 }
 .dish__price {
-  font-family: var(--font-mono); font-size: var(--t-sm); color: var(--brass);
-  font-variant-numeric: tabular-nums; white-space: nowrap;
+  font-family: var(--font-mono); font-size: var(--t-sm); font-weight: 500;
+  color: var(--red-deep); font-variant-numeric: tabular-nums; white-space: nowrap;
 }
-.dish__price--unset { color: var(--dim); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.1em; }
+.dish__price--unset { color: var(--ink-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.1em; }
 .dish__meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
-.dish__desc { grid-column: 1 / -1; color: var(--ash); font-size: var(--t-sm); max-width: 52ch; }
-.dish--out .dish__row { opacity: 0.45; }
+.dish__desc { grid-column: 1 / -1; color: var(--ink-2); font-size: var(--t-sm); max-width: 52ch; }
+.dish--out .dish__row { opacity: 0.5; }
 
 /* Facts sit on the row, never behind a tap: patty count and portion are the
    whole reason this project exists. */
 .fact {
-  font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
-  letter-spacing: 0.1em; color: var(--ash);
-  padding: 3px 9px; border: 1px solid var(--smoke); border-radius: var(--r-pill);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-2);
+  padding: 3px 9px; border: 1px solid var(--line); border-radius: var(--r-pill);
+  background: var(--paper-2);
 }
-.fact--hot { color: var(--ember); border-color: rgb(255 77 25 / 0.45); }
-.fact--warn { color: var(--brass); border-color: rgb(215 169 58 / 0.4); }
+.fact--hot { color: #fff; background: var(--red); border-color: var(--red); }
+.fact--warn { color: var(--warn); border-color: rgb(138 90 18 / 0.4); background: rgb(138 90 18 / 0.07); }
+.band--red .fact, .band--ink .fact {
+  color: var(--cream); background: rgb(225 232 222 / 0.1); border-color: rgb(225 232 222 / 0.28);
+}
+.band--red .fact--warn, .band--ink .fact--warn {
+  color: var(--gold); border-color: rgb(255 217 167 / 0.45); background: rgb(255 217 167 / 0.1);
+}
 
 /* ===========================================================================
-   Split — a two-column editorial block (the story, the room).
+   Split — a two-column editorial block (the pass, the kitchen).
    ========================================================================= */
 .split { display: grid; gap: var(--s7); align-items: center; }
-@media (min-width: 54rem) { .split { grid-template-columns: 1fr 1fr; gap: var(--s9); } }
-.split--wide-left { }
+@media (min-width: 54rem) { .split { grid-template-columns: 1fr 1fr; gap: var(--s8); } }
 @media (min-width: 54rem) { .split--wide-left { grid-template-columns: 1.15fr 0.85fr; } }
 
-.figure { position: relative; overflow: hidden; background: var(--char); border-radius: var(--r); }
+.figure {
+  position: relative; overflow: hidden; background: var(--paper-3);
+  border-radius: var(--r-lg);
+}
 .figure > canvas, .figure > img { width: 100%; height: 100%; object-fit: cover; }
 .figure--tall { aspect-ratio: 4 / 5; }
 .figure--wide { aspect-ratio: 3 / 2; }
@@ -190,41 +187,46 @@
 .figure__cap {
   position: absolute; left: 0; bottom: 0; right: 0; padding: var(--s4);
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
-  color: var(--ash); background: linear-gradient(transparent, rgb(10 10 12 / 0.85));
+  color: var(--cream); background: linear-gradient(transparent, rgb(10 10 10 / 0.8));
 }
 
 /* ===========================================================================
-   Stat row — three plain numbers, mono, hairline separated.
-   ========================================================================= */
-.stats { display: grid; gap: var(--s6); }
-@media (min-width: 42rem) { .stats { grid-template-columns: repeat(3, 1fr); } }
-.stat { border-top: 1px solid var(--dim); padding-top: var(--s4); }
-.stat__n { font-family: var(--font-display); font-size: var(--t-md); color: var(--bone); }
-.stat__l { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ash); margin-top: var(--s2); }
-
-/* ===========================================================================
-   Visit — the branches.
+   Visit — the branches, on the red band.
    ========================================================================= */
 .venues { display: grid; gap: var(--s6); }
 @media (min-width: 48rem) { .venues { grid-template-columns: repeat(2, 1fr); } }
-.venue { border-top: 1px solid var(--dim); padding-top: var(--s5); display: flex; flex-direction: column; gap: var(--s4); }
-.venue__name { font-family: var(--font-display); font-size: var(--t-md); }
-.venue__addr { color: var(--ash); font-size: var(--t-sm); font-style: normal; }
+.venue {
+  border-top: 2px solid rgb(225 232 222 / 0.35); padding-top: var(--s5);
+  display: flex; flex-direction: column; gap: var(--s4);
+}
+.venue__name { font-size: var(--t-md); }
+.venue__addr { color: rgb(225 232 222 / 0.82); font-size: var(--t-sm); font-style: normal; }
 .venue .btn-row { margin-top: auto; padding-top: var(--s3); }
 
 /* ===========================================================================
-   Footer.
+   Footer — the black field off their cover art.
    ========================================================================= */
-.ftr { border-top: var(--rule); padding-block: var(--s8) var(--s6); }
+.ftr { background: var(--ink); color: var(--cream); padding-block: var(--s8) var(--s6); }
 .ftr__grid { display: grid; gap: var(--s7); }
 @media (min-width: 54rem) { .ftr__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
+.ftr .label { color: var(--gold); }
 .ftr__list { list-style: none; padding: 0; display: grid; gap: var(--s3); }
-.ftr__list a { text-decoration: none; color: var(--ash); font-size: var(--t-sm); }
-.ftr__list a:hover { color: var(--bone); }
+.ftr__list a { text-decoration: none; color: rgb(225 232 222 / 0.78); font-size: var(--t-sm); }
+.ftr__list a:hover { color: var(--cream); }
+.ftr__lede { color: rgb(225 232 222 / 0.82); }
 .ftr__bottom {
-  margin-top: var(--s8); padding-top: var(--s4); border-top: var(--rule);
+  margin-top: var(--s8); padding-top: var(--s4); border-top: 1px solid rgb(225 232 222 / 0.18);
   display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between;
-  font-family: var(--font-mono); font-size: 11px; color: var(--dim); letter-spacing: 0.06em;
+  font-family: var(--font-mono); font-size: 11px; color: rgb(225 232 222 / 0.55); letter-spacing: 0.06em;
+}
+
+/* The giant wordmark, cut by the footer edge. Set in the display face because
+   at this size it is a graphic, and the artwork lockup would go soft. */
+.ftr__wordmark {
+  margin-top: var(--s8); font-family: var(--font-display);
+  font-size: clamp(4rem, 17vw, 17rem); line-height: 0.78; letter-spacing: -0.03em;
+  color: var(--cream); opacity: 0.08; user-select: none; pointer-events: none;
+  white-space: nowrap; overflow: hidden;
 }
 
 /* ===========================================================================
@@ -234,10 +236,10 @@
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
   display: flex; gap: var(--s2);
   padding: var(--s3) var(--s4) calc(var(--s3) + env(safe-area-inset-bottom, 0px));
-  background: rgb(20 19 23 / 0.94); backdrop-filter: blur(14px);
-  border-top: var(--rule);
+  background: rgb(10 10 10 / 0.95); backdrop-filter: blur(14px);
 }
 .bar .btn { flex: 1; padding-inline: var(--s3); }
+.bar .btn--ghost { border-color: rgb(225 232 222 / 0.45); color: var(--cream); }
 @media (min-width: 54rem) { .bar { display: none; } }
 body { padding-bottom: 84px; }
 @media (min-width: 54rem) { body { padding-bottom: 0; } }
@@ -247,13 +249,12 @@ body { padding-bottom: 84px; }
    ========================================================================= */
 .prelaunch {
   position: fixed; top: 0; left: 0; right: 0; z-index: 70;
-  background: var(--brass); color: #17130a;
+  background: var(--ink); color: var(--gold);
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
   padding: var(--s2) 0;
 }
 .prelaunch p { max-width: none; }
-.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; }
-
+.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; color: var(--cream); }
 
 /* ===========================================================================
    Two-track layout — a narrow rail of labels and numerals against a wide
@@ -263,12 +264,13 @@ body { padding-bottom: 84px; }
 @media (min-width: 62rem) {
   .track { grid-template-columns: minmax(9rem, 15%) 1fr; gap: var(--s7); align-items: start; }
 }
-.track__rail { position: sticky; top: calc(150px + var(--banner-h, 0px)); }
+.track__rail { position: sticky; top: calc(146px + var(--banner-h, 0px)); }
 @media (max-width: 61.99rem) { .track__rail { position: static; } }
 .track__numeral {
   font-family: var(--font-display); font-size: var(--t-numeral);
-  line-height: 0.8; color: var(--smoke); letter-spacing: -0.04em;
+  line-height: 0.8; color: var(--paper-3); letter-spacing: -0.02em;
 }
+.band--red .track__numeral, .band--ink .track__numeral { color: rgb(225 232 222 / 0.16); }
 
 /*
  * Section hero dish — one item per course is visibly promoted rather than the
@@ -276,14 +278,10 @@ body { padding-bottom: 84px; }
  * without needing a photograph of every dish.
  */
 .dish--hero .dish__row { padding-block: var(--s6); }
-.dish--hero .dish__name { font-size: clamp(1.75rem, 1rem + 3vw, 3rem); }
-.dish--hero .dish__desc { color: var(--bone); font-size: var(--t-body); max-width: 46ch; }
+.dish--hero .dish__name { font-size: clamp(1.375rem, 1rem + 1.6vw, 2rem); }
+.dish--hero .dish__desc { color: var(--ink); font-size: var(--t-body); max-width: 46ch; }
 
-/* Giant wordmark footer, cut by a fade. Scales with the container and is
-   decorative — the real navigation sits above it. */
-.ftr__wordmark {
-  margin-top: var(--s8); font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(4rem, 17vw, 17rem); line-height: 0.78; letter-spacing: -0.045em;
-  color: var(--bone); opacity: 0.09; user-select: none; pointer-events: none;
-  white-space: nowrap; overflow: hidden;
-}
+/* The hero is a brand ground but not a .band-- section, so the two inverted
+   voices it uses are declared here rather than inherited. */
+.hero .label { color: var(--gold); }
+.hero .fact { color: var(--cream); background: rgb(225 232 222 / 0.1); border-color: rgb(225 232 222 / 0.28); }

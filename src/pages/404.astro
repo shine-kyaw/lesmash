@@ -7,15 +7,15 @@ import { href } from '../lib/href';
 <Base path="/404" title={title('Page not found')} description={DESCRIPTIONS.notFound} noindex>
   <section class="section" style="min-height:70svh;display:flex;align-items:center">
     <div class="wrap">
-      <p class="label label--ember">404</p>
+      <p class="label label--red">404</p>
       <h1 style="margin-top:var(--s4)">
-        Nothing on<br /><span class="serif-em">this pass.</span>
+        Nothing on<br /><span class="script">this pass.</span>
       </h1>
       <p class="lede" style="margin-top:var(--s5)">
         That page does not exist. The menu is where most people are heading.
       </p>
       <div class="btn-row" style="margin-top:var(--s6)">
-        <a class="btn btn--bone" href={href("/menu")}>{COPY.cta.menu}</a>
+        <a class="btn btn--ink" href={href("/menu")}>{COPY.cta.menu}</a>
         <a class="btn btn--ghost" href={href("/")}>Home</a>
       </div>
     </div>

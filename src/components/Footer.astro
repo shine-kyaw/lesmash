@@ -1,4 +1,5 @@
 ---
+import Wordmark from './Wordmark.astro';
 import { SITE } from '../lib/site.config.mjs';
 import { COPY } from '../data/copy';
 import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
@@ -9,6 +10,9 @@ import { href } from '../lib/href';
  * lets the site drop a separate contact page, and it is what a customer needs
  * when Facebook is unreachable. Social links go outward only — no SDK, no
  * embed, no pixel.
+ *
+ * Set on the black field from the restaurant's own cover art, which is the
+ * third ground in the identity after the red tile and the paper.
  */
 interface Props { branches: Branch[] }
 const { branches } = Astro.props;
@@ -25,8 +29,8 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="ftr__grid">
       <div>
-        <a class="mark mark--lg" href={href("/")}><i>Le</i><b>SMASH</b></a>
-        <p class="lede" style="margin-top:var(--s4)">{COPY.footer.delivery}</p>
+        <Wordmark size="lg" />
+        <p class="lede ftr__lede" style="margin-top:var(--s5)">{COPY.footer.delivery}</p>
       </div>
 
       <div>
@@ -36,10 +40,10 @@ const year = new Date().getFullYear();
             const phone = primaryPhone(branch);
             return (
               <li>
-                <strong style="display:block;font-family:var(--font-body);color:var(--bone)">
+                <strong style="display:block;font-family:var(--font-body);color:var(--cream)">
                   {branch.name}
                 </strong>
-                <span style="color:var(--ash);font-size:var(--t-sm)">
+                <span style="color:rgb(225 232 222 / 0.72);font-size:var(--t-sm)">
                   {branch.addressLine}, {branch.township}, {branch.city}
                 </span>
                 <span style="display:block;margin-top:6px">
@@ -69,6 +73,8 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
+
+    <p class="ftr__wordmark" aria-hidden="true">SMASH</p>
 
     <div class="ftr__bottom">
       <span>© {year} {SITE.brand.legal}</span>

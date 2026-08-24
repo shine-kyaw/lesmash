@@ -51,7 +51,7 @@ const directionsHref = branches[0] ? directionsUrl(branches[0]) : href('/menu');
 
     {/* Mobile only — two taps to order or find us, from anywhere. */}
     <div class="bar">
-      <a class="btn btn--ember" href={orderHref}
+      <a class="btn btn--red" href={orderHref}
          target={orderable[0] ? '_blank' : undefined}
          rel={orderable[0] ? 'noopener noreferrer' : undefined}
          data-analytics={orderable[0] ? 'foodpanda_outbound' : 'order_cta_click'}
@@ -60,8 +60,6 @@ const directionsHref = branches[0] ? directionsUrl(branches[0]) : href('/menu');
       <a class="btn btn--ghost" href={directionsHref} target="_blank" rel="noopener noreferrer"
          data-analytics="directions_click" data-source="bar">{COPY.cta.directions}</a>
     </div>
-
-    <div class="grain" aria-hidden="true"></div>
 
     <script src={asset('/scripts/app.js')} defer is:inline></script>
     <script src={asset('/scripts/ember.js')} defer is:inline></script>

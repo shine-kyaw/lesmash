@@ -29,6 +29,8 @@ export function organizationSchema() {
     name: SITE.brand.legal,
     alternateName: SITE.brand.display,
     url: absoluteUrl('/'),
+    logo: absoluteUrl('/brand/logo-badge.png'),
+    image: absoluteUrl('/og.jpg'),
     sameAs: sameAs(),
     areaServed: 'Yangon, Myanmar',
   });
@@ -48,6 +50,7 @@ export function websiteSchema() {
 export function restaurantSchema(branch: Branch, opts: { withMenu?: boolean } = {}) {
   return clean({
     '@type': 'Restaurant',
+    image: absoluteUrl('/og.jpg'),
     '@id': absoluteUrl(`/#${branch.slug}`),
     name: `${SITE.brand.legal} — ${branch.name}`,
     url: absoluteUrl('/'),

@@ -24,18 +24,18 @@ const { slot, class: className = '', as: Tag = 'p' } = Astro.props;
 
 <style>
   .slot-empty {
-    border-left: 2px solid var(--brass);
+    border-left: 2px solid var(--warn);
     padding: var(--s3) var(--s4);
-    background: rgb(215 169 58 / 0.06);
+    background: rgb(138 90 18 / 0.06);
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 1.6;
-    color: var(--ash);
+    color: var(--ink-2);
     max-width: 46ch;
   }
   .slot-empty span {
     display: block;
-    color: var(--brass);
+    color: var(--warn);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-size: 10px;

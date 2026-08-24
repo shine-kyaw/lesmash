@@ -27,9 +27,9 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
 <Base path="/menu" title={title('Menu & Prices')} description={DESCRIPTIONS.menu} schema={schema}>
   <section class="section" style="padding-bottom:var(--s6)">
     <div class="wrap">
-      <p class="label label--ember">The menu</p>
+      <p class="label label--red">The menu</p>
       <h1 style="margin-top:var(--s4)">
-        Everything we<br /><span class="serif-em">put on the pass.</span>
+        Everything we<br /><span class="script">put on the pass.</span>
       </h1>
       <div style="margin-top:var(--s5);max-width:46ch">
         <Slot slot={EDITORIAL.priceContext} class="lede" />

@@ -37,8 +37,8 @@ actual content files.
 
 | Ref | What we need | Effect today |
 |---|---|---|
-| **Hero film + photography** | A silent hero loop, plus food shots with countable patties and a scale reference, and the rooms | Every media plane renders a generative ember field. This is the single highest-leverage deliverable in the project. Filenames and compression targets: `public/media/README.md` |
-| **The real logo** | The Le SMASH logo files | The wordmark is currently set in Bodoni Moda as a stand-in. Facebook and every image host are blocked from this environment, so it could not be retrieved |
+| **Photography** | Food shots with countable patties and a scale reference, and the rooms | Three stills cropped from the client's own social posts are standing in. They unblock the layout but meet none of the brief's acceptance criteria — `public/media/README.md`. Still the single highest-leverage deliverable in the project |
+| **The real logo, in vector** | An `.ai`, `.svg` or `.eps` original | Supplied — recovered from the client's Facebook page and in use as raster artwork (`public/brand/`). A vector original would sharpen the header lockup and let the favicon and OG card be regenerated cleanly |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
 | **C-11** | Portion-honesty statement | Recommended; high value; drafted only once the client approves the principle |
 | **C-09** | Breakfast intro, 150–250 words | `/breakfast` has no unique intro copy, which weakens it for search |

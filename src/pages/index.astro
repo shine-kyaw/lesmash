@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Wordmark from '../components/Wordmark.astro';
 import MediaPlane from '../components/MediaPlane.astro';
 import Slot from '../components/Slot.astro';
 import Dish from '../components/Dish.astro';
@@ -7,11 +8,11 @@ import { COPY } from '../data/copy';
 import { EDITORIAL } from '../data/editorial';
 import { SITE } from '../lib/site.config.mjs';
 import {
-  getBranches, getMenuItems, featuredItems, directionsUrl, primaryPhone, IS_PREVIEW,
+  getBranches, getMenuItems, featuredItems, directionsUrl, primaryPhone,
 } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { organizationSchema, websiteSchema, restaurantSchema } from '../lib/schema';
-import { href } from '../lib/href';
+import { href, asset } from '../lib/href';
 
 const branches = await getBranches();
 const items = await getMenuItems();
@@ -36,35 +37,40 @@ const ticker = [
 ---
 <Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
   {/*
-    Hero: the wordmark is the image.
-    With no photography and no film supplied, the type carries the opening —
-    which is also the stronger of the two award-winning restaurant hero
-    patterns. The plane behind it is a generative ember field; a real film
-    drops into public/media/hero.mp4 and layers over it with no code change.
+    Hero: the real lockup on the brand's own red, and the burger beside it.
+    This replaced a generative ember field that stood in for footage nobody had
+    shot. The photograph is the restaurant's own, used at its native size, so
+    nothing here is upscaled and nothing has to buffer.
   */}
   <section class="hero">
-    <div class="hero__media">
-      <MediaPlane file="hero.mp4" poster="hero-poster.jpg" video ember="hero" alt="" />
-    </div>
-    <div class="hero__grade" aria-hidden="true"></div>
-
     <div class="wrap hero__inner">
-      <p class="label label--ember" data-smash-eyebrow>
-        Smash burgers · {SITE.geo}, Myanmar
-      </p>
-
-      <h1 class="hero__title" data-smash>
-        <i>Le</i><br /><em data-smash-word>SMASH</em>
-      </h1>
-
-      <div class="hero__foot">
-        <div class="btn-row">
-          <a class="btn btn--bone" href={href("/menu")}>{COPY.cta.menu}</a>
-          <a class="btn btn--ghost" href="#visit">{COPY.nav.visit}</a>
-        </div>
-        <p class="hero__scroll label" aria-hidden="true">
-          <span></span>{COPY.labels.scroll}
+      <div class="hero__copy">
+        <p class="label" data-smash-eyebrow>
+          Smash burgers · {SITE.geo}, Myanmar
         </p>
+
+        <h1 class="visually-hidden">Le SMASH Burgers &amp; Co. — smash burgers in {SITE.geo}</h1>
+        <div data-smash-word style="transform-origin:0% 100%">
+          <Wordmark size="hero" link={false} />
+        </div>
+
+        {EDITORIAL.heroLine.value && <p class="hero__line">{EDITORIAL.heroLine.value}</p>}
+
+        <div class="hero__foot">
+          <div class="btn-row">
+            <a class="btn btn--cream" href={href("/menu")}>{COPY.cta.menu}</a>
+            <a class="btn btn--ghost" href="#visit">{COPY.nav.visit}</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__plate">
+        <img
+          src={asset('/media/burger.jpg')}
+          alt="A Le SMASH burger held in one hand, the patties visible in profile"
+          width="1008" height="976"
+          fetchpriority="high" decoding="async"
+        />
       </div>
     </div>
   </section>
@@ -93,7 +99,7 @@ const ticker = [
 
       <div class="split split--wide-left">
         <div class="stack-lg reveal">
-          <h2>Every patty is<br /><span class="serif-em">pressed to order.</span></h2>
+          <h2>Every patty is<br /><span class="script">pressed to order.</span></h2>
           <Slot slot={EDITORIAL.heroPositioning} class="lede" />
           <Slot slot={EDITORIAL.howWeSmash} />
           <Slot slot={EDITORIAL.portionHonesty} />
@@ -101,12 +107,8 @@ const ticker = [
         </div>
 
         <div class="figure figure--tall reveal">
-          <MediaPlane file="sear.jpg" ember="sear" alt="" />
-          <p class="figure__cap">
-            {IS_PREVIEW
-              ? 'Awaiting photography — a patty on the press, patties countable in profile'
-              : 'On the press'}
-          </p>
+          <MediaPlane file="sear.jpg" ember="sear" alt="A plate leaving the Le SMASH pass" />
+          <p class="figure__cap">Off the pass, plated as it is served</p>
         </div>
       </div>
     </div>
@@ -138,26 +140,26 @@ const ticker = [
   <section class="section rule-top">
     <div class="wrap track">
       <div class="track__rail">
-        <p class="label">The room</p>
+        <p class="label">The kitchen</p>
         <p class="track__numeral" aria-hidden="true">03</p>
       </div>
 
       <div class="split">
         <div class="figure figure--wide reveal">
-          <MediaPlane file="room-01.jpg" ember="room" alt="" />
-          <p class="figure__cap">
-            {IS_PREVIEW ? 'Awaiting photography — the room, evening' : 'The room'}
-          </p>
+          <MediaPlane file="plate-01.jpg" ember="room" alt="A plate from the Le SMASH kitchen" />
+          <p class="figure__cap">From the Le SMASH kitchen</p>
         </div>
         <div class="stack-lg reveal">
-          <h2>A bistro that<br /><span class="serif-em">happens to smash.</span></h2>
+          <h2>A bistro that<br /><span class="script">happens to smash.</span></h2>
           <Slot slot={EDITORIAL.story} class="lede" />
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section rule-top" id="visit">
+  {/* Visit sits on the red band. It is the page's last ask, and the brand
+      ground makes it read as an ask rather than as one more list. */}
+  <section class="section band--red" id="visit">
     <div class="wrap track">
       <div class="track__rail">
         <p class="label">Visit</p>
@@ -207,7 +209,7 @@ const ticker = [
                     </a>
                   )}
                   {branch.foodpandaUrl && (
-                    <a class="btn btn--ember" href={branch.foodpandaUrl}
+                    <a class="btn btn--cream" href={branch.foodpandaUrl}
                        target="_blank" rel="noopener noreferrer"
                        data-analytics="foodpanda_outbound" data-branch={branch.slug} data-source="visit">
                       {COPY.cta.orderShort}

@@ -19,11 +19,17 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /*
+   * Brand grounds, not embers. The palette was re-cut when the real identity
+   * was recovered: these are the reds and the cream out of the logo and the
+   * restaurant's own artwork, so a plane still waiting on a photograph reads
+   * as a Le SMASH field rather than as a dark room.
+   */
   var PALETTES = {
-    hero:   { blooms: [[210, 74, 28], [168, 62, 24], [86, 24, 10]], count: 4, sparks: 34, alpha: 0.20 },
-    room:   { blooms: [[198, 155, 60], [104, 58, 26], [40, 26, 18]], count: 3, sparks: 10, alpha: 0.16 },
-    sear:   { blooms: [[224, 84, 30], [150, 40, 16], [58, 18, 9]],   count: 3, sparks: 20, alpha: 0.24 },
-    ash:    { blooms: [[104, 98, 90], [64, 58, 54], [28, 26, 24]],   count: 3, sparks: 6,  alpha: 0.15 }
+    hero:   { blooms: [[216, 53, 54], [162, 20, 22], [90, 8, 9]],   count: 4, sparks: 26, alpha: 0.26 },
+    room:   { blooms: [[255, 217, 167], [216, 53, 54], [129, 7, 4]], count: 3, sparks: 10, alpha: 0.20 },
+    sear:   { blooms: [[232, 81, 79], [200, 40, 40], [110, 10, 11]], count: 3, sparks: 18, alpha: 0.28 },
+    ash:    { blooms: [[225, 232, 222], [190, 186, 172], [140, 132, 118]], count: 3, sparks: 6, alpha: 0.18 }
   };
 
   function rand(a, b) { return a + Math.random() * (b - a); }
@@ -80,7 +86,7 @@
     }
 
     function frame() {
-      ctx.fillStyle = '#12100e';
+      ctx.fillStyle = '#4e0708';
       ctx.fillRect(0, 0, w, h);
 
       ctx.globalCompositeOperation = 'lighter';
@@ -105,7 +111,7 @@
           p.y += p.vy; p.x += p.vx;
           if (p.y < -10) sparks[s] = newSpark(false);
         }
-        ctx.fillStyle = 'rgba(226,150,92,' + (0.11 * p.life) + ')';
+        ctx.fillStyle = 'rgba(255,217,167,' + (0.11 * p.life) + ')';
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
       }
       ctx.globalCompositeOperation = 'source-over';
@@ -113,8 +119,8 @@
       // Vignette — seats the plane behind the type instead of letting the
       // blooms run to the edge of the viewport.
       var v = ctx.createRadialGradient(w * 0.4, h * 0.72, Math.min(w, h) * 0.18, w * 0.45, h * 0.6, Math.max(w, h) * 0.85);
-      v.addColorStop(0, 'rgba(18,16,14,0)');
-      v.addColorStop(1, 'rgba(18,16,14,0.88)');
+      v.addColorStop(0, 'rgba(78,7,8,0)');
+      v.addColorStop(1, 'rgba(46,4,5,0.82)');
       ctx.fillStyle = v; ctx.fillRect(0, 0, w, h);
 
       if (!reduced) raf = requestAnimationFrame(frame);

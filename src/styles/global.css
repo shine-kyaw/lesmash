@@ -8,8 +8,8 @@ body {
   font-family: var(--font-body);
   font-size: var(--t-body);
   line-height: var(--lh-body);
-  color: var(--bone);
-  background: var(--void);
+  color: var(--ink);
+  background: var(--paper);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -17,7 +17,7 @@ img, picture, svg, video, canvas { display: block; max-width: 100%; }
 img, video { height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
 p, li { overflow-wrap: break-word; }
-::selection { background: var(--ember); color: var(--bone); }
+::selection { background: var(--red); color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -27,12 +27,18 @@ p, li { overflow-wrap: break-word; }
   }
 }
 
-/* --- Typography ------------------------------------------------------------- */
+/* --- Typography -------------------------------------------------------------
+ * Headings are set in the logo's display face, which is extremely heavy. That
+ * buys two constraints: it is always uppercase (the lowercase is unusable at
+ * this weight), and it is tracked in slightly, because Gasoek's sidebearings
+ * were drawn for single words rather than for lines of text.
+ * -------------------------------------------------------------------------- */
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: var(--lh-head);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 h1 { font-size: var(--t-xl); }
@@ -49,22 +55,35 @@ a { color: inherit; }
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: var(--track-label);
-  color: var(--ash);
+  color: var(--ink-2);
 }
-.label--ember { color: var(--ember); }
+.label--red { color: var(--red-deep); }
 .lede {
-  font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+  font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
   line-height: 1.5;
-  color: var(--ash);
+  color: var(--ink-2);
   max-width: 46ch;
 }
-.serif-em { font-family: var(--font-display); font-style: italic; }
+
+/*
+ * The script voice, off the "Le" in the logo. It is the counterweight to all
+ * that display weight, and it is rationed hard — a phrase at a time, never a
+ * sentence, and never anything a reader has to work through.
+ */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
 
 /* --- Focus, skip ------------------------------------------------------------ */
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: var(--r-sm); }
+.hdr :focus-visible, .band--red :focus-visible, .band--ink :focus-visible { outline-color: var(--gold); }
 .skip-link {
   position: absolute; left: var(--s4); top: -120%; z-index: 200;
-  padding: var(--s3) var(--s5); background: var(--bone); color: var(--void);
+  padding: var(--s3) var(--s5); background: var(--ink); color: var(--paper);
   font-family: var(--font-mono); font-size: var(--t-xs); text-decoration: none;
 }
 .skip-link:focus { top: var(--s4); }
@@ -75,10 +94,26 @@ a { color: inherit; }
 
 /* --- Layout ----------------------------------------------------------------- */
 .wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--gutter); }
-.section { padding-block: clamp(var(--s8), 11vw, var(--s10)); }
+.section { padding-block: clamp(var(--s8), 10vw, var(--s9)); }
 .rule-top { border-top: var(--rule); }
 .stack > * + * { margin-top: var(--s4); }
 .stack-lg > * + * { margin-top: var(--s6); }
+
+/*
+ * A full-bleed band in one of the two brand grounds. The page alternates paper
+ * with a brand ground rather than running one flat colour, which is what the
+ * restaurant's own artwork does — red field, black field, back to red.
+ */
+.band--red {
+  background: linear-gradient(160deg, var(--red-deep), var(--red-dark));
+  color: var(--cream);
+}
+.band--ink { background: var(--ink); color: var(--cream); }
+.band--red .lede, .band--ink .lede { color: rgb(225 232 222 / 0.82); }
+.band--red .label, .band--ink .label { color: var(--gold); }
+.band--red h1, .band--red h2, .band--red h3,
+.band--ink h1, .band--ink h2, .band--ink h3 { color: var(--cream); }
+.band--red .rule-top, .band--ink .rule-top { border-top-color: rgb(225 232 222 / 0.2); }
 
 /*
  * Section headers pair a mono index with a display title. The index is real
@@ -89,46 +124,50 @@ a { color: inherit; }
   display: flex; align-items: baseline; gap: var(--s5);
   flex-wrap: wrap; margin-bottom: var(--s7);
 }
-.sec-head__index { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--dim); }
+.sec-head__index { font-family: var(--font-mono); font-size: var(--t-xs); color: var(--ink-3); }
 .sec-head__link { margin-left: auto; }
 
 /* --- Buttons ---------------------------------------------------------------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s3);
   min-height: var(--tap); padding: 0.9rem var(--s6);
-  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 600;
   text-transform: uppercase; letter-spacing: var(--track-label);
-  text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  text-decoration: none; cursor: pointer; border: 2px solid transparent;
   border-radius: var(--r-pill); white-space: nowrap;
   transition: background-color 240ms var(--ease), color 240ms var(--ease),
               border-color 240ms var(--ease), transform 240ms var(--ease);
 }
-.btn--ember { background: var(--ember); color: #fff; }
-.btn--ember:hover { background: var(--ember-lift); transform: translateY(-1px); }
-.btn--bone { background: var(--bone); color: var(--void); }
-.btn--bone:hover { background: #fff; transform: translateY(-1px); }
-.btn--ghost { border-color: var(--dim); color: var(--bone); }
-.btn--ghost:hover { border-color: var(--bone); background: rgb(244 239 230 / 0.06); }
+/* White on --red is 4.7:1, so the primary button is legible at label size. */
+.btn--red { background: var(--red); color: #fff; border-color: var(--red); }
+.btn--red:hover { background: var(--red-lift); border-color: var(--red-lift); transform: translateY(-1px); }
+.btn--ink { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.btn--ink:hover { background: #262220; border-color: #262220; transform: translateY(-1px); }
+.btn--cream { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.btn--cream:hover { background: #fff; border-color: #fff; transform: translateY(-1px); }
+.btn--ghost { border-color: var(--ink-3); color: var(--ink); }
+.btn--ghost:hover { border-color: var(--ink); background: rgb(10 10 10 / 0.05); }
+/* On a brand ground the ghost outline has to invert, or it disappears. */
+.band--red .btn--ghost, .band--ink .btn--ghost, .hero .btn--ghost {
+  border-color: rgb(225 232 222 / 0.45); color: var(--cream);
+}
+.band--red .btn--ghost:hover, .band--ink .btn--ghost:hover, .hero .btn--ghost:hover {
+  border-color: var(--cream); background: rgb(225 232 222 / 0.12);
+}
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--s3); }
 
 /* A quiet text link that draws its rule on hover. */
 .tlink {
-  font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase;
-  letter-spacing: var(--track-label); text-decoration: none; color: var(--bone);
-  padding-bottom: 3px; background-image: linear-gradient(var(--ember), var(--ember));
-  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 1px;
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  text-transform: uppercase; letter-spacing: var(--track-label);
+  text-decoration: none; color: var(--ink);
+  padding-bottom: 3px; background-image: linear-gradient(var(--red), var(--red));
+  background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 2px;
   transition: background-size 360ms var(--ease);
 }
-.tlink:hover, .tlink:focus-visible { background-size: 100% 1px; }
-
-/* --- Grain -----------------------------------------------------------------
- * A single fixed noise plane over the whole page. It is what stops large flat
- * dark areas reading as flat digital black, and it costs one tiny tiled SVG.
- * -------------------------------------------------------------------------- */
-.grain {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none;
-  opacity: 0.055; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+.tlink:hover, .tlink:focus-visible { background-size: 100% 2px; }
+.band--red .tlink, .band--ink .tlink, .hero .tlink {
+  color: var(--cream); background-image: linear-gradient(var(--gold), var(--gold));
 }
 
 /* --- Scroll reveal ---------------------------------------------------------
