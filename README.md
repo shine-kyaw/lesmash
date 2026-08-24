@@ -224,6 +224,11 @@ else. That closes the security items on the launch checklist.
 detects as Astro; build command `npm run build`; output directory `dist`.
 Nothing else needs configuring.
 
+`main` is the production branch — every push to it deploys to
+`eatlesmash.vercel.app`. Set it under **Settings → Git → Production Branch** in
+the Vercel project, or deployments land as previews and the live URL goes
+stale.
+
 That is the whole setup — every push then deploys itself, with no secrets and
 no workflow.
 

@@ -9,7 +9,7 @@ it serves `dist/` from the CDN.
 2. Vercel reads `vercel.json` and configures itself: framework Astro, build
    `npm run build`, output `dist`. Nothing to fill in.
 3. Set the production branch. Until this work is merged, that is
-   `claude/le-smash-burgers-prd-k1p4cx`; afterwards, your default branch.
+   `main`, which is the production branch.
 4. Deploy.
 
 You get a working site on `*.vercel.app` immediately.
