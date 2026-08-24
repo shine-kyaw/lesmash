@@ -1,6 +1,6 @@
 # Preview bundle
 
-`lesmash-preview.html` is the whole site — all 21 routes, both locales — folded
+`lesmash-site.html` is the whole site — all 21 routes, both locales — folded
 into one self-contained file. Open it in any browser, or host it anywhere, and
 the real navigation works: header, footer, sticky action bar and the language
 toggle. Outbound Foodpanda and Google Maps links are left untouched, so they

@@ -141,8 +141,13 @@
   }
 
   function init() {
-    Array.prototype.forEach.call(document.querySelectorAll('canvas[data-ember]'), start);
+    Array.prototype.forEach.call(document.querySelectorAll('canvas[data-ember]'), function (c) {
+      if (c.dataset.emberStarted) return;
+      c.dataset.emberStarted = '1';
+      start(c);
+    });
   }
+  window.__lesmashEmber = init;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

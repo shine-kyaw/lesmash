@@ -46,18 +46,16 @@ const routes = files.map((file) => {
 const first = readFileSync(routes[0].file, 'utf8');
 let css = /<style>([\s\S]*?)<\/style>/.exec(first)?.[1] ?? '';
 
-// The font must travel inside the document: the artifact host blocks requests
-// to anything but its own origin, and there is no /fonts/ path there.
-const fontPath = join(ROOT, 'public/fonts/noto-myanmar-400.woff2');
-if (existsSync(fontPath)) {
-  const b64 = readFileSync(fontPath).toString('base64');
-  css = css.replace(
-    /url\(\/fonts\/noto-myanmar-400\.woff2\)/g,
-    `url(data:font/woff2;base64,${b64})`
-  );
+// Fonts must travel inside the document: the preview host serves no /fonts/
+// path, and a missing face would silently fall back and change the design.
+for (const face of readdirSync(join(ROOT, 'public/fonts')).filter((f) => f.endsWith('.woff2'))) {
+  const b64 = readFileSync(join(ROOT, 'public/fonts', face)).toString('base64');
+  css = css.split(`url('/fonts/${face}')`).join(`url(data:font/woff2;base64,${b64})`);
+  css = css.split(`url(/fonts/${face})`).join(`url(data:font/woff2;base64,${b64})`);
 }
 
 const appJs = readFileSync(join(ROOT, 'public/scripts/app.js'), 'utf8');
+const emberJs = readFileSync(join(ROOT, 'public/scripts/ember.js'), 'utf8');
 
 /* ------------------------------------------------------- rewrite a page ---- */
 
@@ -71,7 +69,7 @@ function extractBody(html) {
   // Strip the per-page copies of the shared stylesheet and the script tag;
   // both are hoisted to the document once.
   body = body.replace(/<style>[\s\S]*?<\/style>/g, '');
-  body = body.replace(/<script[^>]*src="\/scripts\/app\.js"[^>]*><\/script>/g, '');
+  body = body.replace(/<script[^>]*src="\/scripts\/[^"]+"[^>]*><\/script>/g, '');
 
   // Internal links become hash routes. External links, tel:, mailto: and
   // in-page anchors are left exactly as they are — the point of the preview is
@@ -120,6 +118,8 @@ const router = `
     document.documentElement.setAttribute('lang', map[route].getAttribute('lang'));
     window.scrollTo(0, 0);
     if (window.__lesmashBoot) window.__lesmashBoot();
+    // Ember planes are per-route canvases, so re-seed whatever just appeared.
+    if (window.__lesmashEmber) window.__lesmashEmber();
   }
 
   window.addEventListener('hashchange', show);
@@ -142,6 +142,7 @@ body { margin: 0; }
 ${sections}
 
 <script>${appJs}</script>
+<script>${emberJs}</script>
 <script>${router}</script>
 `;
 
