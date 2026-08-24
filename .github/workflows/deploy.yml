@@ -1,0 +1,73 @@
+# Deploys the site to Vercel.
+#
+# This is the optional path. The simplest way to deploy is Vercel's own Git
+# integration — import the repo once at vercel.com/new and every push deploys
+# itself, with no secrets and no workflow.
+#
+# This workflow exists for the case where you would rather drive deployments
+# from CI. It needs one repository secret:
+#
+#   VERCEL_TOKEN        vercel.com/account/tokens
+#
+# and optionally, once the project exists:
+#
+#   VERCEL_ORG_ID       from .vercel/project.json after `vercel link`
+#   VERCEL_PROJECT_ID   same file
+#
+# Without VERCEL_TOKEN the job exits cleanly rather than failing, so an unset
+# secret does not leave a red mark on every push.
+name: Deploy
+
+on:
+  push:
+    branches: [claude/le-smash-burgers-prd-k1p4cx]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Check for a Vercel token
+        id: creds
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "No VERCEL_TOKEN secret set — skipping deploy."
+            echo "Add one at Settings → Secrets and variables → Actions,"
+            echo "or use Vercel's Git integration instead (vercel.com/new)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.creds.outputs.ready == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+        if: steps.creds.outputs.ready == 'true'
+
+      # Builds here rather than on Vercel so the performance budget gate runs
+      # in CI: a change that breaks the JS, CSS or font budget fails the deploy
+      # instead of shipping.
+      - name: Build
+        if: steps.creds.outputs.ready == 'true'
+        run: npm run build
+
+      - name: Deploy
+        if: steps.creds.outputs.ready == 'true'
+        run: |
+          npx --yes vercel@latest deploy --prod --yes \
+            --token="${{ secrets.VERCEL_TOKEN }}" \
+            >> "$GITHUB_STEP_SUMMARY"

@@ -213,33 +213,19 @@ functions — the output is plain static files and will host anywhere.
 
 ## Deploying
 
-### GitHub Pages (live now)
-
-`.github/workflows/pages.yml` builds and publishes on every push to the default
-branch. Pages serves the repo from a subpath, so the workflow passes
-`BASE_PATH` and `SITE_ORIGIN` into the build and every internal link and asset
-URL is resolved through `src/lib/href.ts` — a hard-coded `/menu` would work
-locally and 404 once deployed, which is the worst kind of bug.
-
-The workflow turns Pages on itself (`configure-pages` with `enablement: true`).
-If the first run fails on permissions, enable it once by hand:
-**Settings → Pages → Source: GitHub Actions**, then re-run the workflow.
-
-The build step is `npm run build`, which includes the performance budget gate —
-a change that breaks the JS, CSS or font budget fails the deploy rather than
-shipping.
-
-### Vercel
-
-A root deployment leaves `BASE_PATH` unset, so everything resolves from `/`.
 `vercel.json` is committed and configures the build, cache headers and a strict
-Content-Security-Policy. The CSP is genuinely strict — `default-src 'self'` with
+Content-Security-Policy. A root deployment leaves `BASE_PATH` unset, so
+everything resolves from `/`; the base-path plumbing in `src/lib/href.ts` only
+engages when a subpath deployment sets it. The CSP is genuinely strict — `default-src 'self'` with
 no third-party origins allowed — because the site loads nothing from anyone
 else. That closes the security items on the launch checklist.
 
 **Import the repo at [vercel.com/new](https://vercel.com/new).** Framework
 detects as Astro; build command `npm run build`; output directory `dist`.
 Nothing else needs configuring.
+
+That is the whole setup — every push then deploys itself, with no secrets and
+no workflow.
 
 Or from a machine with the Vercel CLI:
 
@@ -248,8 +234,21 @@ npx vercel            # preview deployment
 npx vercel --prod     # production
 ```
 
-The build runs the performance budget gate, so a change that breaks the JS, CSS
-or font budget fails the deploy rather than shipping.
+`.github/workflows/deploy.yml` is the CI alternative, for driving deployments
+from GitHub instead. It needs a `VERCEL_TOKEN` repository secret; without one it
+exits cleanly rather than failing, so an unset secret does not leave a red mark
+on every push.
+
+Either way the build runs the performance budget gate, so a change that breaks
+the JS, CSS or font budget fails the deploy rather than shipping.
+
+### A note on the Content-Security-Policy
+
+The policy is `script-src 'self'` with no third-party origins, which the site
+can afford because it loads nothing from anyone else. That means **no inline
+`<script>` will run in production**. An inline script works locally and is
+blocked only once deployed, which is the worst kind of bug — so anything that
+needs to run belongs in `public/scripts/`.
 
 ### Environment variables
 

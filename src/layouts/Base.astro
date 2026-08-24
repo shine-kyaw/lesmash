@@ -63,22 +63,6 @@ const directionsHref = branches[0] ? directionsUrl(branches[0]) : href('/menu');
 
     <div class="grain" aria-hidden="true"></div>
 
-    {/* The preview bar is fixed, so the header and every sticky offset below it
-        need its real height — which wraps to two lines on a narrow phone. */}
-    {IS_PREVIEW && (
-      <script is:inline>
-        (function () {
-          var bar = document.querySelector('[data-banner]');
-          if (!bar) return;
-          var set = function () {
-            document.documentElement.style.setProperty('--banner-h', bar.offsetHeight + 'px');
-          };
-          set();
-          window.addEventListener('resize', set);
-        })();
-      </script>
-    )}
-
     <script src={asset('/scripts/app.js')} defer is:inline></script>
     <script src={asset('/scripts/ember.js')} defer is:inline></script>
   </body>
