@@ -34,7 +34,7 @@
 .mark img { width: auto; height: 100%; }
 .mark--bar { height: 34px; }
 .mark--lg { height: clamp(58px, 8vw, 92px); }
-.mark--hero { height: clamp(76px, 15vw, 190px); }
+.mark--hero { height: clamp(118px, 30vw, 190px); }
 
 /* ===========================================================================
    Hero — the brand's own deep-red field.
