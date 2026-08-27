@@ -478,3 +478,12 @@
 .maplink:hover .maplink__cue::after { width: 20px; }
 /* On a brand ground the whole thing inverts with the register. */
 .band--red .maplink:hover, .band--ink .maplink:hover { background: rgb(244 239 230 / 0.1); }
+
+/* One number for both rooms, under the cards rather than on them. */
+.callrow { margin-top: var(--s6); display: flex; flex-wrap: wrap; gap: var(--s3); }
+
+/* An in-page anchor must clear the fixed bar, or a nav jump lands with the
+   heading hidden behind it. `.course` is excluded: the menu and gallery rails
+   have their own, larger offset because they also sit under a sticky nav, and
+   this rule is appended late enough to have overridden it. */
+[id]:not(.course) { scroll-margin-top: calc(84px + var(--banner-h, 0px)); }

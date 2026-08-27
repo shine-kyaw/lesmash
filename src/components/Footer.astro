@@ -35,6 +35,12 @@ const year = new Date().getFullYear();
 
       <div>
         <p class="label">{COPY.labels.branches}</p>
+        {SITE.phone && (
+          <p style="margin-top:var(--s3)">
+            <a href={"tel:" + SITE.phone.e164} data-analytics="phone_click"
+               data-source="footer" style="color:var(--cream);font-size:var(--t-sm)">{SITE.phone.display}</a>
+          </p>
+        )}
         <ul class="ftr__list" style="margin-top:var(--s4)">
           {branches.map((branch) => {
             const phone = primaryPhone(branch);

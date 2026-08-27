@@ -80,11 +80,24 @@ const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
         })}
       </div>
 
+      {/* One number for all of it. It is the number on their own Facebook page;
+          which room it rings is not stated anywhere public, so it sits here
+          rather than on a branch card. */}
+      {SITE.phone && (
+        <div class="callrow">
+          <a class="btn btn--ember" href={`tel:${SITE.phone.e164}`}
+             data-analytics="phone_click" data-source="visit">
+            Call {SITE.phone.display}
+          </a>
+        </div>
+      )}
+
       {/* Their homepage says three rooms. Two have confirmed addresses in this
           repo, so the third is named as outstanding rather than invented. */}
-      <p class="note" style="margin-top:var(--s7)">
+      <p class="note" style="margin-top:var(--s6)">
         Le SMASH counts three rooms and five kitchens. Two addresses are
-        confirmed above — the third is still to be supplied.
+        confirmed above — the third is still to be supplied, and so are the
+        opening hours for both.
       </p>
     </div>
   </section>

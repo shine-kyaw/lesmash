@@ -27,6 +27,23 @@ export const SITE = {
   // while this is null.
   franchiseEmail: null,
 
+  /**
+   * The number on the client's own Facebook page, verified there twice. Held at
+   * brand level rather than on a branch because that page is brand-level: which
+   * room it actually rings is not stated anywhere public, so attributing it to
+   * one would be a guess. Both branch records still have empty `phone` arrays,
+   * so no branch card claims it.
+   *
+   * `display` is exactly as they publish it. `e164` is the mechanical
+   * conversion for the tel: link — drop the trunk 0, prepend +95.
+   */
+  phone: {
+    display: '09 758 542661',
+    e164: '+959758542661',
+    source: 'facebook.com/eatlesmash',
+    reachesBranch: null,
+  },
+
   geo: 'Yangon',
   timeZone: 'Asia/Yangon', // UTC+06:30
   currency: 'MMK',
