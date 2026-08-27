@@ -421,3 +421,29 @@
 .ftr__by strong { font-weight: 600; }
 .ftr__by:hover { color: var(--cream); }
 .ftr__by:hover img { opacity: 1; }
+
+/* ===========================================================================
+   Header nav on a phone.
+   Two links centred was fine; five is 430px of labels in a 335px measure, and
+   the bar clipped the last one. Below the breakpoint the nav gives up its
+   centred column and becomes a scrolling strip instead — the same gesture the
+   menu and gallery rails already use, so it reads as part of the site rather
+   than as a fix. A right-edge fade says there is more.
+   ========================================================================= */
+@media (max-width: 53.99rem) {
+  .hdr__inner { grid-template-columns: auto minmax(0, 1fr); }
+  .hdr__spacer { display: none; }
+  .hdr__nav {
+    grid-column: 2; justify-self: stretch;
+    justify-content: flex-start;
+    gap: var(--s5);
+    padding-left: var(--s5);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent);
+  }
+  .hdr__nav::-webkit-scrollbar { display: none; }
+  .hdr__nav a { flex: 0 0 auto; }
+}
