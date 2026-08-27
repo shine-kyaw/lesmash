@@ -39,6 +39,14 @@ actual content files.
 |---|---|---|
 | **Photography** | Food shots with countable patties and a scale reference, and the rooms | Three stills cropped from the client's own social posts are standing in, and every other picture slot renders a designed placeholder. Still the single highest-leverage deliverable in the project — the brief and its acceptance criteria are in `public/media/README.md` |
 | **The logo, in vector** | An `.ai`, `.svg` or `.eps` original | Supplied as raster: recovered from the client's Facebook page and in use in `public/brand/`. A vector original would sharpen the header lockup and let the favicon and the share card be regenerated cleanly |
+| **The founded year** | The year Le SMASH opened | The brief says it "must be included". `/story` renders a labelled gap where it goes (C-15) |
+| **The third address** | The address and hours of the third room | Their homepage says three rooms; two are confirmed. `/visit` names the gap rather than showing two and calling it all of them |
+| **Franchise enquiry address** | The email franchise enquiries should reach | The Franchise section renders a note instead of a button. Deliberately not guessed from the domain |
+| **Patty counts** | How many patties are in each burger | Every card omits it, and C-08 no longer promises it |
+| **Delivery coverage** | Which township each kitchen serves, and the boundaries | `/visit` has a drawn map frame and the four townships from the client's own copy. The areas themselves are unconfirmed |
+| **Menu descriptions** | A line per dish, at least for the burgers and the brunch | 35 cards carry a name and nothing else |
+| **Gallery photography** | Files per section, per `src/data/gallery.ts` | 42 reserved frames at final size. This is the deliverable the brief itself calls highest-leverage |
+| **The hero film** | A silent 15–30s loop, 1080p, under 4MB | `/` opens on a full-viewport placeholder naming the file to drop in |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
 | **C-11** | Portion-honesty statement | Recommended; high value; drafted only once the client approves the principle |
 | **C-09** | Breakfast intro, 150–250 words | `/breakfast` has no unique intro copy, which weakens it for search |

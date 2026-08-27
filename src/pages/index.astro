@@ -1,19 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
-import Wordmark from '../components/Wordmark.astro';
+import HeroFilm from '../components/HeroFilm.astro';
+import SpinRing from '../components/SpinRing.astro';
+import Shot from '../components/Shot.astro';
 import Slot from '../components/Slot.astro';
 import Dish from '../components/Dish.astro';
 import { href, asset } from '../lib/href';
 import { COPY } from '../data/copy';
 import { EDITORIAL } from '../data/editorial';
+import { GALLERY_SECTIONS } from '../data/gallery';
 import { SITE } from '../lib/site.config.mjs';
-import { getBranches, getMenuItems, featuredItems, directionsUrl, primaryPhone } from '../lib/content';
+import { getBranches, getMenuItems, featuredItems } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { organizationSchema, websiteSchema, restaurantSchema } from '../lib/schema';
 
 const branches = await getBranches();
 const items = await getMenuItems();
-const signatures = featuredItems(items, 3);
+const icons = featuredItems(items, 6);
 
 const schema = [
   organizationSchema(),
@@ -21,49 +24,55 @@ const schema = [
   ...branches.map((b) => restaurantSchema(b, { withMenu: true })),
 ];
 
-/* Every line is a verified fact. A ticker only earns its place if it carries
-   something a customer actually needs. */
+/*
+ * The ticker is the client's own line, transcribed from their homepage mock —
+ * including the four townships. It is their claim about their own coverage, so
+ * it goes on verbatim rather than being rebuilt from the two branch records
+ * this repo can verify.
+ */
 const ticker = [
   'Smashed to order',
-  `${branches.length} rooms in ${SITE.geo}`,
-  ...branches.map((b) => b.township),
-  'Dine in · Takeaway',
+  '3 rooms',
+  '5 kitchens',
+  'Kamayut Township',
+  'Yankin Township',
+  'Mayangone Township',
+  'Hlaing Township',
+  'Dine in',
+  'Takeaway',
 ];
 ---
 <Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
+  {/* First screen: the film, and nothing competing with it. */}
+  <HeroFilm />
+
   {/*
-    The hero is the brand's own deep-red field, with the real lockup on it and
-    the burger beside it. It used to be a generative ember plane standing in
-    for footage nobody had shot; the photograph is the restaurant's own and is
-    used at its native size, so nothing is upscaled and nothing buffers.
+    Second screen: the homepage as the client drew it. Headline, standfirst,
+    two actions, two pictures and the spinning seal over the first — their
+    layout, set in the type and the palette that came off their logo.
   */}
-  <section class="hero brand-red">
-    <div class="wrap hero__inner">
-      <div class="hero__copy">
-        <p class="label label--ember">Smash burgers · {SITE.geo}, Myanmar</p>
-
-        <h1 class="visually-hidden">Le SMASH Burgers &amp; Co. — smash burgers in {SITE.geo}</h1>
-        <div data-smash-word style="transform-origin:0% 100%">
-          <Wordmark size="hero" link={false} />
-        </div>
-
+  <section class="section intro" id="home">
+    <div class="wrap intro__grid">
+      <div class="intro__copy">
+        <h2 class="intro__head">Officially the<br />best burger<br />in town.</h2>
         <Slot slot={EDITORIAL.heroPositioning} class="lede" />
-
-        <div class="hero__foot">
-          <div class="btn-row">
-            <a class="btn btn--cream" href={href('/menu')}>{COPY.cta.menu}</a>
-            <a class="btn btn--ghost" href="#visit">Find us</a>
-          </div>
+        <div class="btn-row">
+          <a class="btn btn--ember" href={href('/menu')}>{COPY.cta.menu}</a>
+          <a class="btn btn--ghost" href={href('/visit')}>Find us</a>
         </div>
       </div>
 
-      <div class="hero__plate">
-        <img
-          src={asset('/media/burger.jpg')}
-          alt="A Le SMASH burger held in one hand, the patties visible in profile"
-          width="1008" height="976"
-          fetchpriority="high" decoding="async"
-        />
+      <div class="intro__plates">
+        <div class="intro__plate intro__plate--tall">
+          <img src={asset('/media/burger.jpg')}
+               alt="A Le SMASH burger held in one hand, the patties visible in profile"
+               width="1008" height="976" loading="lazy" decoding="async" />
+          <SpinRing class="intro__ring" />
+        </div>
+        <div class="intro__plate">
+          <img src={asset('/media/sear.jpg')} alt="A plate leaving the Le SMASH pass"
+               width="1000" height="1250" loading="lazy" decoding="async" />
+        </div>
       </div>
     </div>
   </section>
@@ -78,126 +87,81 @@ const ticker = [
     </div>
   </div>
 
-  {/*
-    The thesis. This is the one thing the website can do that no other channel
-    does: say plainly how much food arrives.
-  */}
-  <section class="section" id="story">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">The pass</p>
-        <p class="track__numeral" aria-hidden="true">01</p>
-      </div>
-
-      <div class="split split--wide-left">
-        <div class="stack-lg reveal">
-          <h2>Pressed once,<br /><span class="serif-em">hard.</span></h2>
-          <Slot slot={EDITORIAL.howWeSmash} />
-          <a class="tlink" href={href('/menu')}>See the menu</a>
-        </div>
-
-        <div class="figure figure--tall reveal">
-          <img src={asset('/media/sear.jpg')} alt="A plate leaving the Le SMASH pass"
-               width="1000" height="1250" loading="lazy" decoding="async" />
-          <p class="figure__cap">Off the pass, plated as it is served</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {signatures.length > 0 && (
+  {/* The Icons — the brief's own name for the handful of dishes that carry the
+      brand. Six of them here, the full menu one tap away. */}
+  {icons.length > 0 && (
     <section class="section">
-      <div class="wrap track">
-        <div class="track__rail">
-          <p class="label">Signatures</p>
-          <p class="track__numeral" aria-hidden="true">02</p>
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index">01</p>
+          <h2>Le SMASH Icons</h2>
+          <a class="tlink sec-head__link" href={href('/menu')}>Full menu</a>
         </div>
-        <div>
-          <div class="sec-head">
-            <h2>What people order</h2>
-            <a class="tlink sec-head__link" href={href('/menu')}>Full menu</a>
-          </div>
-          <ul class="dishes reveal">
-            {signatures.map((item) => <Dish item={item} branches={branches} />)}
-          </ul>
-        </div>
+        <ul class="dishes reveal">
+          {icons.map((item) => <Dish item={item} branches={branches} />)}
+        </ul>
       </div>
     </section>
   )}
 
-  <section class="section">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">Honestly</p>
-        <p class="track__numeral" aria-hidden="true">03</p>
+  {/* Story teaser. */}
+  <section class="section band--ink">
+    <div class="wrap split split--wide-left">
+      <div class="stack-lg reveal">
+        <p class="label">02</p>
+        <h2>American flavour,<br /><span class="script">French precision.</span></h2>
+        <Slot slot={EDITORIAL.story} class="lede" />
+        <a class="tlink" href={href('/story')}>Read our story</a>
       </div>
-      <div class="split">
-        <div class="figure figure--wide reveal">
-          <img src={asset('/media/plate-01.jpg')} alt="A plate from the Le SMASH kitchen"
-               width="1500" height="1000" loading="lazy" decoding="async" />
-          <p class="figure__cap">From the Le SMASH kitchen</p>
-        </div>
-        <div class="stack-lg reveal">
-          <h2>What you see is<br /><span class="serif-em">what arrives.</span></h2>
-          <Slot slot={EDITORIAL.portionHonesty} class="lede" />
-        </div>
+      <div class="figure figure--wide reveal">
+        <Shot ratio="3x2" caption="The room" />
       </div>
     </div>
   </section>
 
-  <section class="section" id="visit">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">Visit</p>
-        <p class="track__numeral" aria-hidden="true">04</p>
+  {/* Gallery teaser — the six archive sections, named on the client's brief. */}
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-head__index">03</p>
+        <h2>The archive</h2>
+        <a class="tlink sec-head__link" href={href('/gallery')}>Open the gallery</a>
       </div>
+      <ul class="tiles reveal">
+        {GALLERY_SECTIONS.map((s) => (
+          <li class="tile">
+            <a href={`${href('/gallery')}#${s.slug}`}>
+              <Shot ratio="4x3" caption={s.name} />
+              <span class="tile__name">{s.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 
-      <div>
-        <div class="sec-head"><h2>Two rooms in {SITE.geo}</h2></div>
-
-        <div class="venues">
-          {branches.map((branch) => {
-            const phone = primaryPhone(branch);
-            const services = [
-              { on: branch.hasDineIn, label: COPY.labels.dineIn },
-              { on: branch.hasTakeaway, label: COPY.labels.takeaway },
-            ];
-            return (
-              <article class="venue reveal">
-                <h3 class="venue__name">{branch.name}</h3>
-                <address class="venue__addr">
-                  {branch.addressLine}<br />{branch.township}, {branch.city}
-                </address>
-
-                <div class="dish__meta">
-                  {/* Hours and dine-in status show as unknown rather than
-                      guessed — a wrong answer sends someone across Yangon for
-                      nothing. */}
-                  <span class="fact fact--warn">{COPY.state.hoursUnknown}</span>
-                  {services.map((s) =>
-                    s.on === true ? <span class="fact">{s.label}</span>
-                    : s.on === null ? <span class="fact fact--warn">{s.label}: {COPY.state.unconfirmed}</span>
-                    : null
-                  )}
-                </div>
-
-                <div class="btn-row">
-                  <a class="btn btn--ghost" href={directionsUrl(branch)}
-                     target="_blank" rel="noopener noreferrer"
-                     data-analytics="directions_click" data-branch={branch.slug} data-source="visit">
-                    {COPY.cta.directions}
-                  </a>
-                  {phone && (
-                    <a class="btn btn--ghost" href={`tel:${phone.e164}`}
-                       data-analytics="phone_click" data-branch={branch.slug} data-source="visit">
-                      {COPY.cta.call}
-                    </a>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+  {/* Visit teaser. The rooms and the delivery map live on their own page. */}
+  <section class="section band--red">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="sec-head__index">04</p>
+        <h2>Find Le SMASH near you</h2>
+      </div>
+      <p class="lede">Or see if we deliver to your area.</p>
+      <div class="rooms">
+        {branches.map((branch) => (
+          <div class="room">
+            <p class="label">{branch.township}</p>
+            <p class="room__name">{branch.name}</p>
+          </div>
+        ))}
+        <div class="room room--more">
+          <p class="label">{SITE.geo}</p>
+          <p class="room__name">Three rooms, five kitchens</p>
         </div>
+      </div>
+      <div class="btn-row" style="margin-top:var(--s7)">
+        <a class="btn btn--cream" href={href('/visit')}>Visit us</a>
       </div>
     </div>
   </section>

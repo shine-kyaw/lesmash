@@ -53,3 +53,28 @@ acceptance criteria, not just a shot list:
 Compress to: stills under 250KB each at 1× display width, AVIF or WebP where
 possible. `npm run check:budgets` will fail the build if the render-blocking
 payload goes past budget.
+
+## Gallery
+
+`public/media/gallery/<section>/` — one folder per section in
+`src/data/gallery.ts` (`campaigns`, `events`, `food`, `spaces`,
+`behind-the-scenes`, `collaborations`, `special-projects`).
+
+Nothing is wired to these folders yet: every slot on `/gallery` renders
+`Shot.astro` at the section's aspect ratio, so the page is already the right
+shape and nothing shifts when files arrive. Recommended exports:
+
+| Ratio | Use | Longest edge |
+|---|---|---|
+| 4:5 | Campaigns, Behind the Scenes | 1600px |
+| 3:2 | Events, Spaces | 1800px |
+| 4:3 | Food and Product, Collaborations, Special Projects | 1600px |
+
+WebP or AVIF, under 250KB each. Name files so they sort in the order they should
+appear (`01-...`, `02-...`).
+
+## The hero film
+
+`hero.mp4` plus `hero-poster.jpg`. Silent, 15–30s, seamless loop, H.264, 1080p,
+1,000–2,500 kbps, under 4MB. The poster is the film's first frame at the same
+crop. Until both land, `/` opens on the placeholder in `HeroFilm.astro`.

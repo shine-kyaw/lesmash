@@ -129,8 +129,6 @@
 .dish__body { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); flex: 1; }
 .dish__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
 .dish__name { font-family: var(--font-body); font-weight: 800; font-size: var(--t-md); line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
-.dish__price { font-family: var(--font-mono); font-size: var(--t-sm); color: var(--brass); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.dish__price--unset { color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
 .dish__desc { color: var(--ink-2); font-size: var(--t-sm); max-width: none; }
 /* Facts sit on the card, never behind a tap: patty count and portion are the
    whole reason this project exists. */
@@ -233,3 +231,193 @@
 }
 .prelaunch p { max-width: none; }
 .prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; color: var(--cream); }
+
+/* ===========================================================================
+   The opening film.
+   A full viewport of the brand, with the film behind it and nothing competing.
+   Content-sized would defeat the point: the first screen has to be one image.
+   ========================================================================= */
+.film {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: 100svh; display: grid; align-items: center;
+  background: linear-gradient(152deg, #8e1a1b 0%, #6e0c0b 46%, #450607 100%);
+}
+.film__video {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+}
+/* Two washes rather than one flat scrim, so footage reads as a graded plate
+   and the wordmark keeps its contrast wherever the cut lands. */
+.film__grade {
+  position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(120% 90% at 50% 55%, rgb(69 6 7 / 0.15), rgb(46 4 5 / 0.82)),
+    linear-gradient(to top, rgb(46 4 5 / 0.7), transparent 55%);
+}
+.film__inner {
+  position: relative; display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: var(--s5);
+  padding-block: calc(68px + var(--s7)) var(--s9);
+}
+.film__tag {
+  font-size: clamp(1.375rem, 1rem + 2.4vw, 2.5rem);
+  color: var(--brass); margin: 0; max-width: 24ch;
+}
+/* Names itself as a placeholder rather than pretending to be finished. */
+.film__slot {
+  position: absolute; right: var(--gutter); bottom: var(--s7); z-index: 3;
+  max-width: 21rem; padding: var(--s4); text-align: left;
+  border: 1px dashed rgb(255 217 167 / 0.5); border-radius: var(--r);
+  background: rgb(46 4 5 / 0.6); backdrop-filter: blur(6px);
+  font-family: var(--font-mono); font-size: 11px; line-height: 1.6;
+  color: rgb(244 239 230 / 0.85);
+}
+.film__slot b {
+  display: block; margin-bottom: 4px; color: var(--brass);
+  text-transform: uppercase; letter-spacing: 0.12em;
+}
+.film__slot code { color: var(--cream); font-size: 10px; }
+@media (max-width: 54rem) { .film__slot { position: static; margin: 0 var(--gutter) var(--s6); max-width: none; } }
+
+.film__scroll {
+  position: absolute; left: 50%; bottom: var(--s5); z-index: 3;
+  transform: translateX(-50%); width: 44px; height: 44px;
+  display: grid; place-items: center; border-radius: 50%;
+}
+.film__scroll span {
+  display: block; width: 1px; height: 26px; background: rgb(244 239 230 / 0.5);
+  position: relative; overflow: hidden;
+}
+.film__scroll span::after {
+  content: ''; position: absolute; inset: 0; background: var(--brass);
+  transform: translateY(-100%); animation: drop 2.4s var(--ease) infinite;
+}
+@keyframes drop { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
+@media (prefers-reduced-motion: reduce) { .film__scroll span::after { animation: none; } }
+
+/* ===========================================================================
+   Intro — the homepage as the client drew it.
+   Headline and two actions on the left, two pictures on the right with the
+   spinning seal over the first. Their layout; our type and palette.
+   ========================================================================= */
+.intro__grid { display: grid; gap: var(--s7); align-items: center; }
+@media (min-width: 62rem) {
+  .intro__grid { grid-template-columns: 0.85fr 1.15fr; gap: var(--s8); }
+}
+.intro__copy { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s5); }
+.intro__head { font-size: var(--t-xl); }
+
+.intro__plates { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.intro__plate {
+  position: relative; border-radius: var(--r-lg); overflow: hidden;
+  background: var(--paper-3);
+}
+.intro__plate img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.intro__plate--tall { aspect-ratio: 3 / 4; }
+.intro__plate:not(.intro__plate--tall) { aspect-ratio: 3 / 4; }
+@media (max-width: 40rem) {
+  .intro__plates { grid-template-columns: 1fr; }
+  .intro__plate--tall, .intro__plate:not(.intro__plate--tall) { aspect-ratio: 4 / 3; }
+}
+/* The seal straddles the corner of the first picture, the way a stamp would. */
+.intro__ring {
+  position: absolute; right: -8%; bottom: -6%;
+  width: clamp(88px, 30%, 168px); height: auto;
+}
+
+/* ===========================================================================
+   The rotating seal.
+   ========================================================================= */
+.ring { animation: turn 26s linear infinite; }
+.ring__disc { fill: var(--red); }
+.ring__text {
+  fill: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 8.5px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+}
+@keyframes turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+
+/* ===========================================================================
+   Tiles — the gallery grid, and the archive teaser on the home page.
+   ========================================================================= */
+.tiles { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s4); }
+@media (min-width: 34rem) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 58rem) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 58rem) { .tiles--gallery { grid-template-columns: repeat(4, 1fr); } }
+.tile { position: relative; border-radius: var(--r); overflow: hidden; }
+.tile > a { display: block; text-decoration: none; color: inherit; }
+.tile .shot, .tile img { border-radius: var(--r); }
+.tile__name {
+  display: block; margin-top: var(--s3);
+  font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500;
+  text-transform: uppercase; letter-spacing: var(--track-label);
+}
+.tile > a:hover .tile__name { color: var(--ember); }
+
+/* ===========================================================================
+   Drinks list — a category whose whole record is a set of names.
+   ========================================================================= */
+.dlist { display: grid; gap: var(--s6); }
+@media (min-width: 46rem) { .dlist { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 72rem) { .dlist { grid-template-columns: repeat(3, 1fr); } }
+.dlist__label { color: var(--ember); margin-bottom: var(--s3); }
+.dlist__items { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.dlist__items li {
+  padding-block: 7px; border-bottom: var(--rule);
+  font-size: var(--t-sm);
+}
+.dlist__items li:last-child { border-bottom: 0; }
+
+/* ===========================================================================
+   Rooms strip — the visit teaser on the home page.
+   ========================================================================= */
+.rooms { display: grid; gap: var(--s5); margin-top: var(--s6); }
+@media (min-width: 46rem) { .rooms { grid-template-columns: repeat(3, 1fr); } }
+.room { border-top: 2px solid rgb(244 239 230 / 0.35); padding-top: var(--s4); }
+.room__name { font-family: var(--font-body); font-weight: 800; font-size: var(--t-md); margin-top: var(--s2); }
+.room--more .room__name { color: var(--brass); }
+
+/* ===========================================================================
+   Delivery map — a drawn plane plus a key, not an embed.
+   ========================================================================= */
+.map { display: grid; gap: var(--s5); }
+@media (min-width: 62rem) { .map { grid-template-columns: 1fr 14rem; align-items: start; } }
+.map__key { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s2); }
+
+/* ===========================================================================
+   Notes — the site telling you what it does not know yet.
+   A quiet register: it is information for the client and the reader both, and
+   it must never look like a broken component.
+   ========================================================================= */
+.note {
+  font-family: var(--font-mono); font-size: var(--t-xs); line-height: 1.7;
+  color: var(--ink-3); max-width: 52ch;
+}
+.band--red .note, .band--ink .note { color: rgb(244 239 230 / 0.7); }
+.note--gap {
+  border-left: 3px solid var(--brass);
+  padding: var(--s3) var(--s4);
+  background: color-mix(in srgb, var(--brass) 8%, transparent);
+  color: var(--ink-2);
+}
+.note--gap b {
+  display: block; margin-bottom: 6px; color: var(--brass);
+  text-transform: uppercase; letter-spacing: 0.12em; font-size: 10px;
+}
+
+/* ===========================================================================
+   The agency credit, at the very bottom.
+   Small, last, and outbound — it is a signature, not a banner.
+   ========================================================================= */
+.ftr__by {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  text-decoration: none; color: rgb(225 232 222 / 0.55);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  transition: color 240ms var(--ease);
+}
+.ftr__by img { width: 18px; height: 18px; opacity: 0.85; transition: opacity 240ms var(--ease); }
+.ftr__by strong { font-weight: 600; }
+.ftr__by:hover { color: var(--cream); }
+.ftr__by:hover img { opacity: 1; }

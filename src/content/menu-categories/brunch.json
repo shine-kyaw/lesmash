@@ -1,0 +1,13 @@
+{
+  "slug": "brunch",
+  "name": "Brunch Collection",
+  "description": null,
+  "displayGroup": "food",
+  "layout": "cards",
+  "listItems": [],
+  "listGroups": [],
+  "sortOrder": 20,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

@@ -1,0 +1,28 @@
+---
+import type { MenuCategory } from '../lib/content';
+
+/**
+ * A drinks category, set as a list.
+ *
+ * Drinks carry no photograph, no portion, no patty count and — per the brief —
+ * no price, so a name is the entire record. A grid of picture cards with no
+ * picture would be a worse answer than a well-set list, and the brief asks the
+ * menu to focus on the recognisable products rather than every variation.
+ */
+interface Props { category: MenuCategory }
+const { category } = Astro.props;
+
+const groups = category.listGroups.length
+  ? category.listGroups
+  : [{ label: null as string | null, items: category.listItems }];
+---
+<div class="dlist">
+  {groups.map((group) => (
+    <div class="dlist__group">
+      {group.label && <p class="label dlist__label">{group.label}</p>}
+      <ul class="dlist__items">
+        {group.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  ))}
+</div>

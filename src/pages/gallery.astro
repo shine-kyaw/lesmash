@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import Shot from '../components/Shot.astro';
+import { GALLERY_SECTIONS } from '../data/gallery';
+import { href } from '../lib/href';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { breadcrumbSchema } from '../lib/schema';
+
+const schema = [
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Gallery', path: '/gallery' }]),
+];
+---
+<Base path="/gallery" title={title('Gallery')} description={DESCRIPTIONS.gallery} schema={schema}>
+  <section class="section" style="padding-bottom:var(--s6)">
+    <div class="wrap">
+      <p class="label label--ember">The archive</p>
+      <h1 style="margin-top:var(--s4)">
+        Everything we<br /><span class="script">have made so far.</span>
+      </h1>
+      <p class="lede" style="margin-top:var(--s5)">
+        Le SMASH is a restaurant that also makes things — campaigns, pop-ups,
+        collaborations. This is where that work lives.
+      </p>
+    </div>
+  </section>
+
+  {/* A rail rather than tabs: the archive reads as one document, and a reader
+      can feel how much of it is left. */}
+  <nav class="menu-nav" aria-label="Gallery sections">
+    <div class="wrap menu-nav__scroll">
+      {GALLERY_SECTIONS.map((s) => (
+        <a href={`#${s.slug}`} data-course-link={s.slug}
+           data-analytics="gallery_section_select" data-category={s.slug}>{s.name}</a>
+      ))}
+    </div>
+  </nav>
+
+  <div class="wrap">
+    {GALLERY_SECTIONS.map((section, i) => (
+      <section class="course track" id={section.slug}>
+        <div class="track__rail">
+          <p class="track__numeral">
+            <span class="visually-hidden">Section </span>{String(i + 1).padStart(2, '0')}
+          </p>
+        </div>
+        <div>
+          <div class="course__head">
+            <h2 class="course__title">{section.name}</h2>
+          </div>
+          <p class="lede" style="margin-bottom:var(--s5)">{section.blurb}</p>
+          <ul class="tiles tiles--gallery">
+            {Array.from({ length: section.count }, (_, n) => (
+              <li class="tile">
+                <Shot ratio={section.ratio} caption={`${section.name} ${n + 1}`} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <section class="section band--ink">
+    <div class="wrap">
+      <p class="label">Still to come</p>
+      <h2 style="margin-top:var(--s4)">This page is a frame,<br /><span class="script">not a finished gallery.</span></h2>
+      <p class="lede" style="margin-top:var(--s5)">
+        Every slot above is reserved at its final size, so nothing shifts when
+        the photography lands. Sections and counts are both meant to change —
+        see <code>src/data/gallery.ts</code>.
+      </p>
+      <div class="btn-row" style="margin-top:var(--s6)">
+        <a class="btn btn--ghost" href={href('/menu')}>See the menu</a>
+      </div>
+    </div>
+  </section>
+</Base>

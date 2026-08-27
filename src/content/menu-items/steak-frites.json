@@ -5,7 +5,7 @@
   "price": null,
   "priceDisplay": null,
   "priceContext": "unconfirmed",
-  "category": "main-menu",
+  "category": "mains",
   "image": null,
   "imageGallery": [],
   "pattyCount": null,
@@ -15,17 +15,15 @@
   "spiceLevel": null,
   "allergens": [],
   "dietary": [],
-  "tags": [
-    "chef-pick"
-  ],
+  "tags": [],
   "modifiers": [],
   "addons": [],
   "isFeatured": true,
   "isAvailable": true,
   "branchAvailability": [],
-  "sortOrder": 10,
+  "sortOrder": 170,
   "status": "published",
-  "updatedAt": null,
-  "verified": false,
-  "sourceNote": "Placeholder record for structure only. Replace name, description, price and portion from the client's confirmed menu (DS-03/DS-04, Q14)."
+  "updatedAt": "2026-08-27",
+  "verified": true,
+  "sourceNote": "Name taken from the client's Canva board (Le SMASH Website - Presentation, pages 5, 7 and 9), supplied 27 Aug 2026. Description, photography, portion and patty count are still outstanding."
 }

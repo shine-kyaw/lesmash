@@ -3,7 +3,7 @@ import Wordmark from './Wordmark.astro';
 import { SITE } from '../lib/site.config.mjs';
 import { COPY } from '../data/copy';
 import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
-import { href } from '../lib/href';
+import { asset, href } from '../lib/href';
 
 /**
  * Carries the full name, address and phone for every branch. That is what
@@ -29,7 +29,7 @@ const year = new Date().getFullYear();
       <div>
         <Wordmark size="lg" />
         <p class="lede" style="margin-top:var(--s4)">
-          Smash burgers in {SITE.geo}. Two rooms, one way of cooking a patty.
+          American flavour. French precision. Born in {SITE.geo}.
         </p>
       </div>
 
@@ -74,7 +74,10 @@ const year = new Date().getFullYear();
         <p class="label" style="margin-top:var(--s6)">Pages</p>
         <ul class="ftr__list" style="margin-top:var(--s4)">
           <li><a href={href("/")}>{COPY.nav.home}</a></li>
+          <li><a href={href("/story")}>{COPY.nav.story}</a></li>
           <li><a href={href("/menu")}>{COPY.nav.menu}</a></li>
+          <li><a href={href("/gallery")}>{COPY.nav.gallery}</a></li>
+          <li><a href={href("/visit")}>{COPY.nav.visit}</a></li>
         </ul>
       </div>
     </div>
@@ -82,8 +85,14 @@ const year = new Date().getFullYear();
     <p class="ftr__wordmark" aria-hidden="true">SMASH</p>
 
     <div class="ftr__bottom">
-      <span>© {year} {SITE.brand.legal}</span>
+      <span>&copy; {year} {SITE.brand.legal}</span>
       <span>{SITE.geo}, Myanmar</span>
+      <a class="ftr__by" href="https://astermade.com" target="_blank" rel="noopener noreferrer"
+         data-analytics="agency_credit_click">
+        <img src={asset('/brand/aster-mark.png')} alt="" width="96" height="96"
+             loading="lazy" decoding="async" />
+        <span>Made by <strong>Aster</strong></span>
+      </a>
     </div>
   </div>
 </footer>

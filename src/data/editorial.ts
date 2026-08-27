@@ -35,7 +35,7 @@ export const EDITORIAL = {
     'C-01',
     'agency draft, client approve',
     'One sentence under the hero, twenty words at most. Must be verifiable.',
-    'A French-leaning burger house in Yangon, with two rooms and one way of cooking a patty.'
+    'American flavour. French precision. Yangon-born. Three rooms, five kitchens — and counting.'
   ),
 
   /** C-02 — three proof points. Must be true and verifiable. */
@@ -57,8 +57,41 @@ export const EDITORIAL = {
   howWeSmash: slot(
     'C-08',
     'agency draft, client approve',
-    'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, how many patties come in each burger. Those numbers are what make this paragraph worth reading. The last sentence also commits the site to honest photography — it cannot stand while the stills in public/media are social crops rather than a real shoot.',
-    'A smash burger is thin on purpose. A ball of beef hits a hot plancha and is pressed flat — once, hard — and that press is what builds the dark, lacy crust around the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people came for. It is a technique, not a size. So every burger here tells you its patty count before you order, and every picture shows the plate as it leaves the pass.'
+    'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, and how many patties come in each burger. Those numbers are what make this paragraph worth reading, and the patty count is the one fact the old copy promised and the menu cannot yet show.',
+    'A smash burger is thin on purpose. A ball of beef hits a hot plancha and is pressed flat — once, hard — and that press is what builds the dark, lacy crust around the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people came for. It is a technique, not a size.'
+  ),
+
+  /**
+   * C-15 — the founding. The brief says the founded year "must be included",
+   * and it is exactly the kind of fact that must come from the client: a wrong
+   * year on an About page is the sort of error that outlives the project.
+   */
+  founding: slot(
+    'C-15',
+    'client',
+    'The founded year, which the brief says must appear, plus who started Le SMASH and why. No date, founder or origin story will be written for you.'
+  ),
+
+  /**
+   * C-16 — what is next. Sits under "three rooms, and counting", so it needs
+   * to be true about actual plans rather than aspirational.
+   */
+  future: slot(
+    'C-16',
+    'client',
+    'Where Le SMASH is going: rooms planned, kitchens opening, anything already committed. Nothing speculative.'
+  ),
+
+  /**
+   * C-17 — the franchise invitation. The brief asks for a tone that is
+   * "selective and professional rather than like an open sales advertisement",
+   * which is why this is three sentences and an email rather than a pitch.
+   */
+  franchise: slot(
+    'C-17',
+    'agency draft, client approve',
+    'Confirm the invitation and who it is aimed at. Anything about investment level, territory or support belongs in the private follow-up, not here.',
+    'Le SMASH is open to conversations with partners who want to bring a room to a new city. We are looking for operators who care about the food as much as the numbers, and we would rather have one good conversation than fifty enquiries.'
   ),
 
   /** C-10 — brand story. */
@@ -82,12 +115,18 @@ export const EDITORIAL = {
     'Every photograph here is the portion you are served, plated the way the kitchen plates it during service. Nothing is built taller for the camera, and nothing is in the frame that is not in the price. If a burger comes with two patties, you can count two patties in the picture.'
   ),
 
-  /** C-07 — dine-in vs Foodpanda price context. Blocked on Q5. */
+  /**
+   * C-07 — the standfirst on the menu page.
+   *
+   * Prices are absent by decision, not omission: the brief states the menu can
+   * be displayed without them and that the site is not an ordering channel. So
+   * this says what the menu IS rather than apologising for what it lacks.
+   */
   priceContext: slot(
     'C-07',
-    'client',
-    'Whether published prices are dine-in or delivery, and whether the two differ.',
-    'Prices are not published here yet. Ask in store for the current price.'
+    'agency draft, client approve',
+    'Confirm this framing. If prices should appear after all, that is a schema field and a card row, not a rebuild — but the brief says otherwise.',
+    'The dishes Le SMASH is known for, without prices. Ask in the room, or on delivery, for what anything costs today.'
   ),
 
   /** C-14 — agency-authored, factual, ready. */

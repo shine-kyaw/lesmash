@@ -11,7 +11,16 @@ export function title(pageTitle: string | null): string {
 }
 
 export const DESCRIPTIONS: Record<string, string> = {
-  home: 'Le SMASH Burgers & Co. smashes every patty to order in Yangon, with branches at Junction Square in Kamayut and Yankin. See the menu, find us, or order delivery.',
-  menu: 'The full Le SMASH menu in Yangon — burgers, combos, breakfast, sides and shakes, listed with patty counts and portions so you know exactly what arrives.',
-  notFound: 'That page could not be found. Head to the Le SMASH menu or back to the home page.',
+  home:
+    'Le SMASH Burgers & Co. — an American-flavoured, French-precision burger house born in Yangon. Three rooms, five kitchens. See the menu, the archive, and where to find us.',
+  menu:
+    'The full Le SMASH menu in Yangon — the burger collection, brunch, mains, salads, snacks, drinks and cocktails.',
+  story:
+    'How Le SMASH began in Yangon, what the press does to a patty, and where three rooms and five kitchens go next.',
+  gallery:
+    'The Le SMASH archive — campaigns, pop-ups, food and product photography, spaces, behind the scenes and collaborations.',
+  visit:
+    'Le SMASH locations in Yangon, where we deliver across the city, and how to start a franchise conversation.',
+  notFound:
+    'That page could not be found. Head to the Le SMASH menu or back to the home page.',
 };

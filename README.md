@@ -14,12 +14,18 @@ everything you read, with the hero on their deep red and the footer on their
 black as bookends. The logo's red is the one accent, and their gold carries the
 labels on the dark grounds. Gasoek One for display and Grand Hotel for the
 script are the closest available matches to the two hands in the logo; Archivo
-carries the body and IBM Plex Mono the prices. The wordmark itself is the real
+carries the body and IBM Plex Mono the labels. The wordmark itself is the real
 lockup artwork, never re-set in a web font. See `docs/DECISIONS.md` §11.
 
-The menu is a grid of cards with a picture, a price and the portion facts on the
-face of each one, because patty counts are easier to scan on a card than in a
-list.
+The menu is a grid of cards with a picture, a name and whatever portion facts
+are confirmed — and no price, because the brief says the menu can be shown
+without them and the site is not an ordering channel. Drinks are set as lists
+instead: a drink has no photograph, no portion and no price, so a name is its
+entire record.
+
+Five pages — Home, Our Story, Menu, Gallery, Visit Us — carrying the seven
+sections of the client's brief. Collaborations is a Gallery section and Franchise
+a Visit section; Merch is not built. See `docs/DECISIONS.md` §12.
 
 The one orchestrated moment is the wordmark: on load it takes a press,
 compressing and springing back the way a ball of beef does on the plancha. It

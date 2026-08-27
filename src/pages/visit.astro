@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import Shot from '../components/Shot.astro';
+import Slot from '../components/Slot.astro';
+import { EDITORIAL } from '../data/editorial';
+import { COPY } from '../data/copy';
+import { SITE } from '../lib/site.config.mjs';
+import { getBranches, directionsUrl, primaryPhone } from '../lib/content';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { breadcrumbSchema, restaurantSchema } from '../lib/schema';
+
+const branches = await getBranches();
+const schema = [
+  ...branches.map((b) => restaurantSchema(b)),
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Visit Us', path: '/visit' }]),
+];
+
+/* The client's own coverage line, from their homepage mock. The two branch
+   records below are the ones this repo can verify; the townships come from
+   their copy and are theirs to stand behind. */
+const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
+---
+<Base path="/visit" title={title('Visit Us')} description={DESCRIPTIONS.visit} schema={schema}>
+  <section class="section" style="padding-bottom:var(--s6)">
+    <div class="wrap">
+      <p class="label label--ember">Visit us</p>
+      <h1 style="margin-top:var(--s4)">
+        Find Le SMASH<br /><span class="script">near you.</span>
+      </h1>
+      <p class="lede" style="margin-top:var(--s5)">Or see if we deliver to your area.</p>
+    </div>
+  </section>
+
+  {/* The rooms. Hours are shown as unpublished rather than guessed — a wrong
+      answer here sends someone across Yangon for nothing. */}
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="venues">
+        {branches.map((branch) => {
+          const phone = primaryPhone(branch);
+          return (
+            <article class="venue reveal">
+              <h2 class="venue__name">{branch.name}</h2>
+              <address class="venue__addr">
+                {branch.addressLine}<br />{branch.township}, {branch.city}
+              </address>
+              <div class="dish__meta">
+                <span class="fact fact--warn">{COPY.state.hoursUnknown}</span>
+                {branch.hasDineIn === true && <span class="fact">{COPY.labels.dineIn}</span>}
+                {branch.hasTakeaway === true && <span class="fact">{COPY.labels.takeaway}</span>}
+              </div>
+              <div class="btn-row">
+                <a class="btn btn--ghost" href={directionsUrl(branch)}
+                   target="_blank" rel="noopener noreferrer"
+                   data-analytics="directions_click" data-branch={branch.slug} data-source="visit">
+                  {COPY.cta.directions}
+                </a>
+                {phone && (
+                  <a class="btn btn--ghost" href={`tel:${phone.e164}`}
+                     data-analytics="phone_click" data-branch={branch.slug} data-source="visit">
+                    {COPY.cta.call}
+                  </a>
+                )}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {/* Their homepage says three rooms. Two have confirmed addresses in this
+          repo, so the third is named as outstanding rather than invented. */}
+      <p class="note" style="margin-top:var(--s7)">
+        Le SMASH counts three rooms and five kitchens. Two addresses are
+        confirmed above — the third is still to be supplied.
+      </p>
+    </div>
+  </section>
+
+  {/* The delivery map. A concept frame, per the brief's first stage. */}
+  <section class="section band--red" id="delivery">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">Delivery</p>
+        <p class="track__numeral" aria-hidden="true">01</p>
+      </div>
+      <div>
+        <div class="sec-head"><h2>Where we deliver</h2></div>
+        <div class="map">
+          <Shot ratio="3x2" caption="Illustrated Yangon delivery map" />
+          <ul class="map__key">
+            {townships.map((t) => <li class="fact">{t} Township</li>)}
+          </ul>
+        </div>
+        <p class="lede" style="margin-top:var(--s6)">
+          Drawn rather than embedded, so it sits with the rest of the site
+          instead of looking like a widget — and so a new branch or area is an
+          edit, not a redraw. Township boundaries and the areas each kitchen
+          covers are still to be confirmed.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Franchise. A block, not a page: the brief wants it brief, selective and
+      routed to a private conversation. */}
+  <section class="section rule-top" id="franchise">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">Franchise</p>
+        <p class="track__numeral" aria-hidden="true">02</p>
+      </div>
+      <div class="split split--wide-left">
+        <div class="stack-lg reveal">
+          <h2>Work with us.</h2>
+          <Slot slot={EDITORIAL.franchise} class="lede" />
+          <p class="note">
+            Detailed terms are shared privately after an initial conversation.
+          </p>
+          {SITE.franchiseEmail ? (
+            <div class="btn-row">
+              <a class="btn btn--ember"
+                 href={`mailto:${SITE.franchiseEmail}?subject=Le%20SMASH%20franchise%20enquiry`}
+                 data-analytics="franchise_enquiry_click">Make an enquiry</a>
+            </div>
+          ) : (
+            <p class="note note--gap">
+              <b>Enquiry route outstanding</b>
+              One address finishes this section. Tell us where franchise
+              enquiries should land and the button appears here. We will not
+              guess it from the domain — an enquiry that bounces is worse than
+              a section that admits it is not wired up yet.
+            </p>
+          )}
+        </div>
+        <div class="figure figure--tall reveal">
+          <Shot ratio="4x5" caption="A Le SMASH room" />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

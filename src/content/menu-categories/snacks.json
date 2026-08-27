@@ -1,0 +1,13 @@
+{
+  "slug": "snacks",
+  "name": "Snacks",
+  "description": null,
+  "displayGroup": "food",
+  "layout": "cards",
+  "listItems": [],
+  "listGroups": [],
+  "sortOrder": 50,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

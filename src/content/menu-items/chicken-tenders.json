@@ -5,7 +5,7 @@
   "price": null,
   "priceDisplay": null,
   "priceContext": "unconfirmed",
-  "category": "appetizer",
+  "category": "mains",
   "image": null,
   "imageGallery": [],
   "pattyCount": null,
@@ -21,9 +21,9 @@
   "isFeatured": false,
   "isAvailable": true,
   "branchAvailability": [],
-  "sortOrder": 20,
+  "sortOrder": 230,
   "status": "published",
-  "updatedAt": null,
-  "verified": false,
-  "sourceNote": "Name appeared in public customer/creator posts; not confirmed by the client. Price, portion and patty count unresolved (DS-03/DS-04)."
+  "updatedAt": "2026-08-27",
+  "verified": true,
+  "sourceNote": "Name taken from the client's Canva board (Le SMASH Website - Presentation, pages 5, 7 and 9), supplied 27 Aug 2026. Description, photography, portion and patty count are still outstanding."
 }

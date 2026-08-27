@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+import Shot from '../components/Shot.astro';
+import Slot from '../components/Slot.astro';
+import { EDITORIAL } from '../data/editorial';
+import { href } from '../lib/href';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { breadcrumbSchema } from '../lib/schema';
+
+const schema = [
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Our Story', path: '/story' }]),
+];
+---
+<Base path="/story" title={title('Our Story')} description={DESCRIPTIONS.story} schema={schema}>
+  <section class="section" style="padding-bottom:var(--s6)">
+    <div class="wrap">
+      <p class="label label--ember">Our story</p>
+      <h1 style="margin-top:var(--s4)">
+        American flavour.<br /><span class="script">French precision.</span>
+      </h1>
+      <p class="lede" style="margin-top:var(--s5)">
+        Yangon-born. Three rooms, five kitchens — and counting.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">How it started</p>
+        <p class="track__numeral" aria-hidden="true">01</p>
+      </div>
+      <div class="split split--wide-left">
+        <div class="stack-lg reveal">
+          {/* C-10. The founding year, the people and the reason are the client's
+              to give — nothing here will be written for them. */}
+          <Slot slot={EDITORIAL.story} class="lede" />
+          <Slot slot={EDITORIAL.founding} />
+        </div>
+        <div class="figure figure--tall reveal">
+          <Shot ratio="4x5" caption="The first room" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section rule-top">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">The press</p>
+        <p class="track__numeral" aria-hidden="true">02</p>
+      </div>
+      <div class="split">
+        <div class="figure figure--wide reveal">
+          <Shot ratio="3x2" caption="A patty on the press" />
+        </div>
+        <div class="stack-lg reveal">
+          <h2>Pressed once,<br /><span class="script">hard.</span></h2>
+          <Slot slot={EDITORIAL.howWeSmash} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band--red">
+    <div class="wrap track">
+      <div class="track__rail">
+        <p class="label">What is next</p>
+        <p class="track__numeral" aria-hidden="true">03</p>
+      </div>
+      <div class="stack-lg reveal">
+        <h2>Three rooms,<br /><span class="script">and counting.</span></h2>
+        <Slot slot={EDITORIAL.future} class="lede" />
+        <div class="btn-row">
+          <a class="btn btn--cream" href={href('/gallery')}>See the archive</a>
+          <a class="btn btn--ghost" href={href('/visit')}>Visit us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

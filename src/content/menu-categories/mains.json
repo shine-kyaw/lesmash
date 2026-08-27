@@ -1,0 +1,13 @@
+{
+  "slug": "mains",
+  "name": "Main",
+  "description": null,
+  "displayGroup": "food",
+  "layout": "cards",
+  "listItems": [],
+  "listGroups": [],
+  "sortOrder": 30,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

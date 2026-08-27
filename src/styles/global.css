@@ -165,3 +165,13 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; }
 }
+
+/* Inline code, used where the page names a file the client or a developer has
+   to act on. Rare, and deliberately quiet. */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}

@@ -1,0 +1,58 @@
+---
+import { existsSync } from 'node:fs';
+import Wordmark from './Wordmark.astro';
+import { asset } from '../lib/href';
+
+/**
+ * The opening film.
+ *
+ * The brief asks for a site that reads as a gallery rather than a restaurant
+ * page, and the first screen is where that gets decided — so it is a full
+ * viewport of the brand with a film behind it, and nothing else competing.
+ *
+ * No film has been supplied yet. Rather than fake one, this renders the brand's
+ * deep-red field at the film's exact dimensions with the lockup on it, so the
+ * layout is already final: drop `hero.mp4` (and a matching `hero-poster.jpg`)
+ * into public/media and the plane fills in on the next build with nothing else
+ * to change. The placeholder states plainly that it is one.
+ */
+const onDisk = (name: string) =>
+  existsSync(new URL(`../../public/media/${name}`, import.meta.url));
+
+const hasFilm = onDisk('hero.mp4');
+const hasPoster = onDisk('hero-poster.jpg');
+---
+<section class="film brand-red" aria-label="Le SMASH">
+  {hasFilm && (
+    <video
+      class="film__video"
+      src={asset('/media/hero.mp4')}
+      poster={hasPoster ? asset('/media/hero-poster.jpg') : undefined}
+      autoplay muted loop playsinline preload="metadata"
+      aria-hidden="true"
+    ></video>
+  )}
+  <div class="film__grade" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="wrap film__inner">
+    <h1 class="visually-hidden">Le SMASH Burgers &amp; Co. — Yangon</h1>
+    <div data-smash-word style="transform-origin:50% 100%">
+      <Wordmark size="hero" link={false} />
+    </div>
+    <p class="film__tag script">Officially the best burger in town.</p>
+  </div>
+
+  {!hasFilm && (
+    <p class="film__slot">
+      <b>Film goes here</b>
+      A silent 15–30s loop, 1080p, under 4MB. Drop it in as
+      <code>public/media/hero.mp4</code> with a matching
+      <code>hero-poster.jpg</code> and this plane fills itself in.
+    </p>
+  )}
+
+  <a class="film__scroll" href="#home" aria-label="Skip to the page">
+    <span aria-hidden="true"></span>
+  </a>
+</section>

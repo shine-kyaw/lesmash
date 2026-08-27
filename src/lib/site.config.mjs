@@ -17,6 +17,16 @@ export const SITE = {
     display: 'Le SMASH',
   },
 
+  // The brief asks Franchise to route to an enquiry form or a contact email. A
+  // mailto needs no backend, no spam handling and no privacy notice, which is
+  // the right trade for a section expecting a handful of enquiries a year.
+  //
+  // Null until the client gives us the address. It is deliberately NOT guessed
+  // from the domain: a franchise enquiry that bounces is worse than a section
+  // that admits it is not wired up yet, and the button is not rendered at all
+  // while this is null.
+  franchiseEmail: null,
+
   geo: 'Yangon',
   timeZone: 'Asia/Yangon', // UTC+06:30
   currency: 'MMK',

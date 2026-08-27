@@ -1,0 +1,32 @@
+---
+/**
+ * The rotating SMASH seal.
+ *
+ * Asked for directly on the client's homepage mock — "can you please make this
+ * text circle spin". It sits over the corner of the first picture, the way a
+ * stamp or a record label would.
+ *
+ * SVG rather than a rotated block of HTML so the letters follow the curve
+ * properly at every size, and the whole thing is one element to animate. It is
+ * decorative, so it is hidden from assistive technology and frozen under
+ * reduced motion.
+ */
+interface Props {
+  /** Repeated around the circle. Keep it short — it has to fit twice over. */
+  word?: string;
+  class?: string;
+}
+const { word = 'SMASH', class: className = '' } = Astro.props;
+
+// Six repeats sit evenly on a 100-unit circle at this letter size.
+const ring = Array.from({ length: 6 }, () => word).join(' · ') + ' · ';
+---
+<svg class:list={['ring', className]} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="ring-path" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+  </defs>
+  <circle cx="50" cy="50" r="49" class="ring__disc" />
+  <text class="ring__text">
+    <textPath href="#ring-path" startOffset="0">{ring}</textPath>
+  </text>
+</svg>

@@ -81,7 +81,10 @@ export function restaurantSchema(branch: Branch, opts: { withMenu?: boolean } = 
 export function menuSchema(categories: MenuCategory[], items: MenuItem[]) {
   const sections = categories
     .map((category) => {
-      const hasMenuItem = items
+      // A card category's items come from the collection; a list category IS
+      // its list, so its names come off the category record. Either way the
+      // section is only emitted if it actually names something.
+      const fromCollection = items
         .filter((i) => refSlug(i.category) === category.slug)
         .map((item) =>
           clean({
@@ -95,6 +98,11 @@ export function menuSchema(categories: MenuCategory[], items: MenuItem[]) {
                 : null,
           })
         );
+      const fromList = [
+        ...category.listItems,
+        ...category.listGroups.flatMap((g) => g.items),
+      ].map((name) => ({ '@type': 'MenuItem', name }));
+      const hasMenuItem = fromCollection.length ? fromCollection : fromList;
       return clean({
         '@type': 'MenuSection',
         name: category.name,

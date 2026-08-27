@@ -227,12 +227,107 @@ sentence promises photography the site cannot yet keep.
 
 ---
 
+## 12. The client's brief, and the five pages that answer it
+
+The written brief (26 August) and the client's Canva board arrived together and
+changed the project. Recorded here because much of what follows contradicts
+earlier sections.
+
+**The site is a portfolio, not a shop.** The brief opens with it: the site
+"does not need to function as an e-commerce or ordering website at this stage",
+the menu "can be displayed without prices", and it should read like "a museum,
+gallery, or work of art rather than a conventional restaurant website". Section
+11's ordering removal was the right call for the wrong reason; this is the
+reason.
+
+**Prices are gone from the card, not merely absent.** The dish card had a price
+row that said "ask in store" 35 times over. A row that never carries a value is
+not honesty, it is noise, so the element is gone. The `price` field stays in the
+schema — if the client reverses this it is a card row and a field, not a
+rebuild.
+
+**The menu is now the real menu.** Every previous item was a placeholder guessed
+from delivery listings, and every one of the 29 was wrong. The 35 food items and
+~85 drinks now in `src/content/` are transcribed from the client's own Canva
+board, pages 5 to 14, and marked `verified: true` with that provenance in
+`sourceNote`. What is still missing is everything except the name: no
+description, no photograph, no portion, and — this matters — no patty count.
+
+**Drinks are a list, not 85 cards.** A drink has no photograph, no portion, no
+patty count and no price, so a name is its entire record and a file per drink
+would model nothing. `menuCategories` gained `layout: 'cards' | 'list'` plus
+`listItems` / `listGroups`; a list category *is* its list. It also answers the
+brief's instruction to focus on "the most recognizable products rather than
+every possible menu variation" — the burgers get cards, the 51 coffees get a
+well-set column.
+
+### Seven sections, five pages
+
+The brief proposes seven sections and the Canva sitemap adds Merch for eight.
+This build ships five routes:
+
+| Their section | Where it lives | Why |
+|---|---|---|
+| Home | `/` | |
+| Our Story | `/story` | |
+| Menu / Le SMASH Icons | `/menu` | |
+| Gallery | `/gallery` | |
+| Collaborations | a Gallery section | It is images with a short note each — the same shape as every other Gallery section. A route for one block would make the navigation longer than the site |
+| Visit Us and Delivery | `/visit` | |
+| Franchise | a Visit section | The brief asks for it to be brief, selective, and to route to a private conversation. That is three sentences and one link |
+| Merch | not built | A shop, which is the one thing the brief says the site is not. Needs products, prices, stock and payment — a separate project, not a page |
+
+Eight top-level pages for a portfolio is a navigation problem before it is a
+budget one: it splits thin content across more routes and makes the site feel
+emptier than it is. Five carries all of it. If the client wants Collaborations
+or Franchise promoted later, both are already whole sections with their own
+anchor — promoting one is a route file, not a rewrite.
+
+### The opening film
+
+The client asked for the landing page to open on a film and reveal their
+proposed homepage on scroll, so `/` is two screens. The first is
+`HeroFilm.astro`: a full viewport of the brand's red with the lockup on it, the
+exact frame the film will occupy, and a dashed note naming the file to drop in
+(`public/media/hero.mp4`, plus `hero-poster.jpg`). It says it is a placeholder
+rather than pretending otherwise. The second screen is their homepage as drawn —
+headline, standfirst, two actions, two pictures, the spinning SMASH seal they
+asked for over the first, and their ticker line verbatim underneath.
+
+The seal is `SpinRing.astro`, an SVG `textPath` rather than rotated HTML so the
+letters follow the curve at any size. Frozen under `prefers-reduced-motion`.
+
+### What is deliberately not invented
+
+- **The franchise email.** Null, and the button is not rendered while it is.
+  Guessing `hello@` at their domain would send real enquiries nowhere, and a
+  section that admits it is not wired up beats one that silently fails.
+- **The third address.** Their homepage copy says three rooms and five
+  kitchens; this repo can verify two addresses. The Visit page states both
+  facts and names the gap.
+- **The ticker and the townships.** Kamayut, Yankin, Mayangone and Hlaing are
+  transcribed from the client's own mock. They are the client's claim about
+  their own coverage, published as theirs, not rebuilt from the two branch
+  records.
+- **Patty counts.** Every one is null, so C-08 no longer promises them. The
+  paragraph now explains the technique and stops there.
+
+### The agency credit
+
+"Made by Aster" with the Aster mark sits in the last row of the footer, after
+the copyright, linking out to astermade.com. Small, last, and outbound — a
+signature, not a banner.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |
 |---|---|
 | Hero film | Not shot, and no longer needed — the hero is a photograph beside the lockup |
-| Commissioned food and room photography | Not shot. The three stills in `public/media/` are the client's own social posts, cropped, as a stopgap. That folder's README lists the acceptance criteria they do not meet |
+| Commissioned food and room photography | Not shot. The brief calls this the single highest-leverage deliverable and it is right. Every Gallery slot and every dish card is a reserved frame at its final size |
+| Merch | A shop. Out of scope for a portfolio site — see §12 |
+| The Yangon delivery map | A drawn concept frame is in place on `/visit`. The real thing needs confirmed township boundaries and which kitchen serves which area |
 | Google Search Console / Business Profile | Requires client account access |
 | Analytics provider | Requires a client decision on vendor |
 | Lighthouse against the PRD's 5 Mbps profile | Cannot be run from this environment; budgets are enforced statically instead |

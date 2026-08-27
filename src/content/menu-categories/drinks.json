@@ -1,0 +1,90 @@
+{
+  "slug": "drinks",
+  "name": "Coffee, Tea & Shakes",
+  "description": null,
+  "displayGroup": "drinks",
+  "layout": "list",
+  "listItems": [],
+  "listGroups": [
+    {
+      "label": "Hot",
+      "items": [
+        "Hot Americano",
+        "Hot Cappuccino",
+        "Hot Chocolate",
+        "Hot Espresso",
+        "Hot Latte",
+        "Hot Lemon Tea",
+        "Hot Matcha",
+        "Hot Mocha",
+        "Flat White"
+      ]
+    },
+    {
+      "label": "Iced",
+      "items": [
+        "Ice Chocolate",
+        "Iced Americano",
+        "Iced Cappuccino",
+        "Iced Espresso",
+        "Iced Latte",
+        "Iced Lemon Tea",
+        "Iced Matcha",
+        "Iced Mocha",
+        "Saigon Ice Coffee",
+        "Passion Espresso",
+        "Tonic Espresso",
+        "Matcha Frappe",
+        "Lemon Tea Freeze"
+      ]
+    },
+    {
+      "label": "Shakes & Lassi",
+      "items": [
+        "Banoffee Shake",
+        "Chocolate Chip",
+        "Chocolate Milkshake",
+        "Coffee Shake",
+        "Peanut Butter Banana",
+        "SMASH Mango Lassi",
+        "Strawberry Chocolate",
+        "Strawberry Matcha",
+        "Strawberry Milk",
+        "Strawberry Milkshake",
+        "Thai Tea Shake",
+        "Vanilla Milkshake"
+      ]
+    },
+    {
+      "label": "Smoothies & Coolers",
+      "items": [
+        "Apple Refresher",
+        "Avocado Honey Cream",
+        "Avocado Smoothie",
+        "Coconut Mango Cooler",
+        "Dragonfruit Smoothie",
+        "Honeydew Melon Juice",
+        "Mango Mint",
+        "Mango Smoothie",
+        "Passion Mint Smoothie",
+        "Pina Coco",
+        "Roselle Berry Cooler",
+        "Strawberry Mint",
+        "Strawberry Smoothie",
+        "Watermelon Juice"
+      ]
+    },
+    {
+      "label": "Fruit Beer",
+      "items": [
+        "Fruit Beer (Mango)",
+        "Fruit Beer (Passion)",
+        "Fruit Beer (Strawberry)"
+      ]
+    }
+  ],
+  "sortOrder": 70,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

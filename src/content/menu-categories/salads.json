@@ -1,0 +1,13 @@
+{
+  "slug": "salads",
+  "name": "Salad",
+  "description": null,
+  "displayGroup": "food",
+  "layout": "cards",
+  "listItems": [],
+  "listGroups": [],
+  "sortOrder": 40,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

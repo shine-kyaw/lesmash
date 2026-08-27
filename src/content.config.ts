@@ -95,9 +95,26 @@ const menuCategories = defineCollection({
     slug: z.string(),
     name: localised,
     description: localisedOptional,
-    // Groups Non Coffee + Smoothies + Milkshake under one "Drinks" anchor
-    // without merging the underlying categories (PRD §13.3).
     displayGroup: z.enum(['food', 'drinks']),
+
+    /**
+     * How the category renders on the menu page.
+     *
+     * 'cards'  — items come from the menuItems collection and get a picture,
+     *            a name and their portion facts. This is the "Le SMASH Icons"
+     *            treatment the brief asks for.
+     * 'list'   — the category IS its list. Drinks have no photograph, no
+     *            portion, no patty count and (per the brief) no price, so a
+     *            name is the entire record and a separate file per drink would
+     *            model nothing. Those names live in `listItems` below.
+     */
+    layout: z.enum(['cards', 'list']).default('cards'),
+    listItems: z.array(z.string()).default([]),
+    /** Optional grouping for a long list, e.g. Hot / Iced / Shakes. */
+    listGroups: z
+      .array(z.object({ label: localised, items: z.array(z.string()) }))
+      .default([]),
+
     sortOrder: z.number().int(),
     hasLandingPage: z.boolean().default(false),
     serviceHours: localisedOptional,

@@ -6,14 +6,19 @@
  * supplies it (PRD §17.1).
  */
 export const COPY = {
-  nav: { home: 'Home', menu: 'Menu' },
+  nav: {
+    home: 'Home',
+    story: 'Our Story',
+    menu: 'Menu',
+    gallery: 'Gallery',
+    visit: 'Visit Us',
+  },
   cta: {
     menu: 'See the menu',
     directions: 'Directions',
     call: 'Call',
   },
   state: {
-    priceUnset: 'Ask in store',
     unavailable: 'Off the menu',
     soldOut: 'Sold out today',
     hoursUnknown: 'Hours not yet published',
@@ -32,7 +37,6 @@ export const COPY = {
   },
   spice: { none: 'Not spicy', mild: 'Mild', medium: 'Medium', hot: 'Hot' },
   footer: {
-    delivery: 'Delivery is handled by Foodpanda.',
     follow: 'Follow',
     rights: 'All rights reserved.',
   },

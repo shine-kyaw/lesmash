@@ -1,0 +1,20 @@
+{
+  "slug": "bottled",
+  "name": "Bottled",
+  "description": null,
+  "displayGroup": "drinks",
+  "layout": "list",
+  "listItems": [
+    "Carlsberg",
+    "Coca-Cola Classic",
+    "Soda",
+    "Soft Drink",
+    "Sunkist Juice",
+    "Water"
+  ],
+  "listGroups": [],
+  "sortOrder": 80,
+  "hasLandingPage": false,
+  "serviceHours": null,
+  "isActive": true
+}

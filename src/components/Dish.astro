@@ -1,14 +1,17 @@
 ---
 import { COPY } from '../data/copy';
-import { formatPrice, limitedToBranches, IS_PREVIEW, type Branch, type MenuItem } from '../lib/content';
+import { limitedToBranches, IS_PREVIEW, type Branch, type MenuItem } from '../lib/content';
 import Shot from './Shot.astro';
 
 /**
- * A dish card: picture, name, price, and the portion facts.
+ * A dish card: picture, name, and whatever portion facts are confirmed.
  *
- * Patty count and portion sit on the card, never behind a tap. A customer must
- * be able to learn the size of what they are buying without opening anything —
- * that is the premise of this project.
+ * No price. The brief is explicit that the menu "can be displayed without
+ * prices" and that the site is a portfolio rather than an ordering channel, so
+ * a price element here would be 35 cards each admitting it does not know one.
+ *
+ * Facts sit on the card, never behind a tap — a customer should be able to
+ * learn what they are looking at without opening anything.
  */
 interface Props {
   item: MenuItem;
@@ -17,7 +20,6 @@ interface Props {
 }
 const { item, branches, soldOut = false } = Astro.props;
 
-const price = formatPrice(item.price);
 const limited = limitedToBranches(item, branches);
 const unavailable = !item.isAvailable || soldOut;
 ---
@@ -35,19 +37,7 @@ const unavailable = !item.isAvailable || soldOut;
   </div>
 
   <div class="dish__body">
-    <div class="dish__top">
-      <h3 class="dish__name">{item.name}</h3>
-
-      {item.priceDisplay ? (
-        <span class="dish__price">{item.priceDisplay}</span>
-      ) : price ? (
-        <span class="dish__price">{price}</span>
-      ) : (
-        /* No price on this site has been confirmed by the restaurant, so we
-           say so rather than printing a number nobody has stood behind. */
-        <span class="dish__price dish__price--unset">{COPY.state.priceUnset}</span>
-      )}
-    </div>
+    <h3 class="dish__name">{item.name}</h3>
 
     {item.description && <p class="dish__desc">{item.description}</p>}
 

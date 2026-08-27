@@ -1,10 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Dish from '../components/Dish.astro';
+import MenuList from '../components/MenuList.astro';
 import Slot from '../components/Slot.astro';
-import { COPY } from '../data/copy';
 import { EDITORIAL } from '../data/editorial';
-import { SITE } from '../lib/site.config.mjs';
 import { getBranches, getCategories, getMenuItems, itemsInCategory } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { menuSchema, breadcrumbSchema } from '../lib/schema';
@@ -13,9 +12,17 @@ const branches = await getBranches();
 const categories = await getCategories();
 const items = await getMenuItems();
 
+/*
+ * A card category earns a place if it has items; a list category is its own
+ * content, so it earns one if it has names. Both kinds share the course rail.
+ */
 const courses = categories
   .map((category) => ({ category, dishes: itemsInCategory(items, category.slug) }))
-  .filter((c) => c.dishes.length > 0);
+  .filter(({ category, dishes }) =>
+    category.layout === 'list'
+      ? category.listItems.length > 0 || category.listGroups.length > 0
+      : dishes.length > 0
+  );
 
 const schema = [
   menuSchema(categories, items),
@@ -24,12 +31,12 @@ const schema = [
 
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
-<Base path="/menu" title={title('Menu & Prices')} description={DESCRIPTIONS.menu} schema={schema}>
+<Base path="/menu" title={title('Menu')} description={DESCRIPTIONS.menu} schema={schema}>
   <section class="section" style="padding-bottom:var(--s6)">
     <div class="wrap">
       <p class="label label--ember">The menu</p>
       <h1 style="margin-top:var(--s4)">
-        Everything we<br /><span class="serif-em">put on the pass.</span>
+        Le SMASH<br /><span class="script">Icons.</span>
       </h1>
       <div style="margin-top:var(--s5);max-width:46ch">
         <Slot slot={EDITORIAL.priceContext} class="lede" />
@@ -66,28 +73,31 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
           </div>
           {category.description && <p class="lede" style="margin-bottom:var(--s5)">{category.description}</p>}
 
-          <ul class="dishes">
-            {dishes.map((item) => (
-              <Dish
-                item={item}
-                branches={branches}
-                soldOut={branches.length > 0 && branches.every((b) => b.soldOutItems.includes(item.slug))}
-              />
-            ))}
-          </ul>
+          {category.layout === 'list' ? (
+            <MenuList category={category} />
+          ) : (
+            <ul class="dishes">
+              {dishes.map((item) => (
+                <Dish
+                  item={item}
+                  branches={branches}
+                  soldOut={branches.length > 0 && branches.every((b) => b.soldOutItems.includes(item.slug))}
+                />
+              ))}
+            </ul>
+          )}
         </div>
       </section>
     ))}
   </div>
 
-  <section class="section">
+  <section class="section band--ink">
     <div class="wrap">
       <p class="label">Allergens</p>
       <p class="lede" style="margin-top:var(--s4)">
-        Allergen information is published only where the restaurant has confirmed it in writing.
-        If you have an allergy, ask staff before ordering.
+        Allergen information is published only where the restaurant has confirmed it in
+        writing. If you have an allergy, ask staff before ordering.
       </p>
-      <p class="label" style="margin-top:var(--s6)">Prices are shown in {SITE.currency}</p>
     </div>
   </section>
 </Base>

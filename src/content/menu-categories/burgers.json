@@ -1,10 +1,13 @@
 {
   "slug": "burgers",
-  "name": "Burgers",
+  "name": "Burger Collection",
   "description": null,
   "displayGroup": "food",
+  "layout": "cards",
+  "listItems": [],
+  "listGroups": [],
   "sortOrder": 10,
-  "hasLandingPage": true,
+  "hasLandingPage": false,
   "serviceHours": null,
   "isActive": true
 }
