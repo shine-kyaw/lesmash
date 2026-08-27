@@ -320,6 +320,39 @@ signature, not a banner.
 
 ---
 
+## 13. Our Story folds into Home, and the address is the map link
+
+Four routes now, not five. `/story` is gone and the story sits on the home page
+as two sections: where Le SMASH came from, and what the press does to a patty.
+Where it is going closes the page on the red band, next to the rooms it is
+about.
+
+That is a better fit than it sounds. The brief warns the homepage should
+"immediately establish the personality of Le SMASH without containing too much
+information", which cuts against folding a page into it — so the story lost its
+third block rather than being pasted in whole. It also means the one page a
+first-time visitor actually lands on now carries the brand narrative instead of
+linking away to it.
+
+`/story` was live for about half an hour, so `vercel.json` redirects it to
+`/#story` (301) rather than 404ing. The nav and footer point at the anchor.
+
+**The address is the Google Maps link.** The brief lists "Google Maps links" as
+a requirement of the Visit section. Rather than a button beside the address, the
+address itself is the link — pin, address, and an "Open in Google Maps" cue —
+because the address is the thing a visitor already wants to tap. The Call button
+stays; a second button to the same URL would be noise, not emphasis.
+
+One caveat worth knowing: `directionsUrl()` has no `googleMapsUrl`,
+`googlePlaceId` or coordinates for either branch, so it falls back to a Maps
+*search* on brand + name + address + Yangon. That is a real, working link and it
+resolves correctly for a named restaurant, but it is a query rather than a pin.
+Neither the client's Facebook page nor any public listing carries coordinates,
+so this is now an explicit ask in the content register: two Google Maps share
+links, or a place ID each.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |

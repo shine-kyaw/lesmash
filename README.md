@@ -23,9 +23,10 @@ without them and the site is not an ordering channel. Drinks are set as lists
 instead: a drink has no photograph, no portion and no price, so a name is its
 entire record.
 
-Five pages — Home, Our Story, Menu, Gallery, Visit Us — carrying the seven
-sections of the client's brief. Collaborations is a Gallery section and Franchise
-a Visit section; Merch is not built. See `docs/DECISIONS.md` §12.
+Four pages — Home, Menu, Gallery, Visit Us — carrying the seven sections of
+the client's brief. Our Story is a section on Home, Collaborations one on Gallery,
+and Franchise one on Visit; Merch is not built. See `docs/DECISIONS.md` §12 and
+§13.
 
 The one orchestrated moment is the wordmark: on load it takes a press,
 compressing and springing back the way a ball of beef does on the plancha. It

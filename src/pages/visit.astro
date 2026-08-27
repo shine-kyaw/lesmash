@@ -41,27 +41,40 @@ const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
           return (
             <article class="venue reveal">
               <h2 class="venue__name">{branch.name}</h2>
-              <address class="venue__addr">
-                {branch.addressLine}<br />{branch.township}, {branch.city}
-              </address>
+
+              {/* The address is the map link. The brief lists "Google Maps
+                  links" as a requirement, and the address is the thing a
+                  visitor already wants to tap — making it the link means the
+                  affordance sits on the content rather than beside it. */}
+              <a class="maplink" href={directionsUrl(branch)}
+                 target="_blank" rel="noopener noreferrer"
+                 data-analytics="directions_click" data-branch={branch.slug} data-source="visit_address">
+                <svg class="maplink__pin" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5 0 4.9 6.5 12.5 6.5 12.5s6.5-7.6 6.5-12.5c0-3.6-2.9-6.5-6.5-6.5Z"
+                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  <circle cx="12" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+                <address class="venue__addr">
+                  {branch.addressLine}<br />{branch.township}, {branch.city}
+                </address>
+                <span class="maplink__cue">Open in Google Maps</span>
+              </a>
+
               <div class="dish__meta">
                 <span class="fact fact--warn">{COPY.state.hoursUnknown}</span>
                 {branch.hasDineIn === true && <span class="fact">{COPY.labels.dineIn}</span>}
                 {branch.hasTakeaway === true && <span class="fact">{COPY.labels.takeaway}</span>}
               </div>
-              <div class="btn-row">
-                <a class="btn btn--ghost" href={directionsUrl(branch)}
-                   target="_blank" rel="noopener noreferrer"
-                   data-analytics="directions_click" data-branch={branch.slug} data-source="visit">
-                  {COPY.cta.directions}
-                </a>
-                {phone && (
+              {/* Only Call here: the address above is already the map link, and
+                  two buttons to the same URL is noise, not emphasis. */}
+              {phone && (
+                <div class="btn-row">
                   <a class="btn btn--ghost" href={`tel:${phone.e164}`}
                      data-analytics="phone_click" data-branch={branch.slug} data-source="visit">
                     {COPY.cta.call}
                   </a>
-                )}
-              </div>
+                </div>
+              )}
             </article>
           );
         })}

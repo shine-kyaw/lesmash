@@ -5,6 +5,9 @@
   "outputDirectory": "dist",
   "trailingSlash": false,
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/story", "destination": "/#story", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

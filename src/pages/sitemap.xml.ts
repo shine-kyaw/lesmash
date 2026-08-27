@@ -6,7 +6,6 @@ const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/menu', priority: '0.9', changefreq: 'weekly' },
   { path: '/gallery', priority: '0.8', changefreq: 'weekly' },
-  { path: '/story', priority: '0.7', changefreq: 'monthly' },
   { path: '/visit', priority: '0.7', changefreq: 'monthly' },
 ];
 

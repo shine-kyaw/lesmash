@@ -447,3 +447,34 @@
   .hdr__nav::-webkit-scrollbar { display: none; }
   .hdr__nav a { flex: 0 0 auto; }
 }
+
+/* ===========================================================================
+   Map link — the address IS the Google Maps link.
+   The brief lists Google Maps links as a requirement for this section, and the
+   address is the thing a visitor already wants to tap, so the affordance sits
+   on the content rather than in a button beside it. The pin and the cue line
+   are what make it obviously a link rather than a paragraph.
+   ========================================================================= */
+.maplink {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--s1) var(--s3);
+  align-items: start; text-decoration: none; color: inherit;
+  padding: var(--s3); margin-inline: calc(var(--s3) * -1);
+  border-radius: var(--r);
+  transition: background-color 240ms var(--ease);
+}
+.maplink:hover { background: var(--paper-2); }
+.maplink__pin { grid-row: 1 / span 2; color: var(--ember); margin-top: 2px; }
+.maplink .venue__addr { grid-column: 2; }
+.maplink__cue {
+  grid-column: 2;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember);
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.maplink__cue::after {
+  content: ''; width: 12px; height: 1px; background: currentColor;
+  transition: width 240ms var(--ease);
+}
+.maplink:hover .maplink__cue::after { width: 20px; }
+/* On a brand ground the whole thing inverts with the register. */
+.band--red .maplink:hover, .band--ink .maplink:hover { background: rgb(244 239 230 / 0.1); }

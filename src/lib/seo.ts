@@ -15,8 +15,6 @@ export const DESCRIPTIONS: Record<string, string> = {
     'Le SMASH Burgers & Co. — an American-flavoured, French-precision burger house born in Yangon. Three rooms, five kitchens. See the menu, the archive, and where to find us.',
   menu:
     'The full Le SMASH menu in Yangon — the burger collection, brunch, mains, salads, snacks, drinks and cocktails.',
-  story:
-    'How Le SMASH began in Yangon, what the press does to a patty, and where three rooms and five kitchens go next.',
   gallery:
     'The Le SMASH archive — campaigns, pop-ups, food and product photography, spaces, behind the scenes and collaborations.',
   visit:

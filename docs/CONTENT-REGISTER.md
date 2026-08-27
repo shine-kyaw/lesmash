@@ -41,6 +41,7 @@ actual content files.
 | **The logo, in vector** | An `.ai`, `.svg` or `.eps` original | Supplied as raster: recovered from the client's Facebook page and in use in `public/brand/`. A vector original would sharpen the header lockup and let the favicon and the share card be regenerated cleanly |
 | **The founded year** | The year Le SMASH opened | The brief says it "must be included". `/story` renders a labelled gap where it goes (C-15) |
 | **The third address** | The address and hours of the third room | Their homepage says three rooms; two are confirmed. `/visit` names the gap rather than showing two and calling it all of them |
+| **Google Maps pins** | The Maps share link for each branch, or its place ID | The Visit page links the address to a Maps *search* on brand plus address. It works, but it is a query rather than a pin. Nothing public carries coordinates for either room |
 | **Franchise enquiry address** | The email franchise enquiries should reach | The Franchise section renders a note instead of a button. Deliberately not guessed from the domain |
 | **Patty counts** | How many patties are in each burger | Every card omits it, and C-08 no longer promises it |
 | **Delivery coverage** | Which township each kitchen serves, and the boundaries | `/visit` has a drawn map frame and the four townships from the client's own copy. The areas themselves are unconfirmed |
