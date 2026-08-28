@@ -48,9 +48,13 @@ export const SITE = {
   timeZone: 'Asia/Yangon', // UTC+06:30
   currency: 'MMK',
 
-  // DS-06 — all three handles resolve to @eatlesmash, confirmed from public
-  // search results. The client should still confirm they operate these
-  // accounts. A null renders no link at all.
+  // DS-06 — all three handles resolve to @eatlesmash. TikTok is now verified
+  // directly: the live @eatlesmash profile carries 6.4K followers, 241.7K likes
+  // and a bio reading "Best Burger in Town. Instagram @ eatlesmash" — which
+  // corroborates the Instagram handle from the client's own channel rather than
+  // from a search result. Facebook is verified from the page itself (it is
+  // where the logo, the stills and the phone number came from).
+  // A null renders no link at all.
   social: {
     facebook: 'https://www.facebook.com/eatlesmash/',
     instagram: 'https://www.instagram.com/eatlesmash/',

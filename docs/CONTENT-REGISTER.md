@@ -48,7 +48,8 @@ actual content files.
 | **Delivery coverage** | Which township each kitchen serves, and the boundaries | `/visit` has a drawn map frame and the four townships from the client's own copy. The areas themselves are unconfirmed |
 | **Menu descriptions** | A line per dish, at least for the burgers and the brunch | 35 cards carry a name and nothing else |
 | **Gallery photography** | Files per section, per `src/data/gallery.ts` | 42 reserved frames at final size. This is the deliverable the brief itself calls highest-leverage |
-| **The hero film** | A silent 15–30s loop, 1080p, under 4MB | `/` opens on a full-viewport placeholder naming the file to drop in |
+| **The "Main Drive Link"** | Access to the folder their Canva page 2 calls the Main Drive Link | The folder shared with us (`Le SMASH Web`) is empty and has not changed since it was created. Their own board points at a different, populated library that we cannot see. This is the single unblock for all photography |
+| **A hero film** | A silent, seamless landscape loop – 15–30s, 1080p, under 4MB | `/` opens on a placeholder. They have 10 Facebook Reels and an active TikTok (241.7K likes), but those are vertical social cuts with music and burned-in captions, and neither platform serves the source file. Source footage, or a recut, is needed |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
 | **C-11** | Portion-honesty statement | Recommended; high value; drafted only once the client approves the principle |
 | **C-09** | Breakfast intro, 150–250 words | `/breakfast` has no unique intro copy, which weakens it for search |
