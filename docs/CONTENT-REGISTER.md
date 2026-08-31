@@ -47,7 +47,6 @@ actual content files.
 | **Patty counts** | How many patties are in each burger | Every card omits it, and C-08 no longer promises it |
 | **Delivery coverage** | Which township each kitchen serves, and the boundaries | `/visit` has a drawn map frame and the four townships from the client's own copy. The areas themselves are unconfirmed |
 | **Menu descriptions** | A line per dish, at least for the burgers and the brunch | 35 cards carry a name and nothing else |
-| **Gallery photography** | Files per section, per `src/data/gallery.ts` | 42 reserved frames at final size. This is the deliverable the brief itself calls highest-leverage |
 | **26 dish photographs** | One clean frame per remaining dish, named after it | Nine dishes have a photograph. The rest keep a reserved frame: the library has plenty of burger shots but nothing identifies which burger each one is, and a wrong label is worse than none. The list is in `docs/DECISIONS.md` §14 |
 | **A hero film** | A silent, seamless landscape loop – 15–30s, 1080p, under 4MB | The opening screen now carries a real still and is finished as it stands. A film would be better. They have 10 Facebook Reels and an active TikTok, but those are vertical social cuts and neither platform serves the source file |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
