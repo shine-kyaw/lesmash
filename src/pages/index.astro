@@ -131,11 +131,12 @@ const ticker = [
       <div class="split split--wide-left">
         <div class="stack-lg reveal">
           <h2>American flavour,<br /><span class="script">French precision.</span></h2>
-          {/* C-10 and C-15. The founding year the brief says "must be
-              included", the people and the reason are all the client's to give
-              — nothing here will be written for them. */}
+          {/* C-10, interim. C-15 — the founding year the brief says "must be
+              included" — is deliberately not rendered here: it cannot be
+              written for them, and a labelled gap mid-story reads worse than
+              its absence. It stays tracked in editorial.ts and the content
+              register, and drops in as a second Slot once the year exists. */}
           <Slot slot={EDITORIAL.story} class="lede" />
-          <Slot slot={EDITORIAL.founding} />
         </div>
         <div class="figure figure--tall reveal">
           <img src={asset('/media/rooms/counter.jpg')}

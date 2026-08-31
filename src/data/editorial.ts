@@ -73,13 +73,17 @@ export const EDITORIAL = {
   ),
 
   /**
-   * C-16 — what is next. Sits under "three rooms, and counting", so it needs
-   * to be true about actual plans rather than aspirational.
+   * C-16 — what is next.
+   *
+   * Interim wording, and every number in it is the client's own from their
+   * homepage mock and its ticker. Nothing here is speculative, which is the
+   * point: the sentence they wrote already says "and counting".
    */
   future: slot(
     'C-16',
     'client',
-    'Where Le SMASH is going: rooms planned, kitchens opening, anything already committed. Nothing speculative.'
+    'What is actually committed: rooms signed, kitchens opening, dates. Replace this the moment there is something specific to say.',
+    'Three rooms. Five kitchens. Kamayut, Yankin, Mayangone, Hlaing. And counting.'
   ),
 
   /**
@@ -94,11 +98,20 @@ export const EDITORIAL = {
     'Le SMASH is open to conversations with partners who want to bring a room to a new city. We are looking for operators who care about the food as much as the numbers, and we would rather have one good conversation than fifty enquiries.'
   ),
 
-  /** C-10 — brand story. */
+  /**
+   * C-10 — brand story.
+   *
+   * Interim agency wording, written from what Le SMASH has already published
+   * about itself and nothing else: the positioning line off their own homepage
+   * mock, the categories off their own menu, and the technique, which is true
+   * of every smash burger. No founding date, no founder, no sourcing claim, no
+   * award. Replace it freely; it is written to be replaced.
+   */
   story: slot(
     'C-10',
     'client',
-    'Two hundred words on where Le SMASH came from. No founder story, opening date, award, sourcing claim or certification will be written for you.'
+    'The real story: who started Le SMASH, why, and what they were reacting to. Two hundred words. No founder story, opening date, award, sourcing claim or certification will be written for you.',
+    'Le SMASH is a Yangon burger house that runs on French kitchen habits and an American sandwich. The plancha settles the argument: a ball of beef, one hard press, and an edge you cannot get any other way. Everything else on the menu is there for the same reason — the brunch, the frites, the cocktails — because a room worth walking into is a room worth staying in.'
   ),
 
   /**
