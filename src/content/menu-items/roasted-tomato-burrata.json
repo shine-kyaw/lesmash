@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "salads",
-  "image": null,
+  "image": { "src": "/media/dishes/roasted-tomato-burrata.jpg", "alt": "Roasted tomatoes around a ball of burrata" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

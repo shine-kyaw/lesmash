@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "mains",
-  "image": null,
+  "image": { "src": "/media/dishes/grilled-cheese-tomato-soup.jpg", "alt": "Grilled cheese cut in half beside a bowl of tomato soup" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

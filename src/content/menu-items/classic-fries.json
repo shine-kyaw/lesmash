@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "snacks",
-  "image": null,
+  "image": { "src": "/media/dishes/classic-fries.jpg", "alt": "A bowl of classic frites" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

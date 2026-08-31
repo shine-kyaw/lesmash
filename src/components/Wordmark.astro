@@ -30,14 +30,14 @@ const isHero = size === 'hero';
   <a class:list={['mark', `mark--${size}`, className]} href={href('/')} aria-label="Le SMASH — home">
     <img
       src={asset('/brand/logo-lockup-cream.png')}
-      alt="" width="460" height="260" decoding="async" loading="lazy"
+      alt="" width="760" height="451" decoding="async" loading="lazy"
     />
   </a>
 ) : (
   <div class:list={['mark', `mark--${size}`, className]}>
     <img
       src={asset('/brand/logo-lockup-cream.png')}
-      alt="" width="460" height="260" decoding="async"
+      alt="" width="760" height="451" decoding="async"
       fetchpriority={isHero ? 'high' : undefined}
       loading={isHero ? undefined : 'lazy'}
     />

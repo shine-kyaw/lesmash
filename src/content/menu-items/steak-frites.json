@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "mains",
-  "image": null,
+  "image": { "src": "/media/dishes/steak-frites.jpg", "alt": "Sliced steak and frites, sauce poured over" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

@@ -1,80 +1,68 @@
 # Media
 
-Real photographs live here. Drop a file in and reference it from the page that
-needs it — there is no naming contract any more, because the generative media
-plane that used to depend on one is gone (see `docs/DECISIONS.md` §11).
+Everything here came from the client's own Drive library (the "Main Drive Link"
+on their Canva board — 134 files), recompressed for the web. Nothing is stock
+and nothing is borrowed.
 
-| File | Where it appears |
+| Folder | What is in it |
 |---|---|
-| `burger.jpg` | The hero, beside the wordmark. Used at native size — never upscaled |
-| `sear.jpg` | The pass, on the home page. Portrait 4:5 |
-| `plate-01.jpg` | The kitchen, on the home page. Landscape 3:2 |
+| `gallery/<section>/` | 51 pictures, one folder per section in `src/data/gallery.ts` |
+| `dishes/` | Dish photographs, named after the menu item slug they belong to |
+| `rooms/` | The exterior, the counter, the room in the evening, the menu wall |
+| `story/` | The press, the onions, a patty in profile |
+| `home/` | Spares for the home page |
+| `hero-still.jpg` | The opening screen. 16:9, 1920px |
 
-**These three are placeholders with a shelf life.** They were recovered from
-Le SMASH's own Facebook page and cropped, because no photography had been
-supplied to the project. They are the restaurant's own images, so nothing here
-is borrowed — but they were shot for social posts rather than for this layout:
-`burger.jpg` had promotional callouts cropped out of it, and none of the three
-meets the acceptance criteria below. C-08 promises that "every picture shows the
-plate as it leaves the pass"; these do not let the site keep that promise.
+`brand/` (one level up) holds the identity: their real white lockup, the red
+badge tile, the seamless monogram tile, the cut-out burger on transparency, and
+the meat stickers.
 
-Any picture slot without a file renders `Shot.astro` — a designed panel at the
-right aspect ratio, so nothing shifts when the real photograph lands. Never a
-broken image, never stock.
+## Adding a picture to the gallery
 
-## Brand assets
+Two steps, no code:
 
-`public/brand/` holds the identity itself, which is not placeholder material:
+1. Drop the file in `public/media/gallery/<section>/`, named so it sorts where
+   it should appear (`09-...`).
+2. Add one line to that section's `items` array in `src/data/gallery.ts` with
+   its filename and alt text.
 
-| File | What it is |
-|---|---|
-| `logo-lockup-cream.png` | The cream wordmark knocked out of its red ground. Used in the header, the footer and the hero. Never place it on parchment |
-| `logo-badge.png` | The full logo tile — red ground, cream script, black SMASH. The canonical mark |
+A section with an empty `items` array renders reserved `Shot` frames at its
+ratio instead, so a new section can be declared before its photography exists.
+Export at the section's ratio, longest edge 1200–1400px, WebP or JPEG, under
+250KB.
 
-`public/og.jpg`, `public/favicon-32.png` and `public/apple-touch-icon.png` are
-generated from those two. Both are raster, traced back from social exports. If
-the client supplies vector originals, regenerate all of them from the vector.
+## Adding a dish photograph
 
-## Before you shoot
+Set `image` on the item's JSON in `src/content/menu-items/`:
 
-Portion honesty is the point of this site, so the photography brief has
-acceptance criteria, not just a shot list:
+```json
+"image": { "src": "/media/dishes/<slug>.jpg", "alt": "What is in frame" }
+```
 
-- Photograph the portion a paying customer receives, plated as the kitchen
-  plates it during service.
-- Every multi-patty burger needs one frame where the patties are countable in
-  profile.
-- Every hero item needs a visible scale cue in frame — the actual plate, a
-  hand, the serving basket.
-- A combo is photographed with everything the combo includes, and nothing else.
-- Both branches get their own exterior shot. A branch page illustrated with the
-  other branch's room is a small dishonesty that undermines the whole position.
-
-Compress to: stills under 250KB each at 1× display width, AVIF or WebP where
-possible. `npm run check:budgets` will fail the build if the render-blocking
-payload goes past budget.
-
-## Gallery
-
-`public/media/gallery/<section>/` — one folder per section in
-`src/data/gallery.ts` (`campaigns`, `events`, `food`, `spaces`,
-`behind-the-scenes`, `collaborations`, `special-projects`).
-
-Nothing is wired to these folders yet: every slot on `/gallery` renders
-`Shot.astro` at the section's aspect ratio, so the page is already the right
-shape and nothing shifts when files arrive. Recommended exports:
-
-| Ratio | Use | Longest edge |
-|---|---|---|
-| 4:5 | Campaigns, Behind the Scenes | 1600px |
-| 3:2 | Events, Spaces | 1800px |
-| 4:3 | Food and Product, Collaborations, Special Projects | 1600px |
-
-WebP or AVIF, under 250KB each. Name files so they sort in the order they should
-appear (`01-...`, `02-...`).
+Export 4:3, 900px wide. **Only do this when you know which dish the photograph
+shows.** 26 items are still without one, and that is deliberate — the library
+has many burger shots and nothing identifies which burger each one is. A card
+labelled "Miso Bacon" over a photograph of something else is precisely the gap
+between marketing and plate this site exists to close.
 
 ## The hero film
 
 `hero.mp4` plus `hero-poster.jpg`. Silent, 15–30s, seamless loop, H.264, 1080p,
 1,000–2,500 kbps, under 4MB. The poster is the film's first frame at the same
-crop. Until both land, `/` opens on the placeholder in `HeroFilm.astro`.
+crop. Until they land, the opening screen carries `hero-still.jpg` and is
+finished as it stands — the film is an upgrade, not a gap.
+
+## Before the next shoot
+
+Portion honesty is still the point, so the brief has acceptance criteria:
+
+- Photograph the portion a paying customer receives, plated as the kitchen
+  plates it during service.
+- **Name the file after the dish.** This is the whole reason 26 cards have no
+  photograph.
+- Every multi-patty burger needs one frame where the patties are countable in
+  profile.
+- Every hero item needs a visible scale cue in frame — the actual plate, a
+  hand, the serving basket.
+- Both branches get their own exterior shot. A branch page illustrated with the
+  other branch's room is a small dishonesty that undermines the whole position.

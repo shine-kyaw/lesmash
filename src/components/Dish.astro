@@ -1,5 +1,6 @@
 ---
 import { COPY } from '../data/copy';
+import { asset } from '../lib/href';
 import { limitedToBranches, IS_PREVIEW, type Branch, type MenuItem } from '../lib/content';
 import Shot from './Shot.astro';
 
@@ -29,7 +30,7 @@ const unavailable = !item.isAvailable || soldOut;
 >
   <div class="dish__media">
     {item.image ? (
-      <img src={item.image.src} alt={item.image.alt} width="640" height="480"
+      <img src={asset(item.image.src)} alt={item.image.alt} width="900" height="675"
            loading="lazy" decoding="async" />
     ) : (
       <Shot ratio="4x3" />

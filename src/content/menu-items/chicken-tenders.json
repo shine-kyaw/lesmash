@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "mains",
-  "image": null,
+  "image": { "src": "/media/dishes/chicken-tenders.jpg", "alt": "Buttermilk chicken tenders with a dipping sauce" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

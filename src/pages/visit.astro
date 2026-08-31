@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Shot from '../components/Shot.astro';
+import { asset } from '../lib/href';
 import Slot from '../components/Slot.astro';
 import { EDITORIAL } from '../data/editorial';
 import { COPY } from '../data/copy';
@@ -28,6 +29,27 @@ const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
         Find Le SMASH<br /><span class="script">near you.</span>
       </h1>
       <p class="lede" style="margin-top:var(--s5)">Or see if we deliver to your area.</p>
+    </div>
+  </section>
+
+  {/* The rooms themselves, above the addresses. The brief asks Visit to show
+      the spaces, and there are real photographs of them now. */}
+  <section class="section" style="padding-block:0 var(--s8)">
+    <div class="wrap">
+      <ul class="tiles">
+        <li class="tile">
+          <img src={asset('/media/rooms/exterior.jpg')} alt="The Le SMASH shopfront from the street"
+               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
+        </li>
+        <li class="tile">
+          <img src={asset('/media/rooms/counter.jpg')} alt="The counter and stools before service"
+               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
+        </li>
+        <li class="tile">
+          <img src={asset('/media/rooms/evening.jpg')} alt="The room in the evening, neon on"
+               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
+        </li>
+      </ul>
     </div>
   </section>
 
@@ -159,7 +181,9 @@ const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
           )}
         </div>
         <div class="figure figure--tall reveal">
-          <Shot ratio="4x5" caption="A Le SMASH room" />
+          <img src={asset('/media/rooms/menu-wall.jpg')}
+               alt="The painted menu wall, beside the framed Napoleon"
+               width="1600" height="1067" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>

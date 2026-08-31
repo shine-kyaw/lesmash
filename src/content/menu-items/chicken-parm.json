@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "mains",
-  "image": null,
+  "image": { "src": "/media/dishes/chicken-parm.jpg", "alt": "Chicken parm under melted mozzarella and crisped sage" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

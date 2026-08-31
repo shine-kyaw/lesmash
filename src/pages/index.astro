@@ -62,16 +62,25 @@ const ticker = [
         </div>
       </div>
 
+
+      {/*
+        Their mock puts a photograph of the room here with the seal over it, and
+        a panel of the monogram beside it. Both exist now: the room, and the
+        pattern from their brand pack — with the cut-out burger standing on it,
+        which is the one asset in the library that can sit on any ground.
+      */}
       <div class="intro__plates">
         <div class="intro__plate intro__plate--tall">
-          <img src={asset('/media/burger.jpg')}
-               alt="A Le SMASH burger held in one hand, the patties visible in profile"
-               width="1008" height="976" loading="lazy" decoding="async" />
+          <img src={asset('/media/rooms/evening.jpg')}
+               alt="The Le SMASH room in the evening, neon on"
+               width="1600" height="1067" loading="lazy" decoding="async" />
           <SpinRing class="intro__ring" />
         </div>
-        <div class="intro__plate">
-          <img src={asset('/media/sear.jpg')} alt="A plate leaving the Le SMASH pass"
-               width="1000" height="1250" loading="lazy" decoding="async" />
+        <div class="intro__plate intro__plate--pattern"
+             style={"background-image:url(" + asset("/brand/pattern-monogram.png") + ")"}>
+          <img class="intro__cutout" src={asset('/brand/hero-burger.png')}
+               alt="A double Le SMASH burger, both patties visible in profile"
+               width="689" height="516" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -129,7 +138,9 @@ const ticker = [
           <Slot slot={EDITORIAL.founding} />
         </div>
         <div class="figure figure--tall reveal">
-          <Shot ratio="4x5" caption="The first room" />
+          <img src={asset('/media/rooms/counter.jpg')}
+               alt="The Le SMASH counter and stools before service"
+               width="1600" height="1067" loading="lazy" decoding="async" />
         </div>
       </div>
     </div>
@@ -143,7 +154,9 @@ const ticker = [
       </div>
       <div class="split">
         <div class="figure figure--wide reveal">
-          <Shot ratio="3x2" caption="A patty on the press" />
+          <img src={asset('/media/story/on-the-press.jpg')}
+               alt="A cook pressing balls of beef flat on the plancha"
+               width="1600" height="1067" loading="lazy" decoding="async" />
         </div>
         <div class="stack-lg reveal">
           <h2>Pressed once,<br /><span class="script">hard.</span></h2>
@@ -165,7 +178,13 @@ const ticker = [
         {GALLERY_SECTIONS.map((s) => (
           <li class="tile">
             <a href={`${href('/gallery')}#${s.slug}`}>
-              <Shot ratio="4x3" caption={s.name} />
+              {s.items[0] ? (
+                <img src={asset(`/media/gallery/${s.slug}/${s.items[0].src}`)}
+                     alt={s.items[0].alt} width="1200" height="900"
+                     class="shot--4x3" loading="lazy" decoding="async" />
+              ) : (
+                <Shot ratio="4x3" caption={s.name} />
+              )}
               <span class="tile__name">{s.name}</span>
             </a>
           </li>

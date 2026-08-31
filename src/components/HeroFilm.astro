@@ -2,27 +2,41 @@
 import { existsSync } from 'node:fs';
 import Wordmark from './Wordmark.astro';
 import { asset } from '../lib/href';
+import { IS_PREVIEW } from '../lib/content';
 
 /**
- * The opening film.
+ * The opening screen.
  *
  * The brief asks for a site that reads as a gallery rather than a restaurant
- * page, and the first screen is where that gets decided — so it is a full
- * viewport of the brand with a film behind it, and nothing else competing.
+ * page, and this is where that gets decided — one full viewport of the brand
+ * with nothing competing.
  *
- * No film has been supplied yet. Rather than fake one, this renders the brand's
- * deep-red field at the film's exact dimensions with the lockup on it, so the
- * layout is already final: drop `hero.mp4` (and a matching `hero-poster.jpg`)
- * into public/media and the plane fills in on the next build with nothing else
- * to change. The placeholder states plainly that it is one.
+ * A still carries it today: the room in the evening, graded, with the lockup
+ * over it. That is a finished screen, not a gap. A film is still the better
+ * answer and the frame is already the right shape for one — drop `hero.mp4`
+ * (plus a matching `hero-poster.jpg`) into public/media and it layers over the
+ * still on the next build with nothing else to change.
+ *
+ * The note naming the drop-in appears in preview builds only. A live visitor
+ * should never be told what the page is missing.
  */
 const onDisk = (name: string) =>
   existsSync(new URL(`../../public/media/${name}`, import.meta.url));
 
 const hasFilm = onDisk('hero.mp4');
 const hasPoster = onDisk('hero-poster.jpg');
+const hasStill = onDisk('hero-still.jpg');
 ---
 <section class="film brand-red" aria-label="Le SMASH">
+  {hasStill && (
+    <img
+      class="film__still"
+      src={asset('/media/hero-still.jpg')}
+      alt=""
+      width="1920" height="1080"
+      fetchpriority="high" decoding="async"
+    />
+  )}
   {hasFilm && (
     <video
       class="film__video"
@@ -43,12 +57,12 @@ const hasPoster = onDisk('hero-poster.jpg');
     <p class="film__tag script">Officially the best burger in town.</p>
   </div>
 
-  {!hasFilm && (
+  {IS_PREVIEW && !hasFilm && (
     <p class="film__slot">
-      <b>Film goes here</b>
-      A silent 15–30s loop, 1080p, under 4MB. Drop it in as
+      <b>Film slot</b>
+      A silent 15–30s loop, 1080p, under 4MB, dropped in as
       <code>public/media/hero.mp4</code> with a matching
-      <code>hero-poster.jpg</code> and this plane fills itself in.
+      <code>hero-poster.jpg</code>. The still below it is finished either way.
     </p>
   )}
 

@@ -487,3 +487,37 @@
    have their own, larger offset because they also sit under a sticky nav, and
    this rule is appended late enough to have overridden it. */
 [id]:not(.course) { scroll-margin-top: calc(84px + var(--banner-h, 0px)); }
+
+/* ===========================================================================
+   Real pictures in the tile grid.
+   The reserved Shot frame and a photograph have to occupy exactly the same box,
+   or the page reflows as the archive fills in. So the ratio classes apply to
+   both, and images cover rather than letterbox.
+   ========================================================================= */
+.tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.shot--4x3 { aspect-ratio: 4 / 3; }
+.shot--3x2 { aspect-ratio: 3 / 2; }
+.shot--4x5 { aspect-ratio: 4 / 5; }
+.figure > img { width: 100%; height: 100%; object-fit: cover; }
+
+/* The monogram panel from their brand pack, with the cut-out burger on it.
+   The pattern is a seamless tile, so it repeats rather than stretches. */
+.intro__plate--pattern {
+  display: grid; place-items: center;
+  background-color: var(--red);
+  /* The tile URL is set inline in the markup so it goes through asset() like
+     every other reference; a static url() here could not. */
+  background-size: 62%;
+  background-repeat: repeat;
+}
+.intro__cutout {
+  width: 88%; height: auto; object-fit: contain;
+  filter: drop-shadow(0 18px 28px rgb(0 0 0 / 0.42));
+}
+
+/* The still under the opening screen. Same box as the film, so swapping one for
+   the other changes nothing about the layout. */
+.film__still {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+}

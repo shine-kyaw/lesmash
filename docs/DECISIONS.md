@@ -353,6 +353,66 @@ links, or a place ID each.
 
 ---
 
+## 14. The asset library arrived, and the placeholders came out
+
+**Correction first.** Sections 12 and 13 record the client's Drive folder as
+empty. It was not. The Drive MCP connector cannot enumerate the children of a
+folder that was merely *shared* with us — `parentId = '<id>'` returns no results
+whether the folder is empty or full, and `modifiedTime == createdTime` on the
+folder made the wrong reading look confirmed. It held 134 files the whole time.
+
+The way in is `https://drive.google.com/embeddedfolderview?id=<id>#list`, which
+renders a plain HTML listing of any link-shared folder, ids included, with no
+auth. Files then come down at web size from
+`https://drive.google.com/thumbnail?id=<id>&sz=w1600`.
+
+### What was there
+
+Six subfolders (Burgers, Collaborations, Logos, Main Menu, Posters, Stickers)
+and 94 loose files: campaign posters, editorial spreads, product shots, room and
+exterior photography, behind-the-scenes, merchandise mockups, and a full logo
+pack.
+
+77 files are now in the repo, recompressed:
+
+- **51 gallery pictures** across all seven sections. Every reserved frame on
+  `/gallery` is now a photograph.
+- **9 dish photographs**, on the nine items whose name matches a file with no
+  guessing involved. The rest keep their reserved frame — see below.
+- **The real logo pack.** `logo-lockup-cream.png` is now their own white
+  lockup instead of the version I keyed by hand off a social post, and
+  `logo-badge.png` is their red tile. Sharper, and no longer a reconstruction.
+- **A cut-out burger on transparency** (`brand/hero-burger.png`), the one asset
+  in the library that can sit on any ground. It stands on the monogram panel on
+  the home page.
+- **The monogram tile** their homepage mock asked for by name ("Loewe pattern —
+  please add here"), as a seamless repeating background.
+- **A film-frame still** for the opening screen.
+
+### Two judgment calls worth recording
+
+**The Burgers folder is editorial spreads, not product shots.** Every file in it
+is a magazine layout with the burger name set in serif type, lorem ipsum body
+copy, and a price (21K, 18K). They are beautiful and exactly the register the
+brief asks for, so they are in Gallery. They are not dish photographs, and
+using them as such would have put both placeholder Latin and prices on a menu
+the brief says carries neither.
+
+**Only nine dishes got a photograph.** The library has many gorgeous burger
+shots, but nothing in the filenames or the frames says which burger each one
+is — and "Miso Bacon" over a photograph of a different burger is exactly the
+gap between marketing and plate this project exists to close. So the matched
+nine are the ones where a filename names the dish (`chicken parm.jpg`,
+`Steak and fries.jpg`) or the frame is unambiguous. The other 26 keep a
+reserved frame, and the content register now lists them.
+
+**The opening screen no longer announces itself as unfinished.** The dashed
+"film goes here" note was the most placeholder-looking thing on the site. It
+now appears in preview builds only, over a real still. A live visitor is never
+told what the page is missing.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |

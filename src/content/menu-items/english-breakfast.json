@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "brunch",
-  "image": null,
+  "image": { "src": "/media/dishes/english-breakfast.jpg", "alt": "The English breakfast: eggs, sausage, tomato and hash" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

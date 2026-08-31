@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "brunch",
-  "image": null,
+  "image": { "src": "/media/dishes/steak-and-eggs.jpg", "alt": "Sliced steak with fried eggs and salsa verde" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,

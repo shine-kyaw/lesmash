@@ -1,0 +1,45 @@
+---
+import Shot from './Shot.astro';
+import { asset } from '../lib/href';
+import type { GalleryItem, GallerySection } from '../data/gallery';
+
+/**
+ * One picture in the archive.
+ *
+ * Falls back to a reserved `Shot` frame when a section has no file for this
+ * slot, so a section can be declared before its photography exists and nothing
+ * shifts when the file lands.
+ *
+ * The dimensions come off the section ratio rather than the file, because the
+ * point of the reserved frame is that both render at exactly the same size.
+ */
+interface Props {
+  section: GallerySection;
+  item?: GalleryItem;
+  index: number;
+  /** The first row is worth fetching eagerly; the rest are not. */
+  eager?: boolean;
+}
+const { section, item, index, eager = false } = Astro.props;
+
+const DIMS: Record<GallerySection['ratio'], [number, number]> = {
+  '4x3': [1200, 900],
+  '3x2': [1400, 933],
+  '4x5': [1200, 1500],
+};
+const [w, h] = DIMS[section.ratio];
+---
+<li class="tile">
+  {item ? (
+    <img
+      src={asset(`/media/gallery/${section.slug}/${item.src}`)}
+      alt={item.alt}
+      width={w} height={h}
+      class={`shot--${section.ratio}`}
+      loading={eager ? undefined : 'lazy'}
+      decoding="async"
+    />
+  ) : (
+    <Shot ratio={section.ratio} caption={`${section.name} ${index + 1}`} />
+  )}
+</li>

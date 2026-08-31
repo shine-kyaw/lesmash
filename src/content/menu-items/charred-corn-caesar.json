@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "salads",
-  "image": null,
+  "image": { "src": "/media/dishes/charred-corn-caesar.jpg", "alt": "Charred corn caesar in a shallow bowl" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
