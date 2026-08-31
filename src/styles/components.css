@@ -510,7 +510,10 @@
   background-size: 62%;
   background-repeat: repeat;
 }
-.intro__cutout {
+/* Beats `.intro__plate img`, which is a cover rule for the photographic
+   plates and would crop the cut-out to the panel instead of standing it in
+   the middle of it. */
+.intro__plate--pattern .intro__cutout {
   width: 88%; height: auto; object-fit: contain;
   filter: drop-shadow(0 18px 28px rgb(0 0 0 / 0.42));
 }
