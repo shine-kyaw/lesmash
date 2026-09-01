@@ -500,12 +500,18 @@
 }
 
 /* ===========================================================================
-   The mat.
+   Artwork in the archive.
    A photograph can be cropped to a tile; a poster cannot — cropping a
-   landscape poster into a 4:5 tile turns "SMASH NOW" into "MASH OW". So
-   artwork is shown whole on a warm mount, which is how a framed print sits on
-   a gallery wall anyway.
+   landscape poster into a 4:5 tile turns "SMASH NOW" into "MASH OW". Nor is
+   letterboxing it the answer: a 3:2 spread inside a 4:5 box is 47% mat.
+
+   So artwork keeps its own proportions and the row sizes to it. Tiles align to
+   the top of their row, so the ragged edge falls at the bottom where it reads
+   as an archive rather than as a broken grid.
    ========================================================================= */
-.tile--mat { background: var(--paper-2); }
-.tile--mat img { object-fit: contain; }
-.band--ink .tile--mat, .band--red .tile--mat { background: rgb(0 0 0 / 0.25); }
+.tiles { align-items: start; }
+.tile--mat img {
+  aspect-ratio: auto;
+  height: auto;
+  object-fit: contain;
+}
