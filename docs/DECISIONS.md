@@ -433,23 +433,32 @@ Spaces 6, Collaborations 5. 13 files are deliberately out and
 logo colourways, one AI-generated image, two 50:1 print banners and two exact
 duplicates.
 
-### Artwork gets a mat, photographs get cropped
+### Artwork keeps its own proportions
 
 Filling the gallery surfaced a real bug in how it was built. Campaigns is a 4:5
 section, and most of what belongs in it is landscape or square poster artwork.
 Cropping those to 4:5 turned "SMASH NOW" into "MASH OW", cut the lockup off the
 brunch menu, and reduced the eight editorial spreads to a column of lorem ipsum.
 
-So `fit` is now part of the gallery model. A photograph can be cropped to a
-ratio it was not shot for; a poster cannot. Artwork renders `contain` on a warm
-mat — which is how a framed print sits on a wall anyway, and suits the museum
-register the brief asks for — and photography still fills its tile. Campaigns
-and Collaborations set it once for the section; Special Projects is genuinely
-mixed and sets it per item.
+The first fix was wrong in an instructive way. I set the CSS to `contain` and
+mounted artwork on a mat — but the crop had already happened when the *files*
+were generated, so `contain` was faithfully showing the whole of an
+already-cropped image. No CSS can recover pixels that are not in the file. The
+45 artwork files were regenerated at their native aspect ratio, and only then
+did `contain` mean anything.
+
+Letterboxing them turned out to be the wrong answer too: a 3:2 spread inside a
+4:5 box is 47% mat, and half of Campaigns is landscape. So `fit` is part of the
+gallery model, and artwork sizes its own row — `aspect-ratio: auto` with the
+tiles aligned to the top of the row, so the ragged edge falls at the bottom
+where it reads as an archive rather than as a broken grid. Photography is
+unchanged: it still fills its tile at the section ratio, so a reserved frame and
+a picture remain the same box.
 
 The eight `Burgers/` editorial spreads are in Campaigns rather than on the menu,
-for the reason given in §14: they carry lorem ipsum and prices. On a mat, in a
-campaign archive, that reads as what it is — layout artwork.
+for the reason given in §14: they carry lorem ipsum and prices. In a campaign
+archive, at their own proportions, that reads as what it is — layout artwork.
+
 
 ---
 
