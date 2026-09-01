@@ -12,6 +12,10 @@ import type { GalleryItem, GallerySection } from '../data/gallery';
  *
  * The dimensions come off the section ratio rather than the file, because the
  * point of the reserved frame is that both render at exactly the same size.
+ *
+ * A photograph fills its tile; a poster is shown whole on a mat. Cropping
+ * artwork to a ratio it was not drawn for cuts the type off it — see the FIT
+ * note in src/data/gallery.ts.
  */
 interface Props {
   section: GallerySection;
@@ -28,8 +32,9 @@ const DIMS: Record<GallerySection['ratio'], [number, number]> = {
   '4x5': [1200, 1500],
 };
 const [w, h] = DIMS[section.ratio];
+const fit = item?.fit ?? section.fit ?? 'cover';
 ---
-<li class="tile">
+<li class:list={['tile', { 'tile--mat': fit === 'contain' }]}>
   {item ? (
     <img
       src={asset(`/media/gallery/${section.slug}/${item.src}`)}

@@ -4,7 +4,7 @@
    ========================================================================= */
 .hdr {
   position: fixed; left: 0; right: 0; z-index: 60;
-  top: var(--banner-h, 0px);
+  top: 0;
   display: flex; align-items: center; height: 68px;
   border-bottom: 1px solid transparent;
   transition: background-color 400ms var(--ease), border-color 400ms var(--ease),
@@ -92,7 +92,7 @@
    Menu — cards with a picture, a price and the portion facts.
    ========================================================================= */
 .menu-nav {
-  position: sticky; top: calc(68px + var(--banner-h, 0px)); z-index: 40;
+  position: sticky; top: 68px; z-index: 40;
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   backdrop-filter: blur(14px); border-bottom: var(--rule);
 }
@@ -108,7 +108,7 @@
 .menu-nav a:hover { color: var(--ink); }
 .menu-nav a.is-active { color: var(--ember); border-bottom-color: var(--ember); }
 
-.course { scroll-margin-top: calc(150px + var(--banner-h, 0px)); padding-block: var(--s8) 0; }
+.course { scroll-margin-top: 150px; padding-block: var(--s8) 0; }
 .course__head { display: flex; align-items: baseline; gap: var(--s4); margin-bottom: var(--s6); }
 .course__title { font-size: var(--t-lg); }
 
@@ -168,7 +168,7 @@
 @media (min-width: 62rem) {
   .track { grid-template-columns: minmax(9rem, 15%) 1fr; gap: var(--s7); align-items: start; }
 }
-.track__rail { position: sticky; top: calc(150px + var(--banner-h, 0px)); }
+.track__rail { position: sticky; top: 150px; }
 @media (max-width: 61.99rem) { .track__rail { position: static; } }
 .track__numeral { font-family: var(--font-display); font-size: var(--t-numeral); line-height: 0.8; color: var(--line); letter-spacing: -0.04em; }
 
@@ -220,17 +220,6 @@
   white-space: nowrap; overflow: hidden;
 }
 
-/* ===========================================================================
-   Pre-launch notice — preview builds only.
-   ========================================================================= */
-.prelaunch {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 70;
-  background: var(--black); color: #ffd9a7;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em;
-  padding: var(--s2) 0;
-}
-.prelaunch p { max-width: none; }
-.prelaunch b { text-transform: uppercase; letter-spacing: 0.12em; color: var(--cream); }
 
 /* ===========================================================================
    The opening film.
@@ -263,21 +252,6 @@
   font-size: clamp(1.375rem, 1rem + 2.4vw, 2.5rem);
   color: var(--brass); margin: 0; max-width: 24ch;
 }
-/* Names itself as a placeholder rather than pretending to be finished. */
-.film__slot {
-  position: absolute; right: var(--gutter); bottom: var(--s7); z-index: 3;
-  max-width: 21rem; padding: var(--s4); text-align: left;
-  border: 1px dashed rgb(255 217 167 / 0.5); border-radius: var(--r);
-  background: rgb(46 4 5 / 0.6); backdrop-filter: blur(6px);
-  font-family: var(--font-mono); font-size: 11px; line-height: 1.6;
-  color: rgb(244 239 230 / 0.85);
-}
-.film__slot b {
-  display: block; margin-bottom: 4px; color: var(--brass);
-  text-transform: uppercase; letter-spacing: 0.12em;
-}
-.film__slot code { color: var(--cream); font-size: 10px; }
-@media (max-width: 54rem) { .film__slot { position: static; margin: 0 var(--gutter) var(--s6); max-width: none; } }
 
 .film__scroll {
   position: absolute; left: 50%; bottom: var(--s5); z-index: 3;
@@ -486,7 +460,7 @@
    heading hidden behind it. `.course` is excluded: the menu and gallery rails
    have their own, larger offset because they also sit under a sticky nav, and
    this rule is appended late enough to have overridden it. */
-[id]:not(.course) { scroll-margin-top: calc(84px + var(--banner-h, 0px)); }
+[id]:not(.course) { scroll-margin-top: 84px; }
 
 /* ===========================================================================
    Real pictures in the tile grid.
@@ -524,3 +498,14 @@
   position: absolute; inset: 0; z-index: -2;
   width: 100%; height: 100%; object-fit: cover;
 }
+
+/* ===========================================================================
+   The mat.
+   A photograph can be cropped to a tile; a poster cannot — cropping a
+   landscape poster into a 4:5 tile turns "SMASH NOW" into "MASH OW". So
+   artwork is shown whole on a warm mount, which is how a framed print sits on
+   a gallery wall anyway.
+   ========================================================================= */
+.tile--mat { background: var(--paper-2); }
+.tile--mat img { object-fit: contain; }
+.band--ink .tile--mat, .band--red .tile--mat { background: rgb(0 0 0 / 0.25); }

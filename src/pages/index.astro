@@ -177,7 +177,7 @@ const ticker = [
       </div>
       <ul class="tiles reveal">
         {GALLERY_SECTIONS.map((s) => (
-          <li class="tile">
+          <li class:list={["tile", { "tile--mat": (s.items[0]?.fit ?? s.fit) === "contain" }]}>
             <a href={`${href('/gallery')}#${s.slug}`}>
               {s.items[0] ? (
                 <img src={asset(`/media/gallery/${s.slug}/${s.items[0].src}`)}

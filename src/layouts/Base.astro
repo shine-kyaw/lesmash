@@ -5,7 +5,7 @@ import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { COPY } from '../data/copy';
-import { getBranches, IS_PREVIEW } from '../lib/content';
+import { getBranches } from '../lib/content';
 import { asset } from '../lib/href';
 
 interface Props {
@@ -27,16 +27,13 @@ const branches = await getBranches();
   <body>
     <a class="skip-link" href="#main">{COPY.labels.skip}</a>
 
-    {IS_PREVIEW && (
-      <div class="prelaunch" data-banner>
-        <div class="wrap">
-          <p>
-            <b>Preview</b> — menu names, prices, hours and phone numbers are not confirmed by the
-            restaurant yet. No photography has been supplied.
-          </p>
-        </div>
-      </div>
-    )}
+    {/*
+      The pre-launch banner is gone. It said no photography had been supplied
+      and that the menu was unconfirmed; both were true when it was written and
+      neither is now. The gaps that remain are named in
+      docs/CONTENT-REGISTER.md, which is where a client-facing list belongs —
+      not stapled to the top of every page a customer sees.
+    */}
 
     <Header path={path} />
 

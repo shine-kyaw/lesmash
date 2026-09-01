@@ -66,3 +66,18 @@ Portion honesty is still the point, so the brief has acceptance criteria:
   hand, the serving basket.
 - Both branches get their own exterior shot. A branch page illustrated with the
   other branch's room is a small dishonesty that undermines the whole position.
+
+## What was left out of the archive, and why
+
+The Drive library is 134 files. 99 are in the gallery, plus the brand assets,
+the dish photographs, the rooms and the hero still. What is not in, and the
+reason:
+
+| Left out | Why |
+|---|---|
+| 8 logo variants (`Logos/Le Smash Logo-01…09`) | The same lockup in different colourways. Two are shipped as brand assets (`brand/logo-lockup-cream.png`, `brand/logo-badge.png`); the rest are artwork files, not archive pieces |
+| `Gemini_Generated_Image_…jfif` | AI-generated. It cannot sit in a gallery of their photography on a site whose whole argument is that the picture shows the real thing |
+| `Smash Sticker w152in x h3in` (50:1) and `Smash for Counter w187cm x h11cm` (17:1) | Print signage. A 4:3 tile shows about 6% of the artwork, and letterboxing a 50:1 strip leaves a hairline. They need a full-width band of their own if they are wanted |
+| 2 byte-identical duplicates | `Copy of _MHK9399.JPG` and `Copy of Fries Before Guys 1.jpg` |
+
+That is 13 files. Nothing else was skipped.

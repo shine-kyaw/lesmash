@@ -2,7 +2,6 @@
 import { existsSync } from 'node:fs';
 import Wordmark from './Wordmark.astro';
 import { asset } from '../lib/href';
-import { IS_PREVIEW } from '../lib/content';
 
 /**
  * The opening screen.
@@ -17,8 +16,8 @@ import { IS_PREVIEW } from '../lib/content';
  * (plus a matching `hero-poster.jpg`) into public/media and it layers over the
  * still on the next build with nothing else to change.
  *
- * The note naming the drop-in appears in preview builds only. A live visitor
- * should never be told what the page is missing.
+ * No note names the drop-in on the page. A visitor should never be told what a
+ * page is missing; the file contract lives in public/media/README.md.
  */
 const onDisk = (name: string) =>
   existsSync(new URL(`../../public/media/${name}`, import.meta.url));
@@ -56,15 +55,6 @@ const hasStill = onDisk('hero-still.jpg');
     </div>
     <p class="film__tag script">Officially the best burger in town.</p>
   </div>
-
-  {IS_PREVIEW && !hasFilm && (
-    <p class="film__slot">
-      <b>Film slot</b>
-      A silent 15–30s loop, 1080p, under 4MB, dropped in as
-      <code>public/media/hero.mp4</code> with a matching
-      <code>hero-poster.jpg</code>. The still below it is finished either way.
-    </p>
-  )}
 
   <a class="film__scroll" href="#home" aria-label="Skip to the page">
     <span aria-hidden="true"></span>

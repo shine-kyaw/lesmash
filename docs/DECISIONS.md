@@ -413,6 +413,46 @@ told what the page is missing.
 
 ---
 
+## 15. The whole archive, and no more preview furniture
+
+**The banner is gone.** It said no photography had been supplied and the menu
+was unconfirmed. Both were true when it was written; neither is now. A
+client-facing list of gaps belongs in `docs/CONTENT-REGISTER.md`, not stapled to
+the top of every page a customer sees. The dashed "film slot" note on the hero
+went with it — the opening screen carries a real still and is finished, and a
+visitor should never be told what a page is missing.
+
+Removing the banner also retired `initBanner()`, the `[data-banner]` hook and
+the `--banner-h` custom property that five CSS offsets were adding to a value
+that no longer exists. Those offsets are plain numbers again.
+
+**99 of the 134 Drive files are in the gallery**, up from 51. Sections now run
+Campaigns 29, Food 20, Events 12, Behind the Scenes 12, Special Projects 15,
+Spaces 6, Collaborations 5. 13 files are deliberately out and
+`public/media/README.md` names each one and the reason — the short version is 8
+logo colourways, one AI-generated image, two 50:1 print banners and two exact
+duplicates.
+
+### Artwork gets a mat, photographs get cropped
+
+Filling the gallery surfaced a real bug in how it was built. Campaigns is a 4:5
+section, and most of what belongs in it is landscape or square poster artwork.
+Cropping those to 4:5 turned "SMASH NOW" into "MASH OW", cut the lockup off the
+brunch menu, and reduced the eight editorial spreads to a column of lorem ipsum.
+
+So `fit` is now part of the gallery model. A photograph can be cropped to a
+ratio it was not shot for; a poster cannot. Artwork renders `contain` on a warm
+mat — which is how a framed print sits on a wall anyway, and suits the museum
+register the brief asks for — and photography still fills its tile. Campaigns
+and Collaborations set it once for the section; Special Projects is genuinely
+mixed and sets it per item.
+
+The eight `Burgers/` editorial spreads are in Campaigns rather than on the menu,
+for the reason given in §14: they carry lorem ipsum and prices. On a mat, in a
+campaign archive, that reads as what it is — layout artwork.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |

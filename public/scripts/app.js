@@ -50,27 +50,6 @@
     }, true);
   }
 
-  /* --------------------------------------------------------- preview bar */
-
-  /**
-   * The preview bar is fixed, so the header and every sticky offset below it
-   * need its real height — which wraps to two lines on a narrow phone.
-   *
-   * This lives here rather than in an inline <script> because the deployed
-   * Content-Security-Policy is script-src 'self': an inline script would be
-   * blocked in production and nowhere else, so the header would quietly sit
-   * under the bar on the live site only.
-   */
-  function initBanner() {
-    var bar = $('[data-banner]');
-    if (!bar) return;
-    var set = function () {
-      document.documentElement.style.setProperty('--banner-h', bar.offsetHeight + 'px');
-    };
-    set();
-    window.addEventListener('resize', set);
-  }
-
   /* --------------------------------------------------------------- header */
 
   function initHeader() {
@@ -179,7 +158,6 @@
 
   function boot() {
     bindAnalytics();
-    initBanner();
     initHeader();
     initReveal();
     initCourses();
