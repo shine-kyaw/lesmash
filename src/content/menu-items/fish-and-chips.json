@@ -1,12 +1,12 @@
 {
   "slug": "fish-and-chips",
   "name": "Fish and Chips with Tartare",
-  "description": null,
+  "description": "Panko sea bass, crispy fries, tartare sauce, lemon",
   "price": null,
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "mains",
-  "image": null,
+  "image": { "src": "/media/dishes/fish-and-chips.jpg", "alt": "Panko sea bass with fries, tartare sauce and a lemon wedge" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -25,5 +25,5 @@
   "status": "published",
   "updatedAt": "2026-08-27",
   "verified": true,
-  "sourceNote": "Name taken from the client's Canva board (Le SMASH Website - Presentation, pages 5, 7 and 9), supplied 27 Aug 2026. Description, photography, portion and patty count are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph cropped from that board, no separate file having been supplied. Portion, patty count and price are still outstanding."
 }

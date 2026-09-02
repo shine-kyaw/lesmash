@@ -126,6 +126,9 @@
   .dish:hover { transform: translateY(-3px); border-color: var(--ink-3); }
 }
 .dish__media { border-bottom: var(--rule); }
+/* The board-cropped dish photographs are not all the same pixel size, so the
+   card grid gets its proportion from CSS rather than from the file. */
+.dish__media img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .dish__body { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); flex: 1; }
 .dish__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); }
 .dish__name { font-family: var(--font-body); font-weight: 800; font-size: var(--t-md); line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
@@ -202,20 +205,20 @@
 /* ===========================================================================
    Footer — the dark bookend, closed by an oversized wordmark.
    ========================================================================= */
-.ftr { padding-block: var(--s8) var(--s6); position: relative; overflow: hidden; }
-.ftr__grid { display: grid; gap: var(--s7); }
+.ftr { padding-block: var(--s7) var(--s5); position: relative; overflow: hidden; }
+.ftr__grid { display: grid; gap: var(--s6); }
 @media (min-width: 54rem) { .ftr__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
 .ftr__list { list-style: none; padding: 0; display: grid; gap: var(--s3); }
 .ftr__list a { text-decoration: none; color: var(--ink-2); font-size: var(--t-sm); }
 .ftr__list a:hover { color: var(--ink); }
 .ftr__bottom {
-  margin-top: var(--s8); padding-top: var(--s4); border-top: var(--rule);
+  margin-top: var(--s6); padding-top: var(--s4); border-top: var(--rule);
   display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between;
   font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em;
 }
 .ftr__wordmark {
-  margin-top: var(--s7); font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(4rem, 17vw, 17rem); line-height: 0.78; letter-spacing: -0.045em;
+  margin-top: var(--s5); font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.75rem, 12vw, 11rem); line-height: 0.76; letter-spacing: -0.045em;
   color: var(--ink); opacity: 0.08; user-select: none; pointer-events: none;
   white-space: nowrap; overflow: hidden;
 }
@@ -387,12 +390,12 @@
    ========================================================================= */
 .ftr__by {
   display: inline-flex; align-items: center; gap: var(--s2);
-  text-decoration: none; color: rgb(225 232 222 / 0.55);
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+  text-decoration: none; color: rgb(225 232 222 / 0.72);
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em;
   transition: color 240ms var(--ease);
 }
-.ftr__by img { width: 18px; height: 18px; opacity: 0.85; transition: opacity 240ms var(--ease); }
-.ftr__by strong { font-weight: 600; }
+.ftr__by img { width: 22px; height: 22px; opacity: 0.9; transition: opacity 240ms var(--ease); }
+.ftr__by strong { font-weight: 700; color: var(--cream); }
 .ftr__by:hover { color: var(--cream); }
 .ftr__by:hover img { opacity: 1; }
 

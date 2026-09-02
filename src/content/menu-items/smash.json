@@ -6,7 +6,7 @@
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "burgers",
-  "image": null,
+  "image": { "src": "/media/dishes/smash.jpg", "alt": "Two SMASH burgers, cheese pulling between them" },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -25,5 +25,5 @@
   "status": "published",
   "updatedAt": "2026-08-27",
   "verified": true,
-  "sourceNote": "Name taken from the client's Canva board (Le SMASH Website - Presentation, pages 5, 7 and 9), supplied 27 Aug 2026. Description, photography, portion and patty count are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Photograph is the client's own studio shot (Le SMASH burger.jpg, Google Drive, supplied 31 Aug 2026). Description, portion, patty count and price are still outstanding."
 }

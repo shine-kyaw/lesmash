@@ -58,14 +58,25 @@ Portion honesty is still the point, so the brief has acceptance criteria:
 
 - Photograph the portion a paying customer receives, plated as the kitchen
   plates it during service.
-- **Name the file after the dish.** This is the whole reason 26 cards have no
-  photograph.
+- **Name the file after the dish.** This is the whole reason 11 cards still have
+  no photograph — the library has burger shots, but nothing says which burger.
 - Every multi-patty burger needs one frame where the patties are countable in
   profile.
 - Every hero item needs a visible scale cue in frame — the actual plate, a
   hand, the serving basket.
 - Both branches get their own exterior shot. A branch page illustrated with the
   other branch's room is a small dishonesty that undermines the whole position.
+
+## The menu boards
+
+Twenty-one of the dish photographs on `/menu` are cropped out of the two files
+in `Main Menu/` on the Drive, which are the restaurant's own printed boards and
+carry a photograph, an ingredient line and a price for twenty-eight dishes. See
+`docs/DECISIONS.md` §16.
+
+They are crops, so they top out between 490px and 790px wide against 900px for
+a dish shot supplied as its own file. If a clean original of any of these ever
+turns up, drop it in here named after the dish and it will replace the crop.
 
 ## What was left out of the archive, and why
 

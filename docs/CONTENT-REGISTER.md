@@ -13,7 +13,7 @@ actual content files.
 
 | Ref | What we need | Why it blocks | Owner |
 |---|---|---|---|
-| **DS-03 / Q14** | Exact menu item names, all items | Every item record is currently a placeholder marked `verified: false` | Client |
+| **DS-03 / Q14** | Confirmation of the 16 item names not printed on a menu board | 26 of the 42 items are now confirmed against the client's own printed boards (`Main Menu m1.jpg` / `m2.jpg`). The remaining 16 — the seven burgers, four salads and five snacks — still rest on the Canva deck alone | Client |
 | **DS-04 / Q5** | Prices, and whether dine-in and Foodpanda prices differ | No price is published anywhere today; every item reads "Ask in store" | Client |
 | **DS-01 / Q6** | Opening hours per branch, per day, plus any breakfast window | Branch pages, `/breakfast`, opening-hours schema, and the entire open-now feature | Client |
 | **DS-02 / Q7** | Phone number per branch | Tap-to-call renders nowhere; the sticky bar's call button falls back to the locations page | Client |
@@ -44,10 +44,11 @@ actual content files.
 | **Google Maps pins** | The Maps share link for each branch, or its place ID | The Visit page links the address to a Maps *search* on brand plus address. It works, but it is a query rather than a pin. Nothing public carries coordinates for either room |
 | **Which room the phone rings** | Confirm 09 758 542661, and whether each room has its own line | The number is published on their own Facebook page and appears once, at brand level, on Visit and in the footer. No branch card claims it |
 | **Franchise enquiry address** | The email franchise enquiries should reach | The Franchise section renders a note instead of a button. Deliberately not guessed from the domain |
+| **A description for "Homemade Cured Salmon"** | What the dish actually is | The board prints this name above the line "Roasted Tomatoes, Burrata Cheese, Basil, Olive Oil" and beside a photograph of sliced cured salmon. The three do not agree, so the item carries its name and its photograph and no description. `Roasted Tomato & Burrata` is kept as its own item because a separate photograph of that dish exists |
 | **Patty counts** | How many patties are in each burger | Every card omits it, and C-08 no longer promises it |
 | **Delivery coverage** | Which township each kitchen serves, and the boundaries | `/visit` has a drawn map frame and the four townships from the client's own copy. The areas themselves are unconfirmed |
-| **Menu descriptions** | A line per dish, at least for the burgers and the brunch | 35 cards carry a name and nothing else |
-| **26 dish photographs** | One clean frame per remaining dish, named after it | Nine dishes have a photograph. The rest keep a reserved frame: the library has plenty of burger shots but nothing identifies which burger each one is, and a wrong label is worse than none. The list is in `docs/DECISIONS.md` §14 |
+| **Menu descriptions** | A line per dish for the 16 items the boards do not cover | 26 dishes now carry the description printed on the client's own board. The seven burgers are the conspicuous gap: no board, poster or deck in the library describes any of them |
+| **11 dish photographs** | One clean frame per remaining dish, named after it | 31 of 42 dishes have a photograph — 9 from separate files, 21 cropped out of the menu boards, and the SMASH burger from the client's own studio shot. The 11 without are the six remaining burgers, both unphotographed salads and three snacks: the library has plenty of burger shots but nothing identifies which burger each one is, and a wrong label is worse than none |
 | **A hero film** | A silent, seamless landscape loop – 15–30s, 1080p, under 4MB | The opening screen now carries a real still and is finished as it stands. A film would be better. They have 10 Facebook Reels and an active TikTok, but those are vertical social cuts and neither platform serves the source file |
 | **C-08** | "How we smash" — 100–150 words on the actual process and patty size | The flagship expectation-setting block on `/burgers` is an empty slot |
 | **C-11** | Portion-honesty statement | Recommended; high value; drafted only once the client approves the principle |

@@ -462,6 +462,88 @@ archive, at their own proportions, that reads as what it is — layout artwork.
 
 ---
 
+## 16. The menu boards were the missing menu
+
+The client's Drive contains two files called `Main Menu/m1.jpg` and
+`Main Menu/m2.jpg`. Both had been treated as artwork and filed in the Gallery
+under Special Projects. They are not artwork. They are the restaurant's actual
+printed menu, and between them they carry, for twenty-eight dishes, a
+photograph, an ingredient line and a price.
+
+That is the single largest piece of confirmed content in the whole library and
+it had been sitting in the gallery as decoration.
+
+### What came out of them
+
+Twenty-eight plate photographs were located on the two boards by masking the
+red ground and taking the bounding box of every remaining region larger than
+150px — a texture test rather than a colour test, because a plate of peri peri
+chicken is as red and as saturated as the board behind it. Every box was
+checked by eye against an overlay before anything was cropped.
+
+Seven of those boxes were dishes the website had no record of at all:
+
+| Added | Course |
+|---|---|
+| Eggs Shashuka | Brunch |
+| Pain Perdu French Toast | Brunch |
+| Peri Peri Chicken | Main |
+| Spicy Garlic Prawns | Main |
+| Beef Tartare | Snacks |
+| Homemade Cured Salmon Toast | Snacks |
+| Homemade Cured Salmon | Snacks |
+
+The menu goes from 35 items to 42, from 9 photographs to 31, and from **no**
+descriptions at all to 26.
+
+### The boards were re-fetched at full size first
+
+The proofs in the scratchpad were `thumbnail?sz=w1600` renders. The originals
+are 3000×3600. Cropping a 424px box out of the 1600px proof gives a 424px dish
+photograph; cropping the same box out of the original gives 795px. Every crop
+was taken from the original and the box coordinates scaled by 1.875 — which is
+the same lesson as §15, one step earlier in the pipeline: **check what
+resolution you actually have before you decide the crop is good enough.**
+
+### What was not taken
+
+- **Prices.** The boards price every dish. The site publishes none, per §12 —
+  the brief says the menu can be shown without prices and a portfolio site that
+  quotes a number is a price list that goes stale in a kitchen's first
+  re-print.
+- **The seven burgers.** There is no burger board. The eight `Burgers/`
+  spreads are magazine layouts set with lorem ipsum, and the burger imagery in
+  them is composed into the page rather than sitting in it as a plate shot.
+  Only `SMASH` gained a photograph, from `Le SMASH burger.jpg`, which is a
+  clean studio frame the filename identifies by name.
+- **A description for `Homemade Cured Salmon`.** The board prints that name
+  above the line "Roasted Tomatoes, Burrata Cheese, Basil, Olive Oil", beside a
+  photograph of sliced cured salmon and shaved onion. Name, line and picture
+  do not agree, so the item ships with its name and its photograph and no
+  description, and the conflict is in the content register for the client to
+  settle. `Roasted Tomato & Burrata` stays as its own item because a separate
+  photograph of that dish exists in the library.
+
+Spelling was reproduced as printed, with three exceptions where the board has a
+plain slip: `Chimmichurri`, `Bernaise` and `Marimara`. Item *names* were not
+touched at all — `Eggs Shashuka` is their menu's spelling and it stays.
+
+### The footer got shorter
+
+The footer was 728px tall on a 1280px viewport, which is a whole screen on a
+13" laptop before any browser chrome. The design is unchanged; the padding is
+not. Top padding `--s8`→`--s7`, bottom `--s6`→`--s5`, grid gap `--s7`→`--s6`,
+the rule above the bottom row `--s8`→`--s6`, and the oversized SMASH from
+`clamp(4rem, 17vw, 17rem)` to `clamp(2.75rem, 12vw, 11rem)`. That is about
+580px — still the dark bookend, still closed by a wordmark too big for the
+page, but it no longer *is* the page.
+
+The Aster credit went from 11px at 55% opacity to 13px at 72%, with the mark at
+22px and the word "Aster" itself in full cream. A signature should be legible
+without becoming a banner; at 55% on a dark ground it was neither.
+
+---
+
 ## Not built, and why
 
 | Not built | Reason |
