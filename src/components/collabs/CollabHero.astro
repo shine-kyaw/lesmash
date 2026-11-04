@@ -1,0 +1,42 @@
+---
+import { PARTNERS } from '../../data/collabs';
+import { asset } from '../../lib/href';
+
+/* Stickers slapped around the opening. Decorative, so alt="". */
+const stickers = [
+  { src: '/brand/sticker-beef.png', cls: 'a', r: -14 },
+  { src: '/brand/sticker-fish.png', cls: 'b', r: 11 },
+  { src: '/brand/sticker-lecoq.png', cls: 'c', r: -8 },
+  { src: '/brand/sticker-pork.png', cls: 'd', r: 15 },
+  { src: '/brand/logo-badge.png', cls: 'e', r: -6 },
+];
+---
+<section class="cb-hero dark" data-cb-hero aria-labelledby="cb-h1">
+  <img class="cb-hero__monogram" src={asset('/brand/pattern-monogram.png')} alt="" width="900" height="898" decoding="async" />
+  <div class="cb-hero__stickers" aria-hidden="true">
+    {stickers.map((s) => (
+      <img class={`cb-sticker cb-sticker--${s.cls}`} src={asset(s.src)} alt="" width="320" height="320"
+           style={`--r:${s.r}deg`} data-cb-sticker decoding="async" />
+    ))}
+  </div>
+
+  <div class="wrap cb-hero__inner">
+    <p class="label cb-hero__kicker">Collaborations</p>
+    <h1 class="cb-hero__title" id="cb-h1">
+      <span class="visually-hidden">Le SMASH × {PARTNERS.join(', ')}</span>
+      <span class="cb-hero__line" aria-hidden="true" data-cb-line>
+        <span class="cb-hero__le">Le</span><span class="cb-hero__smash">SMASH</span><span class="cb-hero__x">×</span>
+      </span>
+      <span class="cb-reel" aria-hidden="true" data-cb-reel>
+        <span class="cb-reel__track" data-cb-track>
+          {[...PARTNERS, PARTNERS[0]].map((p) => <span class="cb-reel__item">{p}</span>)}
+        </span>
+      </span>
+    </h1>
+    <p class="lede cb-hero__lede">
+      Le SMASH works with other Yangon brands, venues and artists. These are the nights, pop-ups and projects we made together.
+    </p>
+    <p class="cb-hero__roll">{PARTNERS.join(' · ')}</p>
+    <a class="cb-hero__cue" href="#wall"><span>The wall</span><i aria-hidden="true"></i></a>
+  </div>
+</section>

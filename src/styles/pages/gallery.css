@@ -1,0 +1,136 @@
+/* Gallery — every class is .gl- so nothing collides with other pages. */
+.gl-h2 { font-size: var(--t-xl); margin-top: var(--s4); }
+.gl-sticker { position: absolute; pointer-events: none; width: clamp(5rem, 12vw, 9rem); height: auto; z-index: 3; }
+.gl-sticker--a { left: 2%; bottom: 3%; transform: rotate(-12deg); }
+.gl-sticker--b { right: 2%; top: 2%; transform: rotate(10deg); }
+@media (max-width: 47.99rem) { .gl-sticker--a { display: none; } .gl-sticker--b { width: 4.5rem; } }
+
+.gl-round {
+  width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid currentColor; background: transparent;
+  color: inherit; font-size: 1.25rem; cursor: pointer; display: inline-grid; place-items: center;
+  transition: transform 300ms var(--ease), background 300ms var(--ease), color 300ms var(--ease);
+}
+.gl-round:hover { background: var(--cream); color: var(--black); transform: translateY(-3px) rotate(-4deg); }
+.gl-show__ctl { display: flex; gap: var(--s3); }
+
+/* ================================================== 1. Showcase ========== */
+.gl-show { position: relative; isolation: isolate; overflow: hidden; background: var(--red-deep); padding: 6rem 0 var(--s7); }
+.gl-show__pattern { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.07; z-index: -1; pointer-events: none; }
+.gl-show__inner { display: grid; gap: var(--s6); padding-inline: var(--gutter); max-width: var(--wide); margin-inline: auto; }
+.gl-show__copy { display: grid; gap: var(--s4); align-content: center; }
+.gl-show__title { font-size: clamp(2.4rem, 1rem + 5.6vw, 6.25rem); line-height: 0.95; }
+.gl-hl { display: inline-block; background: var(--cream); color: var(--black); padding: 0 0.15em; transform: rotate(-2deg); }
+.gl-show__lede { font-size: clamp(1.0625rem, 1.5vw, 1.375rem); line-height: 1.5; color: var(--ink-2); max-width: 34ch; }
+.gl-count { font-family: var(--font-display); font-size: var(--t-lg); display: flex; gap: 0.4em; align-items: baseline; }
+.gl-count__sep, .gl-count__tot { color: var(--ink-3); }
+.gl-bar { height: 4px; background: var(--line); border-radius: 2px; max-width: 18rem; overflow: hidden; }
+.gl-bar i { display: block; height: 100%; width: 100%; background: var(--cream); transform-origin: 0 50%; transform: scaleX(0.125); }
+.gl-jump { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
+.gl-jump a { font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label); text-decoration: none; border-bottom: 1px solid var(--ink-3); padding-bottom: 2px; }
+.gl-jump a:hover { border-color: var(--cream); }
+
+/* default / mobile / reduced motion: a swipeable snap track */
+.gl-show__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; padding-block: var(--s4); }
+.gl-show__track::-webkit-scrollbar { display: none; }
+.gl-pair { flex: 0 0 100%; scroll-snap-align: center; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); padding-inline: 2px; }
+.gl-pic { margin: 0; aspect-ratio: 4 / 5; border-radius: var(--r); overflow: hidden; box-shadow: 0 12px 30px rgb(0 0 0 / 0.35); background: var(--paper-3); }
+.gl-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gl-pic--a { transform: rotate(-2deg); }
+.gl-pic--b { transform: rotate(2.5deg); margin-top: var(--s5); }
+
+@media (min-width: 62rem) {
+  .gl-show__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: var(--s7); }
+}
+
+/* desktop pinned mode (class added by script) */
+.gl-show--pin { height: 100vh; height: 100svh; padding: 5.5rem 0 var(--s5); display: flex; align-items: center; }
+.gl-show--pin .gl-show__inner { width: 100%; height: 100%; }
+.gl-show--pin .gl-show__stage { position: relative; height: 100%; max-height: 46rem; align-self: center; }
+.gl-show--pin .gl-show__track { display: block; overflow: visible; position: absolute; inset: 0; padding: 0; }
+.gl-show--pin .gl-pair { position: absolute; inset: 0; align-items: center; padding: 0; gap: var(--s5); }
+.gl-show--pin .gl-pic { aspect-ratio: auto; height: min(100%, 36rem); width: 100%; }
+.gl-show--pin .gl-pic--a, .gl-show--pin .gl-pic--b { transform: none; }
+.gl-show--pin .gl-pic--b { margin-top: 0; align-self: end; }
+.gl-show--pin .gl-show__ctl { display: none; }
+
+/* ================================================== 2. Ring ============== */
+.gl-camp { position: relative; padding-block: clamp(var(--s8), 9vw, var(--s9)); overflow: hidden; scroll-margin-top: 4.5rem; }
+.gl-ring {
+  --u: clamp(10.5rem, 6rem + 8vw, 15rem);
+  position: relative; height: calc(var(--u) * 1.95); margin-top: var(--s6);
+  perspective: 1700px; perspective-origin: 50% 45%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.gl-ring.is-drag { cursor: grabbing; }
+.gl-ring:focus-visible { outline-offset: -4px; }
+.gl-ring__rot { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.gl-card {
+  position: absolute; left: 50%; top: 50%; padding: 0; border: 0; background: var(--paper-3); cursor: inherit;
+  width: calc(var(--u) * var(--k)); aspect-ratio: var(--r); margin-left: calc(var(--u) * var(--k) / -2);
+  transform: translateY(-50%) rotateY(var(--a, 0deg)) translateZ(var(--R, 600px));
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--r); overflow: hidden;
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.5);
+}
+.gl-card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.gl-card__shade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+.gl-camp__foot { display: flex; justify-content: space-between; align-items: center; gap: var(--s4); margin-top: var(--s6); }
+.gl-ring__cap { display: grid; gap: 2px; margin: 0; }
+.gl-ring__num { font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); color: var(--ink-3); }
+.gl-ring__title { font-family: var(--font-display); font-size: var(--t-md); text-transform: uppercase; }
+@media (max-width: 40rem) { .gl-ring { perspective: 900px; } }
+
+/* ================================================== 3. Events wall ======= */
+.gl-events { position: relative; overflow: hidden; scroll-margin-top: 4.5rem; }
+.gl-wall { list-style: none; margin: var(--s7) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.gl-snap { margin: 0; transform: rotate(var(--rot)); }
+.gl-snap:nth-child(1), .gl-snap:nth-child(5) { grid-column: 1 / -1; }
+.gl-snap button, .gl-post__img { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.gl-snap img { width: 100%; height: auto; display: block; border: 6px solid #fff; border-radius: 4px; box-shadow: 0 10px 28px rgb(23 18 15 / 0.28); }
+@media (min-width: 48rem) {
+  .gl-wall { display: block; position: relative; aspect-ratio: 100 / 80; }
+  .gl-snap { position: absolute; left: var(--x); top: var(--y); width: var(--w); transition: transform 360ms var(--ease), z-index 0s; }
+  .gl-snap:hover, .gl-snap:focus-within { transform: translateY(-8px) rotate(calc(var(--rot) * -0.6)) scale(1.04); z-index: 5; }
+}
+
+/* ================================================== 4. Feed ============== */
+.gl-feed { background: var(--paper); color: var(--ink); scroll-margin-top: 4.5rem; }
+.gl-posts { list-style: none; margin: var(--s7) 0 0; padding: 0; columns: 2; column-gap: var(--s4); }
+@media (min-width: 52rem) { .gl-posts { columns: 3; } }
+@media (min-width: 80rem) { .gl-posts { columns: 4; } }
+.gl-post { break-inside: avoid; margin: 0 0 var(--s4); background: #fff; color: #17120f; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 28px rgb(0 0 0 / 0.3); transition: transform 320ms var(--ease); }
+.gl-post:hover { transform: translateY(-6px) rotate(-1deg); }
+.gl-post__bar { display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s3); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.gl-post__bar img { width: 1.6rem; height: 1.6rem; border-radius: 50%; }
+.gl-post__img { overflow: hidden; }
+.gl-post__img img { width: 100%; height: auto; display: block; transition: transform 600ms var(--ease); }
+.gl-post:hover .gl-post__img img { transform: scale(1.06); }
+
+/* ================================================== 5. Archive =========== */
+.gl-archive-head { scroll-margin-top: 4.5rem; }
+.gl-archive .tile img { cursor: zoom-in; transition: transform 300ms var(--ease); }
+.gl-archive .tile:hover img { transform: translateY(-4px) rotate(-1deg); }
+.gl-end { overflow: hidden; }
+
+/* ================================================== Lightbox ============= */
+.gl-lb { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(8 6 5 / 0.95); color: #f2eae0; }
+.gl-lb:not([open]) { display: none; }
+.gl-lb::backdrop { background: rgb(0 0 0 / 0.6); }
+.gl-lb__stage { position: absolute; inset: 4.5rem 4.5rem 4rem; display: grid; place-items: center; touch-action: pan-y; }
+.gl-lb__stage img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; }
+.gl-lb__cap { position: absolute; left: 0; right: 0; bottom: 1.1rem; margin: 0 auto; text-align: center; font-family: var(--font-display); text-transform: uppercase; max-width: 80vw; }
+.gl-lb__count { position: absolute; left: 1.25rem; top: 1.5rem; margin: 0; color: #cabcaa; }
+.gl-lb__btn { position: absolute; width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid #f2eae0; background: rgb(0 0 0 / 0.4); color: #f2eae0; font-size: 1.2rem; cursor: pointer; }
+.gl-lb__btn:hover { background: var(--red); border-color: var(--red); }
+.gl-lb__close { right: 1.25rem; top: 1rem; }
+.gl-lb__prev { left: 1rem; top: 50%; margin-top: -1.5rem; }
+.gl-lb__next { right: 1rem; top: 50%; margin-top: -1.5rem; }
+@media (max-width: 40rem) {
+  .gl-lb__stage { inset: 4rem 0.5rem 4rem; }
+  .gl-lb__prev, .gl-lb__next { top: auto; bottom: 0.8rem; margin: 0; }
+  .gl-lb__prev { left: 0.8rem; } .gl-lb__next { right: 0.8rem; }
+  .gl-lb__cap { max-width: 55vw; font-size: 0.8rem; bottom: 1.3rem; }
+}
+html.gl-lb-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-snap, .gl-post, .gl-post__img img, .gl-round { transition: none; }
+}

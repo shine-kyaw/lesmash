@@ -1,7 +1,202 @@
 ---
 import Base from '../layouts/Base.astro';
+import '../styles/pages/collaborations.css';
+import CollabHero from '../components/collabs/CollabHero.astro';
+import CollabWall from '../components/collabs/CollabWall.astro';
+import CollabDialog from '../components/collabs/CollabDialog.astro';
+import CollabClose from '../components/collabs/CollabClose.astro';
 import { title, DESCRIPTIONS } from '../lib/seo';
 ---
 <Base path="/collaborations" title={title('Collaborations')} description={DESCRIPTIONS.collaborations}>
-  <section class="section"><div class="wrap"><h1>Collaborations</h1></div></section>
+  <script is:inline>document.documentElement.classList.add('cb-js')</script>
+  <CollabHero />
+  <CollabWall />
+  <CollabClose />
+  <CollabDialog />
 </Base>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
+  const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------ 1. opening: slam + slot reel + stickers */
+  (() => {
+    const line = $('[data-cb-line]');
+    const track = $('[data-cb-track]');
+    const stickers = $$('[data-cb-sticker]');
+    if (reduced || !line) return;
+
+    // "Le SMASH ×" lands with weight.
+    gsap.timeline({ delay: 0.1 })
+      .fromTo(line, { opacity: 1, y: -120, scaleY: 1.15, scaleX: 0.94 }, { y: 0, scaleY: 1, scaleX: 1, duration: 0.2, ease: 'power4.in' })
+      .to(line, { scaleY: 0.9, scaleX: 1.06, duration: 0.07, ease: 'power2.out' })
+      .to(line, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'back.out(2)' });
+
+    // Stickers get slapped on, one after another.
+    stickers.forEach((el, i) => {
+      gsap.from(el, { scale: 2.4, opacity: 0, duration: 0.5, delay: 0.45 + i * 0.14, ease: 'back.out(1.7)' });
+    });
+
+    // Slot reel: each step spins down one name and lands with an overshoot.
+    if (track) {
+      const items = track.children.length;
+      let i = 0;
+      const step = () => {
+        const h = (track.firstElementChild as HTMLElement).offsetHeight;
+        i += 1;
+        gsap.timeline({ onComplete: () => { if (i >= items - 1) { i = 0; gsap.set(track, { y: 0 }); } } })
+          .to(track, { y: -i * h, duration: 0.6, ease: 'back.out(1.6)' })
+          .to(track, { scaleY: 1.12, duration: 0.12, ease: 'power1.in', transformOrigin: '50% 0%' }, 0)
+          .to(track, { scaleY: 1, duration: 0.4, ease: 'back.out(2)' }, 0.12);
+      };
+      gsap.delayedCall(1.4, function loop() { step(); gsap.delayedCall(1.8, loop); });
+    }
+  })();
+
+  /* ------------------------------------------------ 2. wall: pop-ons + drag */
+  const wall = $('[data-cb-wall]');
+  const posters = $$('[data-cb-p]');
+  if (!reduced) {
+    ScrollTrigger.batch(posters, {
+      start: 'top 92%', once: true,
+      onEnter: (batch) => {
+        batch.forEach((el, k) => {
+          const dir = (Number(el.dataset.i) % 2 ? 1 : -1);
+          gsap.fromTo(el, { opacity: 0, scale: 0.45, y: 70, rotation: dir * 14 }, {
+            opacity: 1, scale: 1, y: 0, rotation: 0, duration: 0.7, delay: k * 0.09, ease: 'back.out(1.7)',
+            clearProps: 'scale,rotation',
+          });
+        });
+      },
+    });
+  }
+
+  // Drag to rearrange: mouse/pen only, desktop wall only, clamped to the wall.
+  const desktop = matchMedia('(min-width: 56rem)');
+  let topZ = 50;
+  let justDragged = false;
+  if (wall) {
+    posters.forEach((el) => {
+      let sx = 0, sy = 0, bx = 0, by = 0, active = false, moved = false;
+      el.addEventListener('pointerdown', (e) => {
+        if (!desktop.matches || e.pointerType === 'touch' || e.button !== 0) return;
+        active = true; moved = false;
+        sx = e.clientX; sy = e.clientY;
+        bx = Number(gsap.getProperty(el, 'x')); by = Number(gsap.getProperty(el, 'y'));
+        el.setPointerCapture(e.pointerId);
+      });
+      el.addEventListener('pointermove', (e) => {
+        if (!active) return;
+        const dx = e.clientX - sx, dy = e.clientY - sy;
+        if (!moved && Math.hypot(dx, dy) < 6) return;
+        if (!moved) { moved = true; el.classList.add('is-dragging'); el.style.zIndex = String(++topZ); }
+        const minX = -el.offsetLeft, maxX = wall.clientWidth - el.offsetLeft - el.offsetWidth;
+        const minY = -el.offsetTop, maxY = wall.clientHeight - el.offsetTop - el.offsetHeight;
+        gsap.set(el, { x: Math.min(maxX, Math.max(minX, bx + dx)), y: Math.min(maxY, Math.max(minY, by + dy)) });
+      });
+      const end = (e: PointerEvent) => {
+        if (!active) return;
+        active = false;
+        if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
+        el.classList.remove('is-dragging');
+        if (moved) { justDragged = true; setTimeout(() => { justDragged = false; }, 0); }
+      };
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+    });
+  }
+
+  /* ------------------------------------------------ 3. detail dialog */
+  type Img = { src: string; w: number; h: number; alt: string };
+  type Collab = {
+    id: string; partner: string; title: string; date: string | null; place: string | null;
+    poster: Img; photos: Img[]; blurb: string | null; details: { label: string; value: string }[];
+  };
+  const dataEl = document.getElementById('cb-data');
+  const dlg = $<HTMLDialogElement>('[data-cb-dlg]');
+  if (dataEl && dlg) {
+    const collabs: Collab[] = JSON.parse(dataEl.textContent || '[]');
+    const main = $<HTMLImageElement>('[data-cb-main]', dlg)!;
+    const strip = $('[data-cb-strip]', dlg)!;
+    const info = $('[data-cb-info]', dlg)!;
+    const set = (sel: string, txt: string) => { const n = $(sel, dlg); if (n) n.textContent = txt; };
+    let cur = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (img: Img) => { main.src = img.src; main.alt = img.alt; main.width = img.w; main.height = img.h; };
+
+    const fill = (idx: number, animate: boolean) => {
+      cur = (idx + collabs.length) % collabs.length;
+      const c = collabs[cur];
+      set('[data-cb-kicker]', `Le SMASH × ${c.partner}`);
+      set('[data-cb-name]', c.partner);
+      set('[data-cb-title]', c.title);
+      set('[data-cb-blurb]', c.blurb ? `“${c.blurb}”` : '');
+      const facts = $('[data-cb-facts]', dlg)!;
+      facts.replaceChildren();
+      const rows = [
+        ...(c.date ? [{ label: 'Date', value: c.date }] : []),
+        ...(c.place ? [{ label: 'Place', value: c.place }] : []),
+        ...c.details,
+      ];
+      rows.forEach((r) => {
+        const d = document.createElement('div');
+        const dt = document.createElement('dt'); dt.textContent = r.label;
+        const dd = document.createElement('dd'); dd.textContent = r.value;
+        d.append(dt, dd); facts.append(d);
+      });
+      const all = [c.poster, ...c.photos];
+      show(c.poster);
+      strip.replaceChildren();
+      strip.hidden = all.length < 2;
+      all.forEach((img, k) => {
+        const li = document.createElement('li');
+        const b = document.createElement('button'); b.type = 'button';
+        b.setAttribute('aria-label', k === 0 ? 'Show the poster' : `Show image ${k + 1} of ${all.length}`);
+        b.setAttribute('aria-current', k === 0 ? 'true' : 'false');
+        const t = document.createElement('img'); t.src = img.src; t.alt = ''; t.loading = 'lazy';
+        b.append(t); li.append(b); strip.append(li);
+        b.addEventListener('click', () => {
+          $$('button', strip).forEach((x) => x.setAttribute('aria-current', 'false'));
+          b.setAttribute('aria-current', 'true');
+          show(img);
+          if (!reduced) gsap.fromTo(main, { scale: 0.92, rotation: -4 }, { scale: 1, rotation: 0, duration: 0.45, ease: 'back.out(1.7)', clearProps: 'transform' });
+        });
+      });
+      if (animate && !reduced) {
+        gsap.fromTo(main, { scale: 0.75, rotation: -8, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.55, ease: 'back.out(1.7)', clearProps: 'transform' });
+        gsap.fromTo(info.children, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power2.out', clearProps: 'transform,opacity' });
+      }
+    };
+
+    const open = (id: string, from: HTMLElement) => {
+      const idx = collabs.findIndex((c) => c.id === id);
+      if (idx < 0) return;
+      opener = from;
+      fill(idx, true);
+      dlg.showModal();
+      document.documentElement.classList.add('cb-lock');
+    };
+    $$('[data-cb-open]').forEach((b) => b.addEventListener('click', (e) => {
+      if (justDragged) { e.preventDefault(); return; }
+      open(b.dataset.cbOpen!, b);
+    }));
+    $('[data-cb-close]', dlg)!.addEventListener('click', () => dlg.close());
+    $('[data-cb-prev]', dlg)!.addEventListener('click', () => fill(cur - 1, true));
+    $('[data-cb-next]', dlg)!.addEventListener('click', () => fill(cur + 1, true));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') fill(cur - 1, true);
+      if (e.key === 'ArrowRight') fill(cur + 1, true);
+    });
+    dlg.addEventListener('close', () => {
+      document.documentElement.classList.remove('cb-lock');
+      opener?.focus();
+    });
+  }
+</script>

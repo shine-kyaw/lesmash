@@ -1,0 +1,83 @@
+---
+/**
+ * Meet Our Team.
+ *
+ * Square photo grid -> (click) -> the same tiles fly into a slowly orbiting
+ * ring around a featured centre panel. On a phone there is no room for a ring,
+ * so selecting opens a full-width profile with a swipeable strip of the rest.
+ *
+ * Everything the panel shows comes from src/data/team.ts. Names, roles and
+ * quotes are all null until the client supplies them; the UI is complete
+ * without them and fills in by itself when they arrive.
+ */
+import { asset } from '../../lib/href';
+import { TEAM } from '../../data/team';
+import manifest from '../../data/media-manifest.json';
+
+const dims = manifest as { path: string; width: number; height: number }[];
+const members = TEAM.map((m, i) => {
+  const d = dims.find((x) => x.path === m.photo);
+  return { ...m, src: asset(m.photo), w: d?.width ?? 1080, h: d?.height ?? 1080, i };
+});
+const label = (m: (typeof members)[number]) =>
+  m.name ? `${m.name}${m.role ? `, ${m.role}` : ''}` : `Crew photo ${m.i + 1} of ${members.length}: ${m.alt}`;
+---
+<section class="vs-team" id="team" aria-labelledby="vs-team-h">
+  <img class="vs-team__sticker" src={asset('/brand/sticker-beef.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
+  <div class="wrap">
+    <header class="vs-team__head">
+      <p class="label label--ember">The crew</p>
+      <h2 id="vs-team-h">Meet our <span class="script">team</span></h2>
+      <p class="lede">
+        Behind every juicy smash and every bite worth craving is our crew! Meet the faces,
+        personalities, and passion that make Le Smash Burger &amp; Co what it is. We're all about
+        good food, great energy, and bringing the burger game to a whole new level. Different
+        personalities, one shared love for smashing burgers.
+      </p>
+      <p class="vs-team__hint label" data-hint>Pick a face to step inside the ring</p>
+    </header>
+
+    <div class="vs-stage" data-stage data-state="grid" data-members={JSON.stringify(members)}>
+      <ul class="vs-grid" data-grid role="list">
+        {members.map((m) => (
+          <li class="vs-cell" data-cell>
+            <button type="button" class="vs-tile" data-i={m.i} aria-label={label(m)}>
+              <img src={m.src} alt="" width={m.w} height={m.h} loading="lazy" decoding="async" />
+              {m.name && <span class="vs-tile__cap">{m.name}</span>}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <section class="vs-profile" data-profile hidden aria-label="Crew profile">
+        <div class="vs-profile__photo" data-pphoto></div>
+        <div class="vs-profile__body">
+          <p class="vs-profile__tag label" data-ptag>Crew</p>
+          <h3 class="vs-profile__name vs-mask" data-pname hidden><span></span></h3>
+          <p class="vs-profile__role vs-mask" data-prole hidden><span></span></p>
+          <blockquote class="vs-profile__quote vs-mask" data-pquote hidden><span></span></blockquote>
+          <div class="vs-profile__nav">
+            <button type="button" class="vs-iconbtn" data-prev aria-label="Previous crew member">&larr;</button>
+            <span class="label" data-pcount aria-live="polite">1 / {members.length}</span>
+            <button type="button" class="vs-iconbtn" data-next aria-label="Next crew member">&rarr;</button>
+            <button type="button" class="btn btn--ghost vs-back" data-back>Back to grid</button>
+          </div>
+        </div>
+      </section>
+
+      <ul class="vs-strip" data-strip hidden role="list" aria-label="More of the crew">
+        {members.map((m) => (
+          <li>
+            <button type="button" class="vs-chip" data-i={m.i} aria-label={label(m)}>
+              <img src={m.src} alt="" width="160" height="160" loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import './team-gallery.ts';
+</script>

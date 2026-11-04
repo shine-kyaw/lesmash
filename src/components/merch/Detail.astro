@@ -1,0 +1,24 @@
+---
+import { GARMENTS } from '../../data/merch';
+import { asset } from '../../lib/href';
+const data = GARMENTS.map((g) => ({ ...g, views: g.views.map((v) => ({ ...v, src: asset(v.src) })) }));
+---
+<dialog class="mc-detail" id="mc-detail" aria-labelledby="mc-d-name">
+  <div class="mc-d-panel" data-panel>
+    <button type="button" class="mc-d-close" data-close aria-label="Close and hang it back up">
+      <span aria-hidden="true">✕</span> <span class="mc-d-close__t">Rehang</span>
+    </button>
+    <div class="mc-d-fig">
+      <div class="mc-d-frame" data-frame>
+        <img data-d-img src="" alt="" draggable="false" />
+      </div>
+    </div>
+    <div class="mc-d-copy" data-copy>
+      <p class="label label--ember" data-d-tag></p>
+      <h2 id="mc-d-name" data-d-name></h2>
+      <p class="mc-d-note" data-d-note></p>
+      <div class="mc-d-views" data-d-views role="group" aria-label="Views"></div>
+    </div>
+  </div>
+</dialog>
+<script type="application/json" id="mc-garment-data" set:html={JSON.stringify(data)}></script>

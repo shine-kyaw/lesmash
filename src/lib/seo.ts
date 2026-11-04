@@ -20,11 +20,11 @@ export const DESCRIPTIONS: Record<string, string> = {
   story:
     'How Le SMASH started in Yangon: from pop-up stalls and bazaars to a room of our own at Junction Square.',
   collaborations:
-    'Le SMASH collaborations in Yangon: pop-ups, parties and projects with Blind Tiger, Britto’s, TagU, RT, Ellie’s and Ar-T.',
+    'Le SMASH collaborations in Yangon: pop-ups, parties and projects with Blind Tiger, Britto’s, TagU, RTH, Ellie’s, Ah-so and Ar-T.',
   merch:
     'Le SMASH merch: graphic tees, the YGN jersey, the tote and the mugs.',
   visit:
-    'Le SMASH locations in Yangon, where we deliver across the city, and how to start a franchise conversation.',
+    'Le SMASH rooms in Yangon, where we deliver across the city, and the crew behind every smash.',
   notFound:
     'That page could not be found. Head to the Le SMASH menu or back to the home page.',
 };

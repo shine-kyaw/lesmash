@@ -1,12 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Shot from '../components/Shot.astro';
+import RoomCard from '../components/visit/RoomCard.astro';
+import TeamGallery from '../components/visit/TeamGallery.astro';
+import '../styles/pages/visit.css';
 import { asset } from '../lib/href';
-import Slot from '../components/Slot.astro';
-import { EDITORIAL } from '../data/editorial';
-import { COPY } from '../data/copy';
 import { SITE } from '../lib/site.config.mjs';
-import { getBranches, directionsUrl, primaryPhone } from '../lib/content';
+import { getBranches } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { breadcrumbSchema, restaurantSchema } from '../lib/schema';
 
@@ -16,176 +15,152 @@ const schema = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Visit Us', path: '/visit' }]),
 ];
 
-/* The client's own coverage line, from their homepage mock. The two branch
-   records below are the ones this repo can verify; the townships come from
-   their copy and are theirs to stand behind. */
+/* Room photographs. The Junction Square opening arch is unmistakable; the
+   carriage room is not tied to a branch in anything the client has told us, so
+   its alt text stays neutral. */
+const roomPhotos: Record<string, { photo: string; alt: string; focus: string }> = {
+  'junction-square': {
+    photo: '/media/highlights/mhk1780-copy.jpg',
+    alt: 'The Le SMASH shopfront at Junction Square with a red, white and black balloon arch over the door',
+    focus: '50% 40%',
+  },
+  yankin: {
+    // A table, not a room: no supplied photo is identified as Yankin's.
+    photo: '/media/highlights/7.jpg',
+    alt: 'Hands reaching across a Le SMASH table spread of brunch plates',
+    focus: '50% 50%',
+  },
+};
+
+/* The client's own coverage line, from their homepage mock. The townships come
+   from their copy and are theirs to stand behind. */
 const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
+const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
 ---
 <Base path="/visit" title={title('Visit Us')} description={DESCRIPTIONS.visit} schema={schema}>
-  <section class="section" style="padding-bottom:var(--s6)">
-    <div class="wrap">
-      <p class="label label--ember">Visit us</p>
-      <h1 style="margin-top:var(--s4)">
-        Find Le SMASH<br /><span class="script">near you.</span>
-      </h1>
-      <p class="lede" style="margin-top:var(--s5)">Or see if we deliver to your area.</p>
-    </div>
-  </section>
+  <div class="vs-page" style={`--vs-mono:url(${asset('/brand/pattern-monogram.png')})`}>
 
-  {/* The rooms themselves, above the addresses. The brief asks Visit to show
-      the spaces, and there are real photographs of them now. */}
-  <section class="section" style="padding-block:0 var(--s8)">
-    <div class="wrap">
-      <ul class="tiles">
-        <li class="tile">
-          <img src={asset('/media/rooms/exterior.jpg')} alt="The Le SMASH shopfront from the street"
-               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
-        </li>
-        <li class="tile">
-          <img src={asset('/media/rooms/counter.jpg')} alt="The counter and stools before service"
-               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
-        </li>
-        <li class="tile">
-          <img src={asset('/media/rooms/evening.jpg')} alt="The room in the evening, neon on"
-               width="1600" height="1067" class="shot--3x2" loading="lazy" decoding="async" />
-        </li>
-      </ul>
-    </div>
-  </section>
+    <section class="vs-hero brand-red" aria-labelledby="vs-h1">
+      <div class="vs-hero__stickers" aria-hidden="true">
+        <img src={asset('/brand/sticker-pork.png')} alt="" width="320" height="320" decoding="async" />
+        <img src={asset('/brand/sticker-fish.png')} alt="" width="320" height="320" decoding="async" />
+        <img src={asset('/brand/sticker-lecoq.png')} alt="" width="320" height="320" decoding="async" />
+      </div>
+      <div class="wrap">
+        <p class="label label--ember">Visit us</p>
+        <h1 id="vs-h1">
+          <span class="vs-mask"><span>Find Le SMASH</span></span>
+          <span class="vs-mask"><span><span class="script">near you.</span></span></span>
+        </h1>
+        <p class="lede">Or see if we deliver to your area.</p>
+        <div class="btn-row">
+          <a class="btn btn--cream" href="#rooms">The rooms</a>
+          <a class="btn btn--ghost" href="#team">Meet the crew</a>
+          <a class="btn btn--ghost" href="#delivery">Delivery</a>
+        </div>
+      </div>
+    </section>
 
-  {/* The rooms. Hours are shown as unpublished rather than guessed — a wrong
-      answer here sends someone across Yangon for nothing. */}
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
-      <div class="venues">
-        {branches.map((branch) => {
-          const phone = primaryPhone(branch);
-          return (
-            <article class="venue reveal">
-              <h2 class="venue__name">{branch.name}</h2>
+    {/* The rooms, laid out as stops on one line. */}
+    <section class="vs-rooms dark" id="rooms" aria-labelledby="vs-rooms-h">
+      <div class="wrap">
+        <div class="vs-sec-head">
+          <p class="label label--brass">All aboard</p>
+          <h2 id="vs-rooms-h">The <span class="script">rooms</span></h2>
+          <p class="lede">Tap an address to open it in Google Maps.</p>
+        </div>
 
-              {/* The address is the map link. The brief lists "Google Maps
-                  links" as a requirement, and the address is the thing a
-                  visitor already wants to tap — making it the link means the
-                  affordance sits on the content rather than beside it. */}
-              <a class="maplink" href={directionsUrl(branch)}
-                 target="_blank" rel="noopener noreferrer"
-                 data-analytics="directions_click" data-branch={branch.slug} data-source="visit_address">
-                <svg class="maplink__pin" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5 0 4.9 6.5 12.5 6.5 12.5s6.5-7.6 6.5-12.5c0-3.6-2.9-6.5-6.5-6.5Z"
-                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                  <circle cx="12" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                </svg>
-                <address class="venue__addr">
-                  {branch.addressLine}<br />{branch.township}, {branch.city}
-                </address>
-                <span class="maplink__cue">Open in Google Maps</span>
+        <div class="vs-rooms__list" data-rooms>
+          {branches.map((b, i) => (
+            <RoomCard stop={i + 1} branch={b} {...(roomPhotos[b.slug] ? { photo: roomPhotos[b.slug].photo, photoAlt: roomPhotos[b.slug].alt, focus: roomPhotos[b.slug].focus } : {})} />
+          ))}
+          {/* Their ticker counts three rooms; only two addresses exist, so the
+              third is shown as what it is: not yet on the map. */}
+          <RoomCard stop={branches.length + 1} />
+        </div>
+
+        {/* One number for all of it: it is the number on their own Facebook
+            page, and which room it rings is not stated anywhere public. */}
+        {SITE.phone && (
+          <div class="vs-board" data-board>
+            <div>
+              <h3>Hungry? <span class="script">Ring us.</span></h3>
+              <p>One number for Le SMASH. Opening hours for each room are still to be published.</p>
+            </div>
+            <a class="btn btn--ember" href={`tel:${SITE.phone.e164}`}
+               data-analytics="phone_click" data-source="visit">
+              Call {SITE.phone.display}
+            </a>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <TeamGallery />
+
+    <section class="vs-delivery" id="delivery" aria-labelledby="vs-del-h">
+      <div class="wrap">
+        <div class="vs-sec-head">
+          <p class="label">Delivery</p>
+          <h2 id="vs-del-h">Where we <span class="script">deliver</span></h2>
+        </div>
+        <ul class="vs-metro" data-metro>
+          {townships.map((t) => <li data-stop>{t} <small>Township</small></li>)}
+        </ul>
+        {deliverable.length > 0 && (
+          <div class="vs-delivery__actions">
+            {deliverable.map((b) => (
+              <a class="btn btn--cream" href={b.foodpandaUrl!} target="_blank" rel="noopener noreferrer"
+                 data-analytics="order_click" data-branch={b.slug} data-platform="foodpanda" data-source="visit_delivery">
+                Order from {b.name}
               </a>
-
-              <div class="dish__meta">
-                <span class="fact fact--warn">{COPY.state.hoursUnknown}</span>
-                {branch.hasDineIn === true && <span class="fact">{COPY.labels.dineIn}</span>}
-                {branch.hasTakeaway === true && <span class="fact">{COPY.labels.takeaway}</span>}
-              </div>
-              {/* Only Call here: the address above is already the map link, and
-                  two buttons to the same URL is noise, not emphasis. */}
-              {phone && (
-                <div class="btn-row">
-                  <a class="btn btn--ghost" href={`tel:${phone.e164}`}
-                     data-analytics="phone_click" data-branch={branch.slug} data-source="visit">
-                    {COPY.cta.call}
-                  </a>
-                </div>
-              )}
-            </article>
-          );
-        })}
-      </div>
-
-      {/* One number for all of it. It is the number on their own Facebook page;
-          which room it rings is not stated anywhere public, so it sits here
-          rather than on a branch card. */}
-      {SITE.phone && (
-        <div class="callrow">
-          <a class="btn btn--ember" href={`tel:${SITE.phone.e164}`}
-             data-analytics="phone_click" data-source="visit">
-            Call {SITE.phone.display}
-          </a>
-        </div>
-      )}
-
-      {/* Their homepage says three rooms. Two have confirmed addresses in this
-          repo, so the third is named as outstanding rather than invented. */}
-      <p class="note" style="margin-top:var(--s6)">
-        Le SMASH counts three rooms and five kitchens. Two addresses are
-        confirmed above — the third is still to be supplied, and so are the
-        opening hours for both.
-      </p>
-    </div>
-  </section>
-
-  {/* The delivery map. A concept frame, per the brief's first stage. */}
-  <section class="section band--red" id="delivery">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">Delivery</p>
-        <p class="track__numeral" aria-hidden="true">01</p>
-      </div>
-      <div>
-        <div class="sec-head"><h2>Where we deliver</h2></div>
-        <div class="map">
-          <Shot ratio="3x2" caption="Illustrated Yangon delivery map" />
-          <ul class="map__key">
-            {townships.map((t) => <li class="fact">{t} Township</li>)}
-          </ul>
-        </div>
-        <p class="lede" style="margin-top:var(--s6)">
-          Drawn rather than embedded, so it sits with the rest of the site
-          instead of looking like a widget — and so a new branch or area is an
-          edit, not a redraw. Township boundaries and the areas each kitchen
-          covers are still to be confirmed.
+            ))}
+          </div>
+        )}
+        <p class="vs-note">
+          Township boundaries and the areas each kitchen covers are still to be confirmed.
         </p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  {/* Franchise. A block, not a page: the brief wants it brief, selective and
-      routed to a private conversation. */}
-  <section class="section rule-top" id="franchise">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">Franchise</p>
-        <p class="track__numeral" aria-hidden="true">02</p>
-      </div>
-      <div class="split split--wide-left">
-        <div class="stack-lg reveal">
-          <h2>Work with us.</h2>
-          <Slot slot={EDITORIAL.franchise} class="lede" />
-          <p class="note">
-            Detailed terms are shared privately after an initial conversation.
-          </p>
-          {SITE.franchiseEmail ? (
-            <div class="btn-row">
-              <a class="btn btn--ember"
-                 href={`mailto:${SITE.franchiseEmail}?subject=Le%20SMASH%20franchise%20enquiry`}
-                 data-analytics="franchise_enquiry_click">Make an enquiry</a>
-            </div>
-          ) : (
-            <p class="note note--gap">
-              <b>Enquiry route outstanding</b>
-              One address finishes this section. Tell us where franchise
-              enquiries should land and the button appears here. We will not
-              guess it from the domain — an enquiry that bounces is worse than
-              a section that admits it is not wired up yet.
-            </p>
-          )}
-        </div>
-        <div class="figure figure--tall reveal">
-          <img src={asset('/media/rooms/menu-wall.jpg')}
-               alt="The painted menu wall, beside the framed Napoleon"
-               width="1600" height="1067" loading="lazy" decoding="async" />
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 </Base>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    gsap.registerPlugin(ScrollTrigger);
+    const rnd = (n: number) => (Math.random() * 2 - 1) * n;
+
+    // Hero: lines rise out of their masks, stickers pop in with a tilt.
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('.vs-hero .vs-mask > span', { yPercent: 115, duration: 0.9, stagger: 0.12 })
+      .from('.vs-hero .lede, .vs-hero .btn-row', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4')
+      .from('.vs-hero__stickers img', { scale: 0, rotation: () => rnd(30), duration: 0.7, ease: 'back.out(1.7)', stagger: 0.12 }, 0.3);
+
+    // Rooms: each stop lands with a little overshoot as it scrolls in.
+    gsap.utils.toArray<HTMLElement>('[data-room]').forEach((el) => {
+      gsap.from(el, {
+        y: 70, opacity: 0, rotation: rnd(3), scale: 0.95, duration: 0.9, ease: 'back.out(1.7)',
+        clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      });
+    });
+    gsap.from('.vs-roundel', {
+      scale: 0, duration: 0.5, ease: 'back.out(2.5)', stagger: 0.15,
+      scrollTrigger: { trigger: '[data-rooms]', start: 'top 85%', once: true },
+    });
+    gsap.from('[data-board]', {
+      y: 40, opacity: 0, rotation: -1.5, duration: 0.8, ease: 'back.out(1.5)', clearProps: 'transform,opacity',
+      scrollTrigger: { trigger: '[data-board]', start: 'top 92%', once: true },
+    });
+
+    // Delivery stops board one after another.
+    gsap.from('[data-stop]', {
+      y: 30, opacity: 0, duration: 0.6, stagger: 0.15, ease: 'back.out(1.7)', clearProps: 'transform,opacity',
+      scrollTrigger: { trigger: '[data-metro]', start: 'top 88%', once: true },
+    });
+  }
+</script>

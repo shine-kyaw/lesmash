@@ -1,0 +1,37 @@
+---
+import { asset } from '../../lib/href';
+import { dim } from './media';
+
+/**
+ * One snapshot on the table. Three layers so the motion never fights:
+ *   li.st-slot     - static scatter (CSS rotate / translate), never animated
+ *   .st-print      - GSAP pop-in
+ *   button.st-print__face - hover lift (CSS), opens the lightbox
+ */
+interface Props {
+  src: string;
+  cap: string;
+  alt: string;
+  rotate?: number;
+  dy?: number;
+  w?: number;
+  fix?: 'tape' | 'clip' | 'pin';
+  pos?: string;
+  note?: string;
+}
+const { src, cap, alt, rotate = 0, dy = 0, w = 1, fix = 'tape', pos = '50% 50%', note = '' } = Astro.props;
+const { width, height } = dim(src);
+---
+<li class="st-slot" style={`--r:${rotate}deg;--dy:${dy}px;--w:${w};`}>
+  <div class="st-print" data-print data-src={asset(src)} data-cap={cap} data-alt={alt}
+       data-note={note} data-w={width} data-h={height}>
+    <button type="button" class={`st-print__face st-fix--${fix}`} aria-haspopup="dialog"
+            aria-label={`Enlarge photo: ${cap}`}>
+      <span class="st-print__img" style={`aspect-ratio:${width}/${height}`}>
+        <img src={asset(src)} alt={alt} width={width} height={height} loading="lazy" decoding="async"
+             style={`object-position:${pos}`} />
+      </span>
+      <span class="st-print__cap">{cap}</span>
+    </button>
+  </div>
+</li>

@@ -1,0 +1,40 @@
+---
+import type { MenuCategory } from '../../lib/content';
+import type { ListBlock } from './plan';
+
+/** A drinks-style page: names with dotted leaders and a price where one exists. */
+interface Props {
+  category: MenuCategory;
+  columns: ListBlock[][];
+  flow: boolean;
+  part: number;
+  parts: number;
+}
+const { category, columns, flow, part, parts } = Astro.props;
+const total = columns.flat().reduce((n, b) => n + b.items.length, 0);
+---
+<div id={part === 1 ? category.slug : undefined} class:list={['mn-lists', { 'mn-lists--flow': flow, 'mn-lists--few': total <= 8 }]}>
+  <header class="mn-phead">
+    <h2 class="mn-phead__title">{category.name}</h2>
+    {parts > 1 && <p class="mn-phead__part">{part} / {parts}</p>}
+  </header>
+  <div class="mn-lcols">
+    {columns.filter((c) => c.length).map((col) => (
+      <div class="mn-lcol">
+        {col.map((block) => (
+          <section class="mn-lblock">
+            {block.label && <h3 class="mn-lblock__label">{block.label}</h3>}
+            <ul class="mn-lblock__items">
+              {block.items.map((it) => (
+                <li class="mn-li">
+                  <span class="mn-li__name">{it.name}</span>
+                  {it.price && <span class="mn-li__price">{it.price}</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>

@@ -2,24 +2,180 @@
 import Base from '../layouts/Base.astro';
 import GalleryTile from '../components/GalleryTile.astro';
 import { GALLERY_SECTIONS, GALLERY_COUNT } from '../data/gallery';
-import { href } from '../lib/href';
+import { SHOWCASE, POSTERS, EVENTS, FEED } from '../data/gallery-v2';
+import { href, asset } from '../lib/href';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { breadcrumbSchema } from '../lib/schema';
+import '../styles/pages/gallery.css';
 
 const schema = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Gallery', path: '/gallery' }]),
 ];
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/* The photo wall: where each event picture sits on desktop, as percentages of
+   the wall so it scales. x/y/w are % of wall width (y of wall height). */
+const WALL = [
+  { x: 0,  y: 3,  w: 36, r: -3.5 },
+  { x: 29, y: 24, w: 34, r: 2.5 },
+  { x: 62, y: 0,  w: 36, r: 3 },
+  { x: 3,  y: 53, w: 33, r: 2 },
+  { x: 38, y: 62, w: 30, r: -3 },
+  { x: 63, y: 36, w: 31, r: -2 },
+  { x: 77, y: 58, w: 21, r: 4 },
+];
 ---
 <Base path="/gallery" title={title('Gallery')} description={DESCRIPTIONS.gallery} schema={schema}>
-  <section class="section" style="padding-bottom:var(--s6)">
+
+  {/* ============================================================ 1. Showcase */}
+  <section class="gl-show brand-red" data-gl-show aria-labelledby="gl-h1">
+    <img class="gl-show__pattern" src={asset('/brand/pattern-monogram.png')} alt="" aria-hidden="true" width="800" height="800" />
+    <div class="gl-show__inner">
+      <div class="gl-show__copy">
+        <p class="label">Le SMASH Burgers &amp; Co.</p>
+        <h1 id="gl-h1" class="gl-show__title">
+          Officially the <span class="gl-hl">best burger</span> in town.
+        </h1>
+        <p class="gl-show__lede">
+          American flavour. French precision. Yangon-born. Three rooms, five kitchens — and counting.
+        </p>
+
+        <div class="gl-count" aria-live="polite">
+          <span class="visually-hidden">Picture pair </span>
+          <span class="gl-count__cur" data-gl-cur>01</span>
+          <span class="gl-count__sep" aria-hidden="true">/</span><span class="visually-hidden"> of </span>
+          <span class="gl-count__tot">{pad(SHOWCASE.length)}</span>
+        </div>
+        <div class="gl-bar" aria-hidden="true"><i data-gl-bar></i></div>
+
+        <div class="gl-show__ctl">
+          <button class="gl-round" type="button" data-gl-prev aria-label="Previous pair">&#8592;</button>
+          <button class="gl-round" type="button" data-gl-next aria-label="Next pair">&#8594;</button>
+        </div>
+
+        <nav class="gl-jump" aria-label="On this page">
+          <a href="#campaigns">Campaigns</a>
+          <a href="#events">Events &amp; nights</a>
+          <a href="#feed">From the feed</a>
+          <a href="#archive">The archive</a>
+        </nav>
+      </div>
+
+      <div class="gl-show__stage">
+        <div class="gl-show__track" data-gl-track tabindex="-1">
+          {SHOWCASE.map((pair, i) => (
+            <div class="gl-pair" data-gl-pair role="group" aria-label={`Pair ${i + 1} of ${SHOWCASE.length}`}>
+              {pair.map((p, j) => (
+                <figure class={`gl-pic gl-pic--${j ? 'b' : 'a'}`} data-gl-pic>
+                  <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h}
+                       style={p.pos ? `object-position:${p.pos}` : undefined}
+                       loading={i === 0 ? undefined : 'lazy'} decoding="async" />
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <img class="gl-sticker gl-sticker--a" src={asset('/brand/sticker-beef.png')} alt="" aria-hidden="true" width="300" height="300" />
+  </section>
+
+  {/* ============================================================ 2. Campaigns */}
+  <section class="gl-camp dark" id="campaigns" aria-labelledby="gl-camp-h">
+    <div class="wrap gl-camp__head">
+      <p class="label label--ember">Campaign highlight</p>
+      <h2 id="gl-camp-h" class="gl-h2">Campaigns we invested <span class="script">heavily in.</span></h2>
+      <p class="lede">
+        Our own campaigns and the collaborations we have thrown with friends.
+        Drag to spin the ring, tap a poster to see it whole.
+      </p>
+    </div>
+
+    <div class="gl-ring" data-gl-ring tabindex="0" role="group" aria-roledescription="carousel"
+         aria-label="Campaign posters. Left and right arrow keys rotate the ring; Enter opens the front poster.">
+      <div class="gl-ring__rot" data-gl-rot>
+        {POSTERS.map((p, i) => {
+          const r = p.w / p.h;
+          const k = r > 1.2 ? 1.3 : r > 0.95 ? 1.08 : 1;
+          return (
+            <button class="gl-card" type="button" tabindex="-1" data-gl-card data-gl-lb="campaigns"
+                    data-full={asset(p.src)} data-cap={p.title} data-i={i}
+                    style={`--r:${r.toFixed(4)};--k:${k}`}>
+              <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" draggable="false" />
+              <span class="gl-card__shade" aria-hidden="true"></span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
+    <div class="wrap gl-camp__foot">
+      <p class="gl-ring__cap" aria-live="polite">
+        <span class="gl-ring__num" data-gl-ring-num>01 / {pad(POSTERS.length)}</span>
+        <span class="gl-ring__title" data-gl-ring-title>{POSTERS[0].title}</span>
+      </p>
+      <div class="gl-show__ctl">
+        <button class="gl-round" type="button" data-gl-ring-prev aria-label="Previous poster">&#8592;</button>
+        <button class="gl-round" type="button" data-gl-ring-next aria-label="Next poster">&#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ 3. Events */}
+  <section class="gl-events section" id="events" aria-labelledby="gl-ev-h">
+    <div class="wrap">
+      <p class="label label--ember">Events &amp; nights</p>
+      <h2 id="gl-ev-h" class="gl-h2">When the room <span class="script">fills up.</span></h2>
+      <p class="lede">Parties, DJs and long nights in the carriage. Tap a picture to enlarge it.</p>
+
+      <ul class="gl-wall" data-gl-wall>
+        {EVENTS.map((p, i) => (
+          <li class="gl-snap" data-gl-snap
+              style={`--x:${WALL[i].x}%;--y:${WALL[i].y}%;--w:${WALL[i].w}%;--rot:${WALL[i].r}deg;--ar:${p.w}/${p.h}`}>
+            <button type="button" data-gl-lb="events" data-full={asset(p.src)} data-cap="">
+              <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <img class="gl-sticker gl-sticker--b" src={asset('/brand/sticker-fish.png')} alt="" aria-hidden="true" width="300" height="300" loading="lazy" />
+  </section>
+
+  {/* ============================================================ 4. Feed */}
+  <section class="gl-feed brand-red section" id="feed" aria-labelledby="gl-fd-h">
+    <div class="wrap">
+      <p class="label">From the feed</p>
+      <h2 id="gl-fd-h" class="gl-h2">Fresh off <span class="script">our posts.</span></h2>
+      <p class="lede">The collages we put out on social, as posted.</p>
+
+      <ul class="gl-posts">
+        {FEED.map((p) => (
+          <li class="gl-post">
+            <div class="gl-post__bar">
+              <img src={asset('/brand/logo-badge.png')} alt="" aria-hidden="true" width="64" height="64" loading="lazy" />
+              <span>Le SMASH Burgers &amp; Co.</span>
+            </div>
+            <button type="button" class="gl-post__img" data-gl-lb="feed" data-full={asset(p.src)} data-cap="">
+              <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ============================================================ 5. Archive */}
+  <section class="gl-archive-head section" id="archive" style="padding-bottom:var(--s6)">
     <div class="wrap">
       <p class="label label--ember">The archive</p>
-      <h1 style="margin-top:var(--s4)">
+      <h2 class="gl-h2" style="margin-top:var(--s4)">
         Everything we<br /><span class="script">have made so far.</span>
-      </h1>
+      </h2>
       <p class="lede" style="margin-top:var(--s5)">
         Le SMASH is a restaurant that also makes things — campaigns, pop-ups,
-        collaborations. {GALLERY_COUNT} pictures, in seven parts.
+        collaborations. {GALLERY_COUNT} pictures, in {GALLERY_SECTIONS.length} parts.
       </p>
     </div>
   </section>
@@ -35,7 +191,7 @@ const schema = [
     </div>
   </nav>
 
-  <div class="wrap">
+  <div class="wrap gl-archive" data-gl-archive>
     {GALLERY_SECTIONS.map((section, i) => (
       <section class="course track" id={section.slug}>
         <div class="track__rail">
@@ -45,13 +201,13 @@ const schema = [
         </div>
         <div>
           <div class="course__head">
-            <h2 class="course__title">{section.name}</h2>
+            <h3 class="course__title">{section.name}</h3>
           </div>
           <p class="lede" style="margin-bottom:var(--s5)">{section.blurb}</p>
           <ul class="tiles tiles--gallery">
             {section.items.length > 0
               ? section.items.map((item, n) => (
-                  <GalleryTile section={section} item={item} index={n} eager={i === 0 && n < 4} />
+                  <GalleryTile section={section} item={item} index={n} eager={false} />
                 ))
               : Array.from({ length: 6 }, (_, n) => (
                   <GalleryTile section={section} index={n} />
@@ -62,18 +218,29 @@ const schema = [
     ))}
   </div>
 
-  <section class="section band--ink">
+  <section class="section dark gl-end">
     <div class="wrap">
-      <p class="label">Still to come</p>
-      <h2 style="margin-top:var(--s4)">More than fits<br /><span class="script">on one page.</span></h2>
-      <p class="lede" style="margin-top:var(--s5)">
-        Sections and their contents are both meant to grow — adding work is one
-        line in <code>src/data/gallery.ts</code> and a file in
-        <code>public/media/gallery/</code>.
-      </p>
+      <p class="label">Hungry now?</p>
+      <h2 class="gl-h2" style="margin-top:var(--s4)">Come and add <span class="script">your own.</span></h2>
       <div class="btn-row" style="margin-top:var(--s6)">
-        <a class="btn btn--ghost" href={href('/menu')}>See the menu</a>
+        <a class="btn btn--ember" href={href('/menu')}>See the menu</a>
       </div>
     </div>
   </section>
+
+  {/* One lightbox for the whole page. */}
+  <dialog class="gl-lb" data-gl-lb-dialog aria-label="Image viewer">
+    <div class="gl-lb__stage" data-gl-lb-stage>
+      <img data-gl-lb-img alt="" />
+    </div>
+    <p class="gl-lb__cap" data-gl-lb-cap></p>
+    <p class="gl-lb__count label" data-gl-lb-count aria-live="polite"></p>
+    <button class="gl-lb__btn gl-lb__close" type="button" data-gl-lb-close aria-label="Close">&#10005;</button>
+    <button class="gl-lb__btn gl-lb__prev" type="button" data-gl-lb-prev aria-label="Previous image">&#8592;</button>
+    <button class="gl-lb__btn gl-lb__next" type="button" data-gl-lb-next aria-label="Next image">&#8594;</button>
+  </dialog>
 </Base>
+
+<script>
+  import '../components/gallery/gallery';
+</script>

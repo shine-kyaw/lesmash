@@ -1,0 +1,10 @@
+---
+import { asset } from '../../lib/href';
+interface Props { filler?: boolean }
+const { filler = false } = Astro.props;
+---
+<div class:list={['mn-back', { 'mn-back--filler': filler }]}>
+  <img class="mn-back__pattern" src={asset('/brand/pattern-monogram.png')} alt="" width="900" height="898" loading="lazy" />
+  <img class="mn-back__badge" src={asset('/brand/logo-badge.png')} alt={filler ? '' : 'Le SMASH Burgers & Co.'} width="512" height="512" loading="lazy" />
+  {!filler && <p class="mn-back__line">Fries before guys.</p>}
+</div>

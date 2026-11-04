@@ -1,9 +1,12 @@
 ---
+import '../styles/pages/menu.css';
 import Base from '../layouts/Base.astro';
-import Dish from '../components/Dish.astro';
-import MenuList from '../components/MenuList.astro';
-import Slot from '../components/Slot.astro';
-import { EDITORIAL } from '../data/editorial';
+import CoverPage from '../components/menu/CoverPage.astro';
+import CardsPage from '../components/menu/CardsPage.astro';
+import ListPage from '../components/menu/ListPage.astro';
+import VisitPage from '../components/menu/VisitPage.astro';
+import BackPage from '../components/menu/BackPage.astro';
+import { buildPages, shortName } from '../components/menu/plan';
 import { getBranches, getCategories, getMenuItems, itemsInCategory } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { menuSchema, breadcrumbSchema } from '../lib/schema';
@@ -12,86 +15,77 @@ const branches = await getBranches();
 const categories = await getCategories();
 const items = await getMenuItems();
 
-/*
- * A card category earns a place if it has items; a list category is its own
- * content, so it earns one if it has names. Both kinds share the course rail.
- */
-const courses = categories
-  .map((category) => ({ category, dishes: itemsInCategory(items, category.slug) }))
-  .filter(({ category, dishes }) =>
-    category.layout === 'list'
-      ? category.listItems.length > 0 || category.listGroups.length > 0
-      : dishes.length > 0
-  );
-
 const schema = [
   menuSchema(categories, items),
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Menu', path: '/menu' }]),
 ];
 
-const pad = (n: number) => String(n + 1).padStart(2, '0');
+const { pages, firstPageOf } = buildPages(categories, (slug) => itemsInCategory(items, slug), branches);
+const jumps = categories
+  .filter((c) => firstPageOf[c.slug] !== undefined)
+  .map((c) => ({ label: shortName(c), page: firstPageOf[c.slug] }));
+const pad = (n: number) => String(n).padStart(2, '0');
+const pageLabel = (p: (typeof pages)[number]) =>
+  p.kind === 'cover' ? 'Cover' :
+  p.kind === 'cards' || p.kind === 'list' ? p.category.name :
+  p.kind === 'visit' ? 'Come find us' : p.kind === 'back' ? 'Back cover' : 'Le SMASH';
 ---
 <Base path="/menu" title={title('Menu')} description={DESCRIPTIONS.menu} schema={schema}>
-  <section class="section" style="padding-bottom:var(--s6)">
+  <section class="mn-head">
     <div class="wrap">
       <p class="label label--ember">The menu</p>
-      <h1 style="margin-top:var(--s4)">
-        Le SMASH<br /><span class="script">Icons.</span>
-      </h1>
-      <div style="margin-top:var(--s5);max-width:46ch">
-        <Slot slot={EDITORIAL.priceContext} class="lede" />
-      </div>
+      <h1 class="mn-head__title">Flip it. <span class="script">Pick it.</span> Smash it.</h1>
+      <nav class="mn-jump" aria-label="Jump to a section of the menu">
+        {jumps.map((j) => (
+          <a href={`#mn-p-${j.page}`} data-jump={j.page} data-analytics="menu_category_select">{j.label}</a>
+        ))}
+      </nav>
     </div>
   </section>
 
-  {/* A sticky rail rather than tabs: one continuous document lets a reader feel
-      how much menu is left, which tabbed views destroy. */}
-  <nav class="menu-nav" aria-label="Courses">
-    <div class="wrap menu-nav__scroll">
-      {courses.map(({ category }) => (
-        <a href={`#${category.slug}`} data-course-link={category.slug}
-           data-analytics="menu_category_select" data-category={category.slug}>
-          {category.name}
-        </a>
-      ))}
+  <section class="mn" data-mn data-total={pages.length} aria-label="The Le SMASH menu">
+    <div class="wrap mn__bar">
+      <button type="button" class="mn-toggle" data-toggle hidden aria-pressed="false">
+        <span data-toggle-label>View as list</span>
+      </button>
     </div>
-  </nav>
 
-  <div class="wrap">
-    {courses.map(({ category, dishes }, i) => (
-      <section class="course track" id={category.slug}>
-        <div class="track__rail">
-          <p class="track__numeral">
-            <span class="visually-hidden">Course </span>{pad(i)}
-          </p>
+    <div class="mn-stage" data-stage>
+      <div class="mn-book" data-book>
+        <div class="mn-edge mn-edge--l" aria-hidden="true"></div>
+        <div class="mn-edge mn-edge--r" aria-hidden="true"></div>
+        <div class="mn-pages" data-pages>
+          {pages.map((p, i) => (
+            <article class={`mn-page mn-page--${p.kind}`} id={`mn-p-${i}`} data-page={i}
+                     aria-label={`Page ${i + 1} of ${pages.length}: ${pageLabel(p)}`}>
+              <div class="mn-page__in">
+                {p.kind === 'cover' && <CoverPage />}
+                {p.kind === 'cards' && <CardsPage category={p.category} items={p.items} part={p.part} parts={p.parts} eager={i <= 2} />}
+                {p.kind === 'list' && <ListPage category={p.category} columns={p.columns} flow={p.flow} part={p.part} parts={p.parts} />}
+                {p.kind === 'visit' && <VisitPage branches={p.branches} />}
+                {p.kind === 'filler' && <BackPage filler />}
+                {p.kind === 'back' && <BackPage />}
+              </div>
+              <span class="mn-page__no" aria-hidden="true">{pad(i + 1)}</span>
+            </article>
+          ))}
         </div>
+        <button type="button" class="mn-curl" data-curl aria-label="Turn the page" hidden><span class="mn-curl__flap"></span></button>
+      </div>
+    </div>
 
-        <div>
-          <div class="course__head">
-            <h2 class="course__title">{category.name}</h2>
-            {category.serviceHours && <span class="fact">{category.serviceHours}</span>}
-          </div>
-          {category.description && <p class="lede" style="margin-bottom:var(--s5)">{category.description}</p>}
+    <div class="mn-controls" data-controls hidden>
+      <button type="button" class="mn-nav" data-prev aria-label="Previous page"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="mn-meter">
+        <p class="mn-count" aria-live="polite"><span data-count>01</span> / <span data-of>{pad(pages.length)}</span></p>
+        <div class="mn-dots" data-dots role="group" aria-label="Pages"></div>
+      </div>
+      <button type="button" class="mn-nav mn-nav--next" data-next aria-label="Next page"><span class="mn-nav__tx">Flip</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <p class="mn-help" data-help hidden><span class="mn-help__d">Click a page, drag it, or use the arrow keys to turn it.</span><span class="mn-help__m">Swipe the page left or right to turn it.</span></p>
+  </section>
 
-          {category.layout === 'list' ? (
-            <MenuList category={category} />
-          ) : (
-            <ul class="dishes">
-              {dishes.map((item) => (
-                <Dish
-                  item={item}
-                  branches={branches}
-                  soldOut={branches.length > 0 && branches.every((b) => b.soldOutItems.includes(item.slug))}
-                />
-              ))}
-            </ul>
-          )}
-        </div>
-      </section>
-    ))}
-  </div>
-
-  <section class="section band--ink">
+  <section class="section band--ink mn-foot">
     <div class="wrap">
       <p class="label">Allergens</p>
       <p class="lede" style="margin-top:var(--s4)">
@@ -101,3 +95,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     </div>
   </section>
 </Base>
+
+<script>
+  import "../components/menu/book.ts";
+</script>

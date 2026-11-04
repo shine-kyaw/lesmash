@@ -1,0 +1,73 @@
+---
+import { asset } from '../../lib/href';
+import type { MenuCategory, MenuItem } from '../../lib/content';
+import { dims } from './plan';
+
+/**
+ * One page of dish tiles, laid out like their printed boards: a photo on a
+ * black tile, the name in display type, the ingredient line, the price on a
+ * black tag. Burgers carry no price (none confirmed) so none is drawn.
+ */
+interface Props {
+  category: MenuCategory;
+  items: MenuItem[];
+  part: number;
+  parts: number;
+  eager?: boolean;
+}
+const { category, items, part, parts, eager = false } = Astro.props;
+const stickers = ['beef', 'fish', 'lecoq', 'pork'];
+const rot = [-5, 4, -3, 6];
+
+/** "Half 20K · Whole 65K" -> separate lines, the K figure picked out. */
+function priceLines(display: string): { lead: string; value: string }[] {
+  return display.split(' · ').map((part) => {
+    const m = part.match(/^(.*?)\s*([\d.,]+K)$/);
+    return m ? { lead: m[1], value: m[2] } : { lead: part, value: '' };
+  });
+}
+---
+<div id={part === 1 ? category.slug : undefined} class:list={['mn-cards', { 'mn-cards--first': part === 1 }]}>
+  <header class="mn-phead">
+    <h2 class="mn-phead__title">{category.name}</h2>
+    {parts > 1 && <p class="mn-phead__part">{part} / {parts}</p>}
+    {category.slug === 'burgers' && (
+      <p class="mn-phead__note">Burger prices at the counter</p>
+    )}
+  </header>
+  <ul class="mn-items" data-n={items.length}>
+    {items.map((item, i) => {
+      const lines = item.priceDisplay ? priceLines(item.priceDisplay) : [];
+      const single = lines.length === 1 && lines[0].lead === '';
+      const d = item.image ? dims(item.image.src) : null;
+      return (
+        <li class="mn-item" id={item.slug}>
+          {item.image && d ? (
+            <div class="mn-item__img">
+              <img src={asset(item.image.src)} alt={item.image.alt} width={d.width} height={d.height}
+                   loading={eager ? 'eager' : 'lazy'} decoding="async" />
+            </div>
+          ) : (
+            <div class="mn-item__img mn-item__img--ph" aria-hidden="true" style={`--mono:url(${asset('/brand/pattern-monogram.png')})`}>
+              <img src={asset(`/brand/sticker-${stickers[i % 4]}.png`)} alt="" width="320" height="320"
+                   loading="lazy" decoding="async" style={`--r:${rot[i % 4]}deg`} />
+            </div>
+          )}
+          <div class="mn-item__txt">
+            <h3 class="mn-item__name">{item.name}</h3>
+            {item.description && <p class="mn-item__desc">{item.description}</p>}
+            {lines.length > 0 && (
+              <p class:list={['mn-price', { 'mn-price--multi': !single }]}>
+                {single ? (
+                  <><span class="mn-price__lab">Price :</span> <b>{lines[0].value}</b></>
+                ) : (
+                  lines.map((l) => <span class="mn-price__line">{l.lead} <b>{l.value}</b></span>)
+                )}
+              </p>
+            )}
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+</div>

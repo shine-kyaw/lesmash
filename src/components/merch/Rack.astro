@@ -1,0 +1,45 @@
+---
+import { asset } from '../../lib/href';
+import { GARMENTS } from '../../data/merch';
+---
+<section class="mc-rack-sec" id="rack" aria-labelledby="mc-rack-h">
+  <div class="wrap mc-sec-head">
+    <p class="label label--ember">01 · The rack</p>
+    <h2 id="mc-rack-h">Pick one off the rail</h2>
+    <p class="lede">Tees and the YGN jersey, hung up the way they would be in a shop. Tap or click one to take it down and see the other side.</p>
+    <p class="mc-hint label" aria-hidden="true"><span class="mc-hint__fine">Drag the rack sideways</span><span class="mc-hint__touch">Swipe the rail</span> →</p>
+  </div>
+
+  <div class="mc-rack" data-rack>
+    <div class="mc-rack-track">
+      <div class="mc-rail" aria-hidden="true"></div>
+      <ul class="mc-hangers" role="list">
+        {GARMENTS.map((g) => {
+          const v = g.views[g.start];
+          return (
+            <li class="mc-hang">
+              <button type="button" class="mc-hang-btn" data-garment={g.id} aria-haspopup="dialog"
+                aria-label={`${g.name}, ${g.tag}. Open details`}>
+                <span class="mc-pivot" data-pivot>
+                  <svg class="mc-hook" viewBox="0 -10 30 52" aria-hidden="true" focusable="false">
+                    <path d="M15 42 V28 C15 18 5 16 5 5 C5 -4 11 -8 15 -8 C20 -8 25 -4 25 5" />
+                  </svg>
+                  <svg class="mc-arch" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <path d="M2 29 Q50 -4 98 29" />
+                  </svg>
+                  <span class="mc-garment" data-photo style={`--ar:${v.ar}`}>
+                    <img src={asset(v.src)} alt={v.alt} style={`object-position:${v.pos}`} loading="lazy" decoding="async" draggable="false" />
+                  </span>
+                </span>
+                <span class="mc-cap">
+                  <span class="mc-cap__name">{g.name}</span>
+                  <span class="mc-cap__tag label">{g.tag}</span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+</section>

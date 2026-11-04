@@ -1,22 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
-import HeroFilm from '../components/HeroFilm.astro';
-import SpinRing from '../components/SpinRing.astro';
-import Shot from '../components/Shot.astro';
 import Slot from '../components/Slot.astro';
-import Dish from '../components/Dish.astro';
+import '../styles/pages/home.css';
 import { href, asset } from '../lib/href';
-import { COPY } from '../data/copy';
 import { EDITORIAL } from '../data/editorial';
-import { GALLERY_SECTIONS } from '../data/gallery';
-import { SITE } from '../lib/site.config.mjs';
-import { getBranches, getMenuItems, featuredItems } from '../lib/content';
+import { getBranches, getMenuItems, itemsInCategory } from '../lib/content';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { organizationSchema, websiteSchema, restaurantSchema } from '../lib/schema';
 
 const branches = await getBranches();
 const items = await getMenuItems();
-const icons = featuredItems(items, 6);
+// Burgers carry no prices anywhere on this page: they are unconfirmed.
+const burgers = itemsInCategory(items, 'burgers');
 
 const schema = [
   organizationSchema(),
@@ -24,200 +19,313 @@ const schema = [
   ...branches.map((b) => restaurantSchema(b, { withMenu: true })),
 ];
 
-/*
- * The ticker is the client's own line, transcribed from their homepage mock —
- * including the four townships. It is their claim about their own coverage, so
- * it goes on verbatim rather than being rebuilt from the two branch records
- * this repo can verify.
- */
-const ticker = [
-  'Smashed to order',
-  '3 rooms',
-  '5 kitchens',
-  'Kamayut Township',
-  'Yankin Township',
-  'Mayangone Township',
-  'Hlaing Township',
-  'Dine in',
-  'Takeaway',
+/* The four doors — the client's "Option 1". `hint` is the header link each one
+   lights up while it is hovered or focused. */
+const doors = [
+  { label: 'Our Story', to: '/story', hint: '/story', img: '/media/home/post-1-2.jpg', pos: '50% 55%', cap: 'Where it started.' },
+  { label: 'Menu', to: '/menu', hint: '/menu', img: '/media/home/spicy-bacon.jpg', pos: '50% 62%', cap: 'Smashed to order.' },
+  { label: 'Outlets', to: '/visit', hint: '/visit', img: '/media/home/mhk1766-copy.jpg', pos: '38% 40%', cap: 'Three rooms, five kitchens.' },
+  { label: 'Campaigns', to: '/gallery#campaigns', hint: '/gallery', img: '/media/home/copy-of-38.jpg', pos: '45% 50%', cap: 'Pop-ups, parties, collabs.' },
+];
+
+const teasers = [
+  { name: 'Gallery', note: 'The archive', to: '/gallery', img: '/media/events/mhk2601-copy.jpg', pos: '50% 40%' },
+  { name: 'Collaborations', note: 'Le SMASH × friends', to: '/collaborations', img: '/media/campaigns/announcement.jpg', pos: '50% 45%' },
+  { name: 'Merch', note: 'Wear it', to: '/merch', img: '/media/merch/le-smash-t-shirt-mockup.jpg', pos: '30% 40%' },
 ];
 ---
 <Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
-  {/* First screen: the film, and nothing competing with it. */}
-  <HeroFilm />
+  <script is:inline>document.documentElement.classList.add('hm-js')</script>
 
-  {/*
-    Second screen: the homepage as the client drew it. Headline, standfirst,
-    two actions, two pictures and the spinning seal over the first — their
-    layout, set in the type and the palette that came off their logo.
-  */}
-  <section class="section intro" id="home">
-    <div class="wrap intro__grid">
-      <div class="intro__copy">
-        <h2 class="intro__head">Officially the<br />best burger<br />in town.</h2>
+  {/* 1 — the smash. Real text in the h1; the slam is script-driven. */}
+  <section class="hm-hero" data-hm-hero aria-label="Le SMASH Burgers &amp; Co.">
+    <div class="hm-hero__stage" data-hm-stage>
+      <video class="hm-hero__video" autoplay muted loop playsinline preload="auto"
+             poster={asset('/media/home/hero-poster.jpg')} aria-hidden="true" tabindex="-1" data-hm-video>
+        <source src={asset('/media/home/hero-720.mp4')} type="video/mp4" media="(max-width: 767px)" />
+        <source src={asset('/media/home/hero.mp4')} type="video/mp4" />
+      </video>
+      <div class="hm-hero__scrim"></div>
+    </div>
+    <h1 class="hm-hero__title" data-hm-title>
+      <span class="hm-hero__slam" data-hm-slam>
+        <span class="hm-hero__le" aria-hidden="true">Le</span>
+        <span class="visually-hidden">Le </span><span class="hm-hero__word" data-hm-word>SMASH</span><span class="visually-hidden"> Burgers &amp; Co.</span>
+      </span>
+    </h1>
+    <a class="hm-hero__cue" href="#doors"><span>Scroll</span><i aria-hidden="true"></i></a>
+  </section>
+
+  {/* 2 — four doors */}
+  <section class="hm-doors" id="doors" aria-label="Where to next">
+    <ul class="hm-doors__row" data-hm-doors>
+      {doors.map((d, i) => (
+        <li class="hm-door" data-hint={d.hint}>
+          <a class="hm-door__link" href={href(d.to)}>
+            <img class="hm-door__img" src={asset(d.img)} alt="" width="1600" height="1067"
+                 loading="lazy" decoding="async" style={`object-position:${d.pos}`} />
+            <span class="hm-door__num" aria-hidden="true">0{i + 1}</span>
+            <span class="hm-door__tag" aria-hidden="true">{d.label}</span>
+            <span class="hm-door__plain">{d.label}</span>
+            <span class="hm-door__cap" aria-hidden="true">{d.cap}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {/* 3 — officially the best burger in town */}
+  <section class="hm-best" id="home" data-hm-best>
+    <div class="wrap hm-best__grid">
+      <div class="hm-best__copy">
+        <h2 class="hm-best__head" data-hm-pop>Officially the <em>best burger</em> in town.</h2>
         <Slot slot={EDITORIAL.heroPositioning} class="lede" />
         <div class="btn-row">
-          <a class="btn btn--ember" href={href('/menu')}>{COPY.cta.menu}</a>
+          <a class="btn btn--ember" href={href('/menu')}>See the menu</a>
           <a class="btn btn--ghost" href={href('/visit')}>Find us</a>
         </div>
       </div>
-
-
-      {/*
-        Their mock puts a photograph of the room here with the seal over it, and
-        a panel of the monogram beside it. Both exist now: the room, and the
-        pattern from their brand pack — with the cut-out burger standing on it,
-        which is the one asset in the library that can sit on any ground.
-      */}
-      <div class="intro__plates">
-        <div class="intro__plate intro__plate--tall">
-          <img src={asset('/media/rooms/evening.jpg')}
-               alt="The Le SMASH room in the evening, neon on"
-               width="1600" height="1067" loading="lazy" decoding="async" />
-          <SpinRing class="intro__ring" />
-        </div>
-        <div class="intro__plate intro__plate--pattern"
-             style={"background-image:url(" + asset("/brand/pattern-monogram.png") + ")"}>
-          <img class="intro__cutout" src={asset('/brand/hero-burger.png')}
-               alt="A double Le SMASH burger, both patties visible in profile"
+      <div class="hm-best__art" aria-hidden="true">
+        <div class="hm-best__panel">
+          <img class="hm-best__burger" data-hm-burger src={asset('/brand/hero-burger.png')} alt=""
                width="689" height="516" loading="lazy" decoding="async" />
         </div>
+        <img class="hm-best__sticker hm-best__sticker--a" data-hm-spin="1" src={asset('/brand/sticker-beef.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
+        <img class="hm-best__sticker hm-best__sticker--b" data-hm-spin="-1" src={asset('/brand/sticker-lecoq.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>
 
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      {[0, 1].map(() => (
-        <div style="display:inline-flex">
-          {ticker.map((line) => <span class="marquee__item">{line}</span>)}
+  {/* 4 — the line-up */}
+  {burgers.length > 0 && (
+    <section class="hm-line" data-hm-line aria-labelledby="hm-line-title">
+      <div class="hm-line__pin">
+        <div class="wrap hm-line__head">
+          <h2 class="hm-line__title" id="hm-line-title">The <span>line-up</span></h2>
+          <p class="hm-line__sub">{burgers.length} burgers · smashed to order</p>
+          <a class="tlink" href={href('/menu')}>Full menu</a>
         </div>
-      ))}
-    </div>
-  </div>
-
-  {/* The Icons — the brief's own name for the handful of dishes that carry the
-      brand. Six of them here, the full menu one tap away. */}
-  {icons.length > 0 && (
-    <section class="section">
-      <div class="wrap">
-        <div class="sec-head">
-          <p class="sec-head__index">01</p>
-          <h2>Le SMASH Icons</h2>
-          <a class="tlink sec-head__link" href={href('/menu')}>Full menu</a>
+        <div class="hm-line__viewport" data-hm-viewport>
+          <ul class="hm-line__track" data-hm-track>
+            {burgers.map((b, i) => (
+              <li class="hm-card" data-hm-card>
+                <a class="hm-card__in" href={href('/menu') + '#' + b.slug} style="text-decoration:none;color:inherit" data-hm-inner>
+                  <figure class="hm-card__fig">
+                    <span class="hm-card__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    <img src={asset(b.image?.src ?? '')} alt={b.image?.alt ?? b.name}
+                         width="1024" height="1365" loading="lazy" decoding="async" />
+                    <h3 class="hm-card__name">{b.name}</h3>
+                  </figure>
+                  <p class="hm-card__desc">{b.description}</p>
+                </a>
+              </li>
+            ))}
+            <li class="hm-card hm-card--end" data-hm-card>
+              <a class="hm-card__more" data-hm-inner href={href('/menu')}>
+                <b>The whole menu</b>
+                <span class="label" style="color:var(--cream)">Brunch, mains, snacks →</span>
+              </a>
+            </li>
+          </ul>
         </div>
-        <ul class="dishes reveal">
-          {icons.map((item) => <Dish item={item} branches={branches} />)}
-        </ul>
       </div>
     </section>
   )}
 
-  {/*
-    Our Story, in place of a page of its own.
-    The brief warns the homepage should "immediately establish the personality
-    of Le SMASH without containing too much information", so the story is two
-    blocks here rather than the three it had as a route: where it came from, and
-    what the press does. Where it is going now closes the page on the red band,
-    next to the rooms it is about.
-  */}
-  <section class="section" id="story">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">Our story</p>
-        <p class="track__numeral" aria-hidden="true">02</p>
-      </div>
-
-      <div class="split split--wide-left">
-        <div class="stack-lg reveal">
-          <h2>American flavour,<br /><span class="script">French precision.</span></h2>
-          {/* C-10, interim. C-15 — the founding year the brief says "must be
-              included" — is deliberately not rendered here: it cannot be
-              written for them, and a labelled gap mid-story reads worse than
-              its absence. It stays tracked in editorial.ts and the content
-              register, and drops in as a second Slot once the year exists. */}
-          <Slot slot={EDITORIAL.story} class="lede" />
-        </div>
-        <div class="figure figure--tall reveal">
-          <img src={asset('/media/rooms/counter.jpg')}
-               alt="The Le SMASH counter and stools before service"
-               width="1600" height="1067" loading="lazy" decoding="async" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section band--ink">
-    <div class="wrap track">
-      <div class="track__rail">
-        <p class="label">The press</p>
-        <p class="track__numeral" aria-hidden="true">03</p>
-      </div>
-      <div class="split">
-        <div class="figure figure--wide reveal">
-          <img src={asset('/media/story/on-the-press.jpg')}
-               alt="A cook pressing balls of beef flat on the plancha"
-               width="1600" height="1067" loading="lazy" decoding="async" />
-        </div>
-        <div class="stack-lg reveal">
-          <h2>Pressed once,<br /><span class="script">hard.</span></h2>
-          <Slot slot={EDITORIAL.howWeSmash} />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* Gallery teaser — the seven archive sections, named on the client's brief. */}
-  <section class="section">
+  {/* 5 — small teaser row */}
+  <section class="hm-more" aria-label="More Le SMASH">
     <div class="wrap">
-      <div class="sec-head">
-        <p class="sec-head__index">04</p>
-        <h2>The archive</h2>
-        <a class="tlink sec-head__link" href={href('/gallery')}>Open the gallery</a>
-      </div>
-      <ul class="tiles reveal">
-        {GALLERY_SECTIONS.map((s) => (
-          <li class:list={["tile", { "tile--mat": (s.items[0]?.fit ?? s.fit) === "contain" }]}>
-            <a href={`${href('/gallery')}#${s.slug}`}>
-              {s.items[0] ? (
-                <img src={asset(`/media/gallery/${s.slug}/${s.items[0].src}`)}
-                     alt={s.items[0].alt} width="1200" height="900"
-                     class="shot--4x3" loading="lazy" decoding="async" />
-              ) : (
-                <Shot ratio="4x3" caption={s.name} />
-              )}
-              <span class="tile__name">{s.name}</span>
+      <ul class="hm-more__row">
+        {teasers.map((t) => (
+          <li class="hm-more__item">
+            <a href={href(t.to)}>
+              <img src={asset(t.img)} alt="" width="1600" height="1067" loading="lazy" decoding="async" style={`object-position:${t.pos}`} />
+              <span class="hm-more__name">{t.name}<small>{t.note}</small></span>
             </a>
           </li>
         ))}
       </ul>
     </div>
   </section>
-
-  {/* Visit teaser, which also closes the story: the rooms, and where they are
-      going next. The addresses and the delivery map live on their own page. */}
-  <section class="section band--red">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="sec-head__index">05</p>
-        <h2>Three rooms,<br /><span class="script">and counting.</span></h2>
-      </div>
-      <Slot slot={EDITORIAL.future} class="lede" />
-      <div class="rooms">
-        {branches.map((branch) => (
-          <div class="room">
-            <p class="label">{branch.township}</p>
-            <p class="room__name">{branch.name}</p>
-          </div>
-        ))}
-        <div class="room room--more">
-          <p class="label">{SITE.geo}</p>
-          <p class="room__name">Find Le SMASH near you</p>
-        </div>
-      </div>
-      <div class="btn-row" style="margin-top:var(--s7)">
-        <a class="btn btn--cream" href={href('/visit')}>Visit us</a>
-      </div>
-    </div>
-  </section>
 </Base>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+  const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
+  const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------------------ 1. hero */
+  (() => {
+    const video = $<HTMLVideoElement>('[data-hm-video]');
+    const slamEl = $('[data-hm-slam]');
+    const word = $('[data-hm-word]');
+    const stage = $('[data-hm-stage]');
+    const title = $('[data-hm-title]');
+    if (!video || !slamEl || !word) return;
+
+    if (reduced) {
+      video.removeAttribute('autoplay');
+      video.pause();
+      return; // poster + static SMASH (CSS shows it)
+    }
+
+    const PRESS = 0.5; // seconds into the clip the press lands
+    const LEAD = 0.14; // length of the fast-in half of the slam
+    let fired = false;
+    let breathe: gsap.core.Tween | null = null;
+    let last = 0;
+
+    const shake = () => {
+      const targets = [stage, title].filter(Boolean);
+      gsap.fromTo(targets, { x: 0, y: 0 }, {
+        keyframes: [
+          { x: 7, y: -9, duration: 0.045 }, { x: -6, y: 6, duration: 0.045 },
+          { x: 4, y: -3, duration: 0.05 }, { x: 0, y: 0, duration: 0.08 },
+        ], ease: 'power2.out', overwrite: 'auto',
+      });
+    };
+
+    const slam = () => {
+      if (fired) return;
+      fired = true;
+      breathe?.kill();
+      gsap.set(word, { scale: 1 });
+      gsap.timeline()
+        .fromTo(slamEl, { opacity: 0, scaleX: 1.5, scaleY: 1.5, rotation: -3 },
+          { opacity: 1, scaleX: 1.07, scaleY: 0.88, rotation: 0, duration: LEAD, ease: 'power4.in' })
+        .add(shake)
+        .to(slamEl, { scaleX: 1, scaleY: 1, duration: 0.55, ease: 'back.out(2)' })
+        .add(() => {
+          breathe = gsap.to(word, { scale: 1.02, duration: 1.7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        });
+    };
+
+    const reset = () => {
+      fired = false;
+      breathe?.kill();
+      gsap.killTweensOf(slamEl);
+      gsap.set(slamEl, { opacity: 0, scaleX: 1, scaleY: 1 });
+    };
+
+    const tick = (t: number) => {
+      if (t < last - 0.5) reset(); // the loop wrapped
+      last = t;
+      if (!fired && t >= PRESS - LEAD && t < PRESS + 1.5) slam();
+    };
+
+    // timeupdate is the coarse backstop: it still fires when frame callbacks are throttled.
+    video.addEventListener('timeupdate', () => tick(video.currentTime));
+    if ('requestVideoFrameCallback' in video) {
+      const loop = (_now: number, meta: { mediaTime: number }) => {
+        tick(meta.mediaTime);
+        (video as any).requestVideoFrameCallback(loop);
+      };
+      (video as any).requestVideoFrameCallback(loop);
+    } else {
+      setInterval(() => { if (!video.paused) tick(video.currentTime); }, 40);
+    }
+
+    // Autoplay refused (data saver, low power): slam once anyway so the page is never blank.
+    setTimeout(() => { if (!fired && (video.paused || video.currentTime === 0)) slam(); }, 1600);
+    video.play?.().catch(() => {});
+  })();
+
+  /* ------------------------------------------------------------ 2. doors */
+  (() => {
+    const doors = $$('.hm-door');
+    const setHint = (path: string | null) => {
+      $$('.hdr__nav a').forEach((a) => a.classList.remove('hm-hint'));
+      if (path) $$(`.hdr__nav a[href$="${path}"]`).forEach((a) => a.classList.add('hm-hint'));
+    };
+    doors.forEach((d) => {
+      const path = d.dataset.hint ?? null;
+      d.addEventListener('mouseenter', () => setHint(path));
+      d.addEventListener('mouseleave', () => setHint(null));
+      d.addEventListener('focusin', () => setHint(path));
+      d.addEventListener('focusout', () => setHint(null));
+    });
+  })();
+
+  /* ------------------------------------------------------ 3. best burger */
+  if (!reduced) {
+    const best = $('[data-hm-best]');
+    if (best) {
+      $$('[data-hm-spin]').forEach((s) => {
+        gsap.fromTo(s, { rotation: 0 }, {
+          rotation: 300 * Number(s.dataset.hmSpin), ease: 'none',
+          scrollTrigger: { trigger: best, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        });
+      });
+      const head = $('[data-hm-pop]');
+      if (head) gsap.from(head, {
+        y: 70, rotation: -2, opacity: 0, duration: 0.9, ease: 'back.out(1.7)',
+        scrollTrigger: { trigger: head, start: 'top 85%', once: true },
+      });
+      const burger = $('[data-hm-burger]');
+      if (burger) gsap.from(burger, {
+        y: -160, rotation: -14, opacity: 0, duration: 0.7, ease: 'back.out(1.7)',
+        scrollTrigger: { trigger: burger, start: 'top 90%', once: true },
+      });
+    }
+  }
+
+  /* ------------------------------------------------------- 4. line-up */
+  (() => {
+    const section = $('[data-hm-line]');
+    const track = $('[data-hm-track]');
+    const viewport = $('[data-hm-viewport]');
+    if (!section || !track || !viewport || reduced) return;
+    const cards = $$('[data-hm-card]', track);
+    const inners = (c: HTMLElement) => $('[data-hm-inner]', c) as HTMLElement;
+
+    const smash = (c: HTMLElement) => {
+      gsap.timeline()
+        .fromTo(inners(c), { opacity: 0, y: -110, scaleX: 0.96, scaleY: 1.08 },
+          { opacity: 1, y: 0, scaleX: 1.06, scaleY: 0.9, duration: 0.2, ease: 'power4.in' })
+        .to(inners(c), { scaleX: 1, scaleY: 1, duration: 0.55, ease: 'back.out(2)' });
+    };
+
+    const mm = gsap.matchMedia();
+
+    mm.add('(min-width: 900px)', () => {
+      gsap.set(cards.map(inners), { opacity: 0 });
+      const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 8);
+      const tween = gsap.to(track, {
+        x: () => -dist(), ease: 'none',
+        scrollTrigger: {
+          trigger: section, start: 'top top', end: () => '+=' + dist(),
+          pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
+        },
+      });
+      let live = false;
+      const pending: HTMLElement[] = [];
+      ScrollTrigger.create({
+        trigger: section, start: 'top 75%', once: true,
+        onEnter: () => { live = true; pending.splice(0).forEach((c, i) => gsap.delayedCall(i * 0.12, () => smash(c))); },
+      });
+      cards.forEach((c) => {
+        ScrollTrigger.create({
+          trigger: c, containerAnimation: tween, start: 'left 94%', once: true,
+          onEnter: () => (live ? smash(c) : pending.push(c)),
+        });
+      });
+    });
+
+    mm.add('(max-width: 899.98px)', () => {
+      gsap.set(cards.map(inners), { opacity: 0 });
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          smash(e.target as HTMLElement);
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.35 });
+      cards.forEach((c) => io.observe(c));
+      return () => io.disconnect();
+    });
+  })();
+</script>
