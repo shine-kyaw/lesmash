@@ -2,11 +2,14 @@
   "slug": "chicken-parm",
   "name": "Chicken Parm",
   "description": "Crispy chicken cutlet, marinara sauce, mozzarella",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 45000,
+  "priceDisplay": "45K",
+  "priceContext": "dine-in",
   "category": "mains",
-  "image": { "src": "/media/dishes/chicken-parm.jpg", "alt": "Chicken parm under melted mozzarella and crisped sage" },
+  "image": {
+    "src": "/media/dishes/chicken-parm.jpg",
+    "alt": "Chicken parm under melted mozzarella and crisped sage"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 180,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the client's Drive. Portion, patty count and price are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the client's Drive. Portion, patty count and price are still outstanding. Price from the client's printed menu board (Main Menu m1.jpg / m2.jpg), supplied again in the 4 Nov 2026 Drive."
 }

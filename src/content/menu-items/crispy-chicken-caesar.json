@@ -2,11 +2,14 @@
   "slug": "crispy-chicken-caesar",
   "name": "Crispy Chicken Caesar",
   "description": "Crispy chicken, romaine lettuce, caesar dressing, parmesan, croutons",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 28000,
+  "priceDisplay": "28K",
+  "priceContext": "dine-in",
   "category": "mains",
-  "image": { "src": "/media/dishes/crispy-chicken-caesar.jpg", "alt": "A caesar salad with crispy chicken and croutons" },
+  "image": {
+    "src": "/media/dishes/crispy-chicken-caesar.jpg",
+    "alt": "A caesar salad with crispy chicken and croutons"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 210,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph cropped from that board, no separate file having been supplied. Portion, patty count and price are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the 4 Nov 2026 Drive. Portion, patty count and price are still outstanding. Price from the client's printed menu board (Main Menu m1.jpg / m2.jpg), supplied again in the 4 Nov 2026 Drive."
 }

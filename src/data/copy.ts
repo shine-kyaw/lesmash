@@ -11,6 +11,8 @@ export const COPY = {
     story: 'Our Story',
     menu: 'Menu',
     gallery: 'Gallery',
+    collaborations: 'Collaborations',
+    merch: 'Merch',
     visit: 'Visit Us',
   },
   cta: {

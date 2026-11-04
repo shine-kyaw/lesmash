@@ -17,6 +17,12 @@ export const DESCRIPTIONS: Record<string, string> = {
     'The full Le SMASH menu in Yangon — the burger collection, brunch, mains, salads, snacks, drinks and cocktails.',
   gallery:
     'The Le SMASH archive — campaigns, pop-ups, food and product photography, spaces, behind the scenes and collaborations.',
+  story:
+    'How Le SMASH started in Yangon: from pop-up stalls and bazaars to a room of our own at Junction Square.',
+  collaborations:
+    'Le SMASH collaborations in Yangon: pop-ups, parties and projects with Blind Tiger, Britto’s, TagU, RT, Ellie’s and Ar-T.',
+  merch:
+    'Le SMASH merch: graphic tees, the YGN jersey, the tote and the mugs.',
   visit:
     'Le SMASH locations in Yangon, where we deliver across the city, and how to start a franchise conversation.',
   notFound:

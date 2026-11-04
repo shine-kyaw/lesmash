@@ -2,11 +2,14 @@
   "slug": "homemade-cured-salmon",
   "name": "Homemade Cured Salmon",
   "description": null,
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 20000,
+  "priceDisplay": "20K",
+  "priceContext": "dine-in",
   "category": "snacks",
-  "image": { "src": "/media/dishes/homemade-cured-salmon.jpg", "alt": "Thinly sliced cured salmon with shaved onion" },
+  "image": {
+    "src": "/media/dishes/homemade-cured-salmon.jpg",
+    "alt": "Thinly sliced cured salmon with shaved onion"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 360,
   "status": "published",
-  "updatedAt": "2026-09-02",
+  "updatedAt": "2026-11-04",
   "verified": true,
   "sourceNote": "Name and photograph from the client's own printed menu board (Main Menu m2.jpg, Google Drive, supplied 31 Aug 2026). The description printed under this name on the board reads (Roasted Tomatoes, Burrata Cheese, Basil, Olive Oil), which describes neither the name nor the photograph beside it, so it is left out rather than guessed at - see docs/CONTENT-REGISTER.md. Description, portion and price outstanding."
 }

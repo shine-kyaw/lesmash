@@ -2,11 +2,14 @@
   "slug": "steak-frites",
   "name": "Steak Frites",
   "description": "Grilled steak, bearnaise sauce, crispy fries",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 60000,
+  "priceDisplay": "60K",
+  "priceContext": "dine-in",
   "category": "mains",
-  "image": { "src": "/media/dishes/steak-frites.jpg", "alt": "Sliced steak and frites, sauce poured over" },
+  "image": {
+    "src": "/media/dishes/steak-frites.jpg",
+    "alt": "Sliced steak and frites, sauce poured over"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 170,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the client's Drive. Portion, patty count and price are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the client's Drive. Portion, patty count and price are still outstanding. Price from the client's printed menu board (Main Menu m1.jpg / m2.jpg), supplied again in the 4 Nov 2026 Drive."
 }

@@ -2,7 +2,7 @@
   "name": "lesmash-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Le SMASH Burgers & Co. \u2014 Yangon. Bilingual (EN/my) static site.",
+  "description": "Le SMASH Burgers & Co. — Yangon. Bilingual (EN/my) static site.",
   "type": "module",
   "engines": {
     "node": ">=20.11"
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "astro": "^5.14.1",
+    "gsap": "^3.13.0",
     "sharp": "^0.34.3"
   }
 }

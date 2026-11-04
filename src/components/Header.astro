@@ -6,14 +6,8 @@ import { COPY } from '../data/copy';
 /**
  * Wordmark left, navigation centred, nothing on the right.
  *
- * Five links, matching the sitemap on the client's own foundation slide. There
- * is no order button: the brief is explicit that this is a portfolio and an
- * expression of the brand, not an ordering site.
- *
- * Their slide lists eight items. Collaborations lives inside Gallery and
- * Franchise inside Visit, because both are one block of content each and a
- * top-level page per block would make the navigation longer than the site.
- * Merch is not built — see docs/DECISIONS.md §12.
+ * Seven links: the sitemap from Reyy's 4 Nov 2026 briefing, less Franchise,
+ * which the client has parked for a later phase.
  *
  * The bar stays in the dark register at every scroll position, which is what
  * lets the cream lockup be the only version of the logo the site needs.
@@ -23,9 +17,11 @@ const { path } = Astro.props;
 
 const links = [
   { href: '/', label: COPY.nav.home },
-  { href: '/#story', label: COPY.nav.story },
+  { href: '/story', label: COPY.nav.story },
   { href: '/menu', label: COPY.nav.menu },
   { href: '/gallery', label: COPY.nav.gallery },
+  { href: '/collaborations', label: COPY.nav.collaborations },
+  { href: '/merch', label: COPY.nav.merch },
   { href: '/visit', label: COPY.nav.visit },
 ];
 ---
