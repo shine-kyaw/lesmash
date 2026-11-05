@@ -1,0 +1,29 @@
+---
+import { asset } from '../../lib/href';
+interface Props {
+  num: string;
+  kicker: string;
+  title: string;
+  flip?: boolean;
+  id?: string;
+  tone?: 'paper' | 'raised';
+  sticker?: string;
+}
+const { num, kicker, title, flip = false, id, tone = 'paper', sticker } = Astro.props;
+---
+<section class={`st-chapter st-chapter--${tone}${flip ? ' is-flip' : ''}`} id={id} data-chapter aria-labelledby={`${id}-h`}>
+  {sticker && <img class="st-sticker" data-sticker src={asset(sticker)} alt="" width="320" height="320" loading="lazy" decoding="async" />}
+  <div class="wrap st-chapter__grid">
+    <div class="st-chapter__text">
+      <p class="st-chapter__num" aria-hidden="true">{num}</p>
+      <p class="label label--ember st-chapter__kicker" data-rise>{kicker}</p>
+      <h2 class="st-chapter__title" id={`${id}-h`}><span class="st-mask"><span class="st-mask__in">{title}</span></span></h2>
+      <div class="st-chapter__body" data-rise>
+        <slot name="text" />
+      </div>
+    </div>
+    <ul class="st-board" role="list">
+      <slot />
+    </ul>
+  </div>
+</section>

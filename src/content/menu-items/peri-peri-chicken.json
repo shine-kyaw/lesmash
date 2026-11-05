@@ -2,12 +2,20 @@
   "slug": "peri-peri-chicken",
   "name": "Peri Peri Chicken",
   "description": "Roasted chicken, red capsicum, smoked paprika, frites, lemon, cherry tomato",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 20000,
+  "priceDisplay": "Half 20K · Whole 65K",
+  "priceContext": "dine-in",
   "category": "mains",
-  "image": { "src": "/media/dishes/peri-peri-chicken.jpg", "alt": "Roasted peri peri chicken with frites and lemon" },
-  "imageGallery": [],
+  "image": {
+    "src": "/media/dishes/peri-peri-chicken.jpg",
+    "alt": "Roasted peri peri chicken with frites and lemon"
+  },
+  "imageGallery": [
+    {
+      "src": "/media/dishes/peri-peri-chicken-half.jpg",
+      "alt": "A half peri peri chicken with frites"
+    }
+  ],
   "pattyCount": null,
   "weightG": null,
   "portionNote": null,
@@ -23,7 +31,7 @@
   "branchAvailability": [],
   "sortOrder": 235,
   "status": "published",
-  "updatedAt": "2026-09-02",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m1.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph cropped from the same board. Portion and price are still outstanding."
+  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m1.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph supplied as its own file in the 4 Nov 2026 Drive. Portion and price are still outstanding."
 }

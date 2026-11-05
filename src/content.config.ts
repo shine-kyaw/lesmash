@@ -114,6 +114,9 @@ const menuCategories = defineCollection({
     listGroups: z
       .array(z.object({ label: localised, items: z.array(z.string()) }))
       .default([]),
+    /** Prices in MMK for list items, keyed by the exact item name. A name with
+        no entry renders without a price rather than with a guessed one. */
+    listPrices: z.record(z.string(), z.number().int().min(0)).default({}),
 
     sortOrder: z.number().int(),
     hasLandingPage: z.boolean().default(false),

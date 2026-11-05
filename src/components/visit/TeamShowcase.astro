@@ -1,0 +1,104 @@
+---
+/**
+ * Meet Our Team: a pinned, scroll-driven showcase.
+ *
+ * Flow (from the client's deck): select member -> portrait appears -> quote
+ * reveals -> signature draws. Desktop pins the section and spends about one
+ * viewport of scroll on each of the crew; phones stack one block per member and
+ * reveal each as it scrolls in; reduced motion shows everything, stacked.
+ *
+ * The profile card is a deliberate template. Name, role and quote slots are
+ * empty until the client supplies them in src/data/team.ts; fill a field in and
+ * the real text replaces the ruled placeholder with no other change.
+ */
+import { asset } from '../../lib/href';
+import { TEAM } from '../../data/team';
+import manifest from '../../data/media-manifest.json';
+
+const dims = manifest as { path: string; width: number; height: number }[];
+const members = TEAM.map((m, i) => {
+  const d = dims.find((x) => x.path === m.photo);
+  return { ...m, src: asset(m.photo), w: d?.width ?? 1080, h: d?.height ?? 1080, i };
+});
+const N = members.length;
+const pad = (n: number) => String(n).padStart(2, '0');
+const SIG = 'M4 30 C 26 4, 44 6, 58 24 S 92 40, 118 20 S 160 2, 186 22 S 236 38, 262 16 S 290 10, 296 14';
+---
+<section class="vs-team" id="team" aria-labelledby="vs-team-h">
+  <div class="wrap">
+    <header class="vs-team__head">
+      <p class="label label--ember">The crew</p>
+      <h2 id="vs-team-h">Meet our <span class="script">team</span></h2>
+      <p class="lede">
+        Behind every juicy smash and every bite worth craving is our crew! Meet the faces,
+        personalities, and passion that make Le Smash Burger &amp; Co what it is. We're all about
+        good food, great energy, and bringing the burger game to a whole new level. Different
+        personalities, one shared love for smashing burgers.
+      </p>
+    </header>
+  </div>
+
+  <div class="vs-tm" data-tm>
+    <div class="vs-tm__stage">
+      {members.map((m) => (
+        <article class="vs-m" data-m aria-label={`Crew member ${m.i + 1} of ${N}`}>
+          <figure class="vs-m__photo" data-photo>
+            <img src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" />
+          </figure>
+
+          <div class="vs-m__card" data-card>
+            <div class="vs-m__row" data-name>
+              <span class="vs-m__slot">Name</span>
+              {m.name
+                ? <h3 class="vs-m__name">{m.name}</h3>
+                : <span class="vs-m__rule vs-m__rule--name" aria-hidden="true"></span>}
+            </div>
+
+            <div class="vs-m__row" data-role>
+              <span class="vs-m__slot">Role</span>
+              {m.role
+                ? <p class="vs-m__role">{m.role}</p>
+                : <span class="vs-m__rule vs-m__rule--role" aria-hidden="true"></span>}
+            </div>
+
+            <div class="vs-m__quote" data-quote>
+              <span class="vs-m__slot">In their words</span>
+              <span class="vs-m__qmark" aria-hidden="true">&ldquo;</span>
+              {m.quote
+                ? <blockquote class="vs-m__text"><p>{m.quote}</p></blockquote>
+                : (
+                  <span class="vs-m__lines" aria-hidden="true"><i></i><i></i><i></i></span>
+                )}
+            </div>
+
+            <div class="vs-m__sig" data-sig>
+              <span class="vs-m__slot">Signature</span>
+              <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <line class="vs-m__base" x1="2" y1="40" x2="298" y2="40" />
+                <path class="vs-m__stroke" d={SIG} pathLength="1" />
+              </svg>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <nav class="vs-rail" aria-label="Crew members">
+      <p class="vs-rail__count" aria-live="polite"><b data-cur>01</b> / {pad(N)}</p>
+      <ol class="vs-rail__thumbs">
+        {members.map((m) => (
+          <li>
+            <button type="button" class="vs-rail__btn" data-go={m.i} aria-label={`Show crew member ${m.i + 1} of ${N}`} aria-current={m.i === 0 ? 'true' : undefined}>
+              <img src={m.src} alt="" width={m.w} height={m.h} loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
+      </ol>
+      <span class="vs-rail__bar" aria-hidden="true"><span data-fill></span></span>
+    </nav>
+  </div>
+</section>
+
+<script>
+  import './team-showcase.ts';
+</script>

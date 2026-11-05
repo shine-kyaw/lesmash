@@ -1,0 +1,26 @@
+---
+/**
+ * The client's ticker line, on every page directly above the footer — their
+ * mock draws it under every tab ("Text below moving side to side").
+ *
+ * It is their claim about their own coverage, so it goes on verbatim rather
+ * than being rebuilt from the two branch records this repo can verify.
+ */
+const items = [
+  'Smashed to order',
+  '3 rooms',
+  '5 kitchens',
+  'Kamayut Township',
+  'Yankin Township',
+  'Mayangone Township',
+  'Hlaing Township',
+  'Dine in',
+  'Takeaway',
+];
+---
+<div class="marquee ticker" role="presentation">
+  <p class="visually-hidden">{items.join(' · ')}</p>
+  <div class="marquee__track" aria-hidden="true">
+    {[0, 1].map(() => items.map((t) => <span class="marquee__item">{t}</span>))}
+  </div>
+</div>

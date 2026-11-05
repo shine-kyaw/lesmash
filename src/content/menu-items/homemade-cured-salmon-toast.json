@@ -2,11 +2,14 @@
   "slug": "homemade-cured-salmon-toast",
   "name": "Homemade Cured Salmon Toast",
   "description": "Salmon sashimi, egg, cherry tomato, toasted sourdough",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 35000,
+  "priceDisplay": "35K",
+  "priceContext": "dine-in",
   "category": "snacks",
-  "image": { "src": "/media/dishes/homemade-cured-salmon-toast.jpg", "alt": "Cured salmon, egg and tomato on toasted sourdough" },
+  "image": {
+    "src": "/media/dishes/homemade-cured-salmon-toast.jpg",
+    "alt": "Cured salmon, egg and tomato on toasted sourdough"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 358,
   "status": "published",
-  "updatedAt": "2026-09-02",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m2.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph cropped from the same board. Portion and price are still outstanding."
+  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m2.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph supplied as its own file in the 4 Nov 2026 Drive. Portion and price are still outstanding."
 }

@@ -1,0 +1,73 @@
+---
+/**
+ * One stop on the line. Styled as a station: a roundel on the route, a window
+ * onto the room, the address (which is the Google Maps link), and the ways to
+ * reach it.
+ */
+import { asset } from '../../lib/href';
+import { directionsUrl, primaryPhone, type Branch } from '../../lib/content';
+import { COPY } from '../../data/copy';
+import manifest from '../../data/media-manifest.json';
+
+interface Props {
+  stop: number;
+  branch: Branch;
+  photo?: string;
+  photoAlt?: string;
+  /** CSS object-position for the window crop */
+  focus?: string;
+}
+const { stop, branch, photo, photoAlt = '', focus = '50% 50%' } = Astro.props;
+const dims = photo ? (manifest as { path: string; width: number; height: number }[]).find((m) => m.path === photo) : undefined;
+const phone = primaryPhone(branch);
+---
+<article class="vs-room" data-room>
+    <div class="vs-room__sign">
+      <span class="vs-roundel" aria-hidden="true">{stop}</span>
+      <span class="vs-room__stop label">Stop {stop}</span>
+    </div>
+    <div class="vs-room__card">
+      {photo && dims && (
+        <div class="vs-window">
+          <img src={asset(photo)} alt={photoAlt} width={dims.width} height={dims.height}
+               style={`object-position:${focus}`} loading="lazy" decoding="async" />
+        </div>
+      )}
+      <h3 class="vs-room__name">{branch.name}</h3>
+
+      {/* The address is the map link: the thing a visitor already wants to tap. */}
+      <a class="vs-maplink" href={directionsUrl(branch)} target="_blank" rel="noopener noreferrer"
+         data-analytics="directions_click" data-branch={branch.slug} data-source="visit_address">
+        <svg class="vs-maplink__pin" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path d="M12 2.5c-3.6 0-6.5 2.9-6.5 6.5 0 4.9 6.5 12.5 6.5 12.5s6.5-7.6 6.5-12.5c0-3.6-2.9-6.5-6.5-6.5Z"
+                fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="12" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <address class="vs-maplink__addr">
+          {branch.addressLine}<br />{branch.township}, {branch.city}
+        </address>
+        <span class="vs-maplink__cue">Open in Google Maps <span aria-hidden="true">&rarr;</span></span>
+      </a>
+
+      <div class="vs-facts">
+        <span class="vs-fact vs-fact--warn">{COPY.state.hoursUnknown}</span>
+        {branch.hasDineIn === true && <span class="vs-fact">{COPY.labels.dineIn}</span>}
+        {branch.hasTakeaway === true && <span class="vs-fact">{COPY.labels.takeaway}</span>}
+      </div>
+
+      {(phone || branch.foodpandaUrl) && (
+        <div class="btn-row vs-room__actions">
+          {phone && (
+            <a class="btn btn--ghost" href={`tel:${phone.e164}`}
+               data-analytics="phone_click" data-branch={branch.slug} data-source="visit">{COPY.cta.call}</a>
+          )}
+          {branch.foodpandaUrl && branch.hasDelivery && (
+            <a class="btn btn--ghost" href={branch.foodpandaUrl} target="_blank" rel="noopener noreferrer"
+               data-analytics="order_click" data-branch={branch.slug} data-platform="foodpanda" data-source="visit">
+              Order on foodpanda
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </article>

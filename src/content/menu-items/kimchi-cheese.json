@@ -1,0 +1,32 @@
+{
+  "slug": "kimchi-cheese",
+  "name": "Kimchi Cheese",
+  "description": null,
+  "price": null,
+  "priceDisplay": null,
+  "priceContext": "unconfirmed",
+  "category": "burgers",
+  "image": {
+    "src": "/media/burgers/kimchi-cheese.jpg",
+    "alt": "The Kimchi Cheese burger: kimchi and melted cheese in a brioche bun"
+  },
+  "imageGallery": [],
+  "pattyCount": null,
+  "weightG": null,
+  "portionNote": null,
+  "comboContents": null,
+  "spiceLevel": null,
+  "allergens": [],
+  "dietary": [],
+  "tags": [],
+  "modifiers": [],
+  "addons": [],
+  "isFeatured": false,
+  "isAvailable": true,
+  "branchAvailability": [],
+  "sortOrder": 75,
+  "status": "published",
+  "updatedAt": "2026-11-04",
+  "verified": true,
+  "sourceNote": "Name and photograph from the Drive 'Burger Menu Tab' (Kimchi Cheese Burger.png, 4 Nov 2026). Not on Foodpanda or any board; description and price outstanding."
+}

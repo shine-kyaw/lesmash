@@ -2,11 +2,14 @@
   "slug": "animal-frites",
   "name": "Animal Frites",
   "description": "Fries, grilled chicken or beef, cheese sauce, caramelized onions",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 18000,
+  "priceDisplay": "18K",
+  "priceContext": "dine-in",
   "category": "snacks",
-  "image": { "src": "/media/dishes/animal-frites.jpg", "alt": "Frites loaded with cheese sauce, beef and pickles" },
+  "image": {
+    "src": "/media/dishes/animal-frites.jpg",
+    "alt": "Frites loaded with cheese sauce, beef and pickles"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 290,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph cropped from that board, no separate file having been supplied. Portion, patty count and price are still outstanding."
+  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Name and description confirmed against the client's own printed menu boards (Main Menu m1.jpg and m2.jpg, Google Drive, supplied 31 Aug 2026). Photograph supplied as its own file in the 4 Nov 2026 Drive. Portion, patty count and price are still outstanding. Price from the client's printed menu board (Main Menu m1.jpg / m2.jpg), supplied again in the 4 Nov 2026 Drive."
 }

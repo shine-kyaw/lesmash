@@ -1,12 +1,15 @@
 {
   "slug": "smash",
   "name": "SMASH",
-  "description": null,
+  "description": "Double beef patty, diced onions, house pickles, Le SMASH sauce, American cheese x2",
   "price": null,
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "burgers",
-  "image": { "src": "/media/dishes/smash.jpg", "alt": "Two SMASH burgers, cheese pulling between them" },
+  "image": {
+    "src": "/media/burgers/smash.jpg",
+    "alt": "The Le SMASH burger: two smashed patties and melted American cheese in a brioche bun"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 20,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name from the client's Canva board (Le SMASH Website - Presentation), supplied 27 Aug 2026. Photograph is the client's own studio shot (Le SMASH burger.jpg, Google Drive, supplied 31 Aug 2026). Description, portion, patty count and price are still outstanding."
+  "sourceNote": "Description from the restaurant's own Foodpanda listing (read 4 Nov 2026). Photograph from the Drive 'Burger Menu Tab'. Dine-in price not yet confirmed: the Foodpanda price is a delivery price and the magazine-spread prices are layout placeholders."
 }

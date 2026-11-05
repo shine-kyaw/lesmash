@@ -1,12 +1,15 @@
 {
   "slug": "spicy-bacon",
   "name": "Spicy Bacon",
-  "description": null,
+  "description": "Double beef patty, house pickles, BBQ sauce, fried onions, spicy bacon relish, American cheese x2",
   "price": null,
   "priceDisplay": null,
   "priceContext": "unconfirmed",
   "category": "burgers",
-  "image": null,
+  "image": {
+    "src": "/media/burgers/spicy-bacon.jpg",
+    "alt": "Spicy Bacon: double patty, cheese and spicy bacon relish"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 40,
   "status": "published",
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name taken from the client's Canva board (Le SMASH Website - Presentation, pages 5, 7 and 9), supplied 27 Aug 2026. Description, photography, portion and patty count are still outstanding."
+  "sourceNote": "Description from the restaurant's own Foodpanda listing (read 4 Nov 2026). Photograph from the Drive 'Burger Menu Tab'. Dine-in price not yet confirmed: the Foodpanda price is a delivery price and the magazine-spread prices are layout placeholders."
 }

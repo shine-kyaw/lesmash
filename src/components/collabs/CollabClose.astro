@@ -1,0 +1,17 @@
+---
+import { SITE } from '../../lib/site.config.mjs';
+---
+<section class="cb-close brand-red" aria-labelledby="cb-close-h">
+  <div class="wrap cb-close__inner">
+    <h2 class="cb-close__h" id="cb-close-h"><span>Want to</span> collaborate?</h2>
+    <p class="cb-close__p">No form. Message us on Instagram or give us a call.</p>
+    <div class="btn-row cb-close__btns">
+      {SITE.social.instagram && (
+        <a class="btn btn--cream" href={SITE.social.instagram} target="_blank" rel="noopener">Instagram</a>
+      )}
+      {SITE.phone && (
+        <a class="btn btn--ghost cb-close__tel" href={`tel:${SITE.phone.e164}`}>{SITE.phone.display}</a>
+      )}
+    </div>
+  </div>
+</section>

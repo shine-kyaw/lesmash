@@ -1,0 +1,41 @@
+---
+import { asset } from '../../lib/href';
+import { LINEUP } from '../../data/merch';
+---
+<section class="mc-line dark" id="lineup" aria-labelledby="mc-line-h">
+  <div class="mc-line-pin" data-pin>
+    <div class="wrap mc-sec-head mc-sec-head--dark">
+      <p class="label mc-line__label">02 · The line-up</p>
+      <h2 id="mc-line-h">Mugs, tote, cups</h2>
+      <p class="lede">Scroll, drag or use the arrow keys. The piece at the front steps up into the light.</p>
+    </div>
+
+    <div class="mc-arc" data-arc tabindex="0" role="group" aria-roledescription="carousel" aria-label="Mugs, tote and cups">
+      <div class="mc-light" aria-hidden="true"></div>
+      <div class="mc-floor" aria-hidden="true"></div>
+      <ul class="mc-ring" data-ring role="list">
+        {LINEUP.map((it, i) => (
+          <li class="mc-ri" data-i={i} style={`--w:${it.w};--h:${it.h}`}>
+            <button type="button" class="mc-ri-btn" tabindex="-1" aria-label={`${it.name}. ${it.note}`}>
+              <span class="mc-prod">
+                <img class="mc-prod__img" src={asset(it.src)} alt={it.alt} width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+                <img class="mc-prod__refl" src={asset(it.src)} alt="" aria-hidden="true" width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+                <span class="mc-prod__dim" aria-hidden="true"></span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="wrap mc-line-foot">
+      <button type="button" class="mc-nav" data-prev aria-label="Previous piece">←</button>
+      <p class="mc-lu-name" data-name aria-live="polite">
+        <span class="mc-lu-name__n" data-name-n>{LINEUP[0].name}</span>
+        <span class="mc-lu-name__d label" data-name-d>{LINEUP[0].note}</span>
+      </p>
+      <button type="button" class="mc-nav" data-next aria-label="Next piece">→</button>
+    </div>
+  </div>
+  <script type="application/json" id="mc-lineup-data" set:html={JSON.stringify(LINEUP.map(({ name, note, glow }) => ({ name, note, glow })))}></script>
+</section>

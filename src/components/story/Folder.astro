@@ -1,0 +1,61 @@
+---
+import { asset } from '../../lib/href';
+import { dim } from './media';
+
+/*
+ * The opening: a kraft folder on a table. As the reader scrolls, the cover
+ * swings open and snapshots fly out and land. The prints here are decoration
+ * (aria-hidden) - every one of them is also a real, focusable print in a
+ * chapter below. Without JS or with reduced motion the folder is simply open.
+ */
+const prints = [
+  { src: '/media/story/1.jpg', x: '3%', y: '13%', r: -6, w: 1.0, mx: '3%', my: '22%' },
+  { src: '/media/story/3.jpg', x: '16%', y: '43%', r: 4, w: 0.9, mx: '33%', my: '36%' },
+  { src: '/media/story/2.jpg', x: '4%', y: '60%', r: -3, w: 0.85, mx: '5%', my: '50%' },
+  { src: '/media/campaigns/invitation.jpg', x: '81%', y: '9%', r: 6, w: 1.0, mx: '62%', my: '23%' },
+  { src: '/media/campaigns/grand-opening-fi.jpg', x: '68%', y: '38%', r: -5, w: 0.95, mx: '63%', my: '49%' },
+  { src: '/media/story/le-smash-chit-thu-bazzar.jpg', x: '82%', y: '58%', r: 3, w: 0.85, mx: '0', my: '0' },
+];
+---
+<section class="st-open" data-open aria-labelledby="st-h1">
+  <div class="st-open__stage" data-stage>
+    <div class="st-open__table" aria-hidden="true" style={`background-image:url(${asset('/brand/pattern-monogram.png')})`}></div>
+
+    <header class="st-open__head wrap">
+      <p class="label label--ember st-open__eyebrow" data-intro>Our story</p>
+      <h1 id="st-h1" class="st-open__title">
+        <span class="st-mask"><span class="st-mask__in" data-intro-line><span class="script st-open__le">Le</span> SMASH</span></span>
+        <span class="st-mask"><span class="st-mask__in st-open__sub" data-intro-line>How we got here</span></span>
+      </h1>
+    </header>
+
+    <div class="st-open__prints" aria-hidden="true">
+      {prints.map((p, i) => {
+        const { width, height } = dim(p.src);
+        return (
+          <div class="st-fp" data-fp data-src={asset(p.src)}
+               style={`--x:${p.x};--y:${p.y};--mx:${p.mx};--my:${p.my};--r:${p.r}deg;--w:${p.w};`}>
+            <div class="st-fp__in">
+              <span class={`st-fp__pic st-fix--${i % 3 === 0 ? 'tape' : i % 3 === 1 ? 'clip' : 'pin'}`}
+                    style={`aspect-ratio:${width}/${height}`}>
+                <img src={asset(p.src)} alt="" width={width} height={height} decoding="async" />
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="st-folder" data-folder aria-hidden="true">
+      <div class="st-folder__back"><span class="st-folder__tab"><img src={asset('/brand/logo-badge.png')} alt="" width="512" height="512" /></span></div>
+      <div class="st-folder__inner"></div>
+      <div class="st-folder__cover" data-cover>
+        <img class="st-folder__sticker" src={asset('/brand/sticker-beef.png')} alt="" width="320" height="320" />
+        <span class="st-folder__label">Le SMASH<small>Snapshots</small></span>
+      </div>
+      <div class="st-folder__pocket"></div>
+    </div>
+
+    <p class="st-open__hint label" data-hint aria-hidden="true">Scroll to open <span>&darr;</span></p>
+  </div>
+</section>

@@ -2,11 +2,14 @@
   "slug": "pain-perdu-french-toast",
   "name": "Pain Perdu French Toast",
   "description": "Brioche, whipped mascarpone, brown sugar",
-  "price": null,
-  "priceDisplay": null,
-  "priceContext": "unconfirmed",
+  "price": 22000,
+  "priceDisplay": "22K",
+  "priceContext": "dine-in",
   "category": "brunch",
-  "image": { "src": "/media/dishes/pain-perdu-french-toast.jpg", "alt": "Caramelised brioche french toast with whipped mascarpone" },
+  "image": {
+    "src": "/media/dishes/pain-perdu-french-toast.jpg",
+    "alt": "Caramelised brioche french toast with whipped mascarpone"
+  },
   "imageGallery": [],
   "pattyCount": null,
   "weightG": null,
@@ -23,7 +26,7 @@
   "branchAvailability": [],
   "sortOrder": 168,
   "status": "published",
-  "updatedAt": "2026-09-02",
+  "updatedAt": "2026-11-04",
   "verified": true,
-  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m1.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph cropped from the same board. Portion and price are still outstanding."
+  "sourceNote": "Name and description transcribed from the client's own printed menu board (Main Menu m1.jpg, Google Drive, supplied 31 Aug 2026), where this dish appears but the site had no record of it. Photograph supplied as its own file in the 4 Nov 2026 Drive. Portion and price are still outstanding."
 }

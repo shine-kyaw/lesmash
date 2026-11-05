@@ -203,37 +203,125 @@
 .venue .btn-row { margin-top: auto; padding-top: var(--s3); }
 
 /* ===========================================================================
-   Footer — the dark bookend, closed by an oversized wordmark.
+   Footer — the platform at Le SMASH. See Footer.astro for the why.
    ========================================================================= */
-.ftr { padding-block: var(--s7) var(--s5); position: relative; overflow: hidden; }
+.ftr { position: relative; overflow: hidden; padding-top: var(--s7); background: #0f0c0b; }
 .ftr > .wrap { position: relative; z-index: 2; }
-.ftr__grid { display: grid; gap: var(--s6); }
-.ftr__split { display: grid; gap: var(--s6); }
-@media (min-width: 22rem) { .ftr__split { grid-template-columns: 1fr 1fr; gap: var(--s5); } }
-@media (min-width: 54rem) { .ftr__grid { grid-template-columns: 1.6fr 1fr 1fr; } }
-/* Wide enough for four columns: the Follow and Pages pair stops being a nested
-   grid and becomes two columns of the footer itself, which also buys the
-   addresses enough width to stop wrapping. */
-@media (min-width: 64rem) {
-  .ftr__grid { grid-template-columns: 1.15fr 1.45fr 0.7fr 0.7fr; }
-  .ftr__split { display: contents; }
+
+.ftr__top { display: grid; gap: var(--s5); align-items: end; }
+@media (min-width: 60rem) { .ftr__top { grid-template-columns: auto 1fr; } }
+.ftr__tag { margin-top: var(--s3); color: var(--ink-2); font-size: var(--t-sm); max-width: 28ch; }
+.ftr__order { justify-self: stretch; }
+@media (min-width: 60rem) { .ftr__order { justify-self: end; text-align: right; } }
+.ftr__order-btns { margin-top: var(--s3); display: flex; flex-wrap: wrap; gap: var(--s2); }
+@media (min-width: 60rem) { .ftr__order-btns { justify-content: flex-end; } }
+
+/* Order buttons carry the platforms' own marks, in their own colours. */
+.ord {
+  display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px 9px 12px;
+  border-radius: 999px; background: #fff; color: #111; text-decoration: none; text-align: left;
+  box-shadow: 0 3px 0 rgb(0 0 0 / 0.35); transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
 }
-.ftr__list { list-style: none; padding: 0; display: grid; gap: var(--s3); }
-.ftr__list a { text-decoration: none; color: var(--ink-2); font-size: var(--t-sm); }
-.ftr__list a:hover { color: var(--ink); }
-.ftr__bottom {
-  margin-top: var(--s6); padding-top: var(--s4); border-top: var(--rule);
-  display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between;
-  font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em;
+.ord:hover { transform: translateY(-2px); box-shadow: 0 5px 0 rgb(0 0 0 / 0.35); }
+.ord:active { transform: translateY(1px); box-shadow: 0 1px 0 rgb(0 0 0 / 0.35); }
+.ord img { width: 22px; height: 22px; }
+.ord span { display: grid; line-height: 1.1; }
+.ord b { font-family: var(--font-body); font-weight: 800; font-size: 14px; letter-spacing: -0.01em; }
+.ord small { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: #555; }
+.ord--panda b { color: #d70f64; }
+.ord--panda img { filter: invert(14%) sepia(93%) saturate(5000%) hue-rotate(322deg) brightness(88%); }
+.ord--grab b { color: #00a94a; }
+.ord--grab img { filter: invert(46%) sepia(83%) saturate(2600%) hue-rotate(118deg) brightness(92%); }
+.ord--call { background: var(--red); color: #fff; }
+.ord--call small { color: rgb(255 255 255 / 0.8); }
+
+/* The departures line: every page, left to right. */
+.ftr__pages { margin-top: var(--s6); }
+.ftr__pages ol {
+  list-style: none; margin: 0; padding: var(--s4) 0; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5);
+  border-block: 1px solid rgb(225 232 222 / 0.14);
 }
-.ftr__wordmark {
-  position: absolute; left: 0; right: 0; bottom: -0.055em; z-index: 0; margin: 0;
-  text-align: center; font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(5rem, 20vw, 20rem); line-height: 0.76; letter-spacing: -0.045em;
-  color: var(--ink); opacity: 0.07; user-select: none; pointer-events: none;
-  white-space: nowrap; overflow: hidden;
+.ftr__pages a {
+  font-family: var(--font-display); font-size: clamp(1rem, 0.7rem + 1.1vw, 1.5rem); text-transform: uppercase;
+  color: var(--cream); text-decoration: none; letter-spacing: -0.01em; transition: color 180ms var(--ease);
+}
+.ftr__pages a:hover, .ftr__pages a:focus-visible { color: var(--red); }
+
+.ftr__info {
+  margin-top: var(--s4); display: flex; flex-wrap: wrap; gap: var(--s2) var(--s6);
+  font-size: var(--t-xs); color: var(--ink-3);
+}
+.ftr__info p { display: flex; flex-wrap: wrap; gap: 0 8px; align-items: baseline; }
+.ftr__info strong { color: var(--ink); font-weight: 700; }
+.ftr__info a { color: var(--ink-2); }
+.ftr__info a:hover { color: var(--cream); }
+.ftr__social { margin-left: auto; gap: 0 var(--s4) !important; }
+
+/* ---------------------------------------------------------------- station */
+.stn { position: relative; margin-top: var(--s6); }
+.stn__wall {
+  position: absolute; inset: 0 0 34px; overflow: hidden;
+  background:
+    linear-gradient(rgb(0 0 0 / 0.0), rgb(0 0 0 / 0.55)),
+    repeating-linear-gradient(0deg, transparent 0 27px, rgb(0 0 0 / 0.18) 27px 28px),
+    repeating-linear-gradient(90deg, transparent 0 55px, rgb(0 0 0 / 0.14) 55px 56px),
+    #e6e1d6;
+}
+.stn__sign {
+  position: absolute; left: 50%; top: 14px; transform: translateX(-50%); z-index: 1;
+  padding: 6px 22px 8px; background: #fbfaf6; border: 4px solid var(--red); border-radius: 6px;
+  font-family: var(--font-display); font-size: 22px; color: var(--black); text-transform: uppercase; white-space: nowrap;
+  box-shadow: 0 6px 14px rgb(0 0 0 / 0.25);
+}
+.stn__sign-le { font-family: var(--font-script); text-transform: none; color: var(--red); font-size: 1.25em; }
+.stn__sign small { display: block; text-align: center; font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: #555; margin-top: -2px; }
+.stn__poster { position: absolute; top: 70px; width: 96px; aspect-ratio: 5 / 7; border: 6px solid #2b2522; box-shadow: 0 6px 12px rgb(0 0 0 / 0.3); }
+.stn__poster img { width: 100%; height: 100%; object-fit: cover; }
+.stn__poster--a { left: 12%; }
+.stn__poster--b { right: 12%; }
+.stn__clock {
+  position: absolute; top: 18px; right: 6%; width: 40px; height: 40px; border-radius: 50%;
+  background: #fbfaf6; border: 3px solid #222;
+}
+.stn__clock i { position: absolute; left: 50%; top: 50%; width: 2px; height: 14px; background: #111; transform-origin: 50% 0; transform: rotate(200deg); }
+.stn__clock i + i { height: 10px; transform: rotate(320deg); }
+@media (max-width: 40rem) {
+  .stn__poster, .stn__clock { display: none; }
+  .stn__sign { font-size: 14px; top: 10px; padding: 4px 14px 5px; border-width: 3px; }
+  .stn .stn__track { padding-top: 78px; }
 }
 
+.stn__track { --th: clamp(150px, 19vw, 270px); position: relative; height: var(--th); padding-top: clamp(70px, 7.5vw, 100px); box-sizing: content-box; }
+.train { position: absolute; left: 0; bottom: 0; height: var(--th); width: calc(var(--th) * 4840 / 300); will-change: transform; }
+.train__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tr-txt { font-family: var(--font-display); font-size: 20px; fill: #fff; text-transform: uppercase; }
+.train__board {
+  position: absolute; top: 7.5%; height: 8.5%; overflow: hidden; border-radius: 4px;
+  left: calc(1620 / 4840 * 100% + 600 / 4840 * 100%); width: calc(400 / 4840 * 100%);
+  background: #120d0b; border: 2px solid #2b2420;
+}
+.train__board-track {
+  display: inline-flex; gap: 2.4em; height: 100%; align-items: center; white-space: nowrap;
+  font-family: var(--font-mono); font-weight: 600; font-size: clamp(8px, 0.9vw, 13px); letter-spacing: 0.2em;
+  text-transform: uppercase; color: #ffb43a; text-shadow: 0 0 6px rgb(255 160 40 / 0.8);
+  animation: slide 26s linear infinite;
+}
+
+.stn__floor {
+  position: relative; z-index: 3; height: 34px; margin-top: -6px; display: flex; justify-content: space-around; align-items: center;
+  background:
+    repeating-linear-gradient(90deg, #ffb43a 0 10px, #e0962a 10px 20px) top / 100% 6px no-repeat,
+    linear-gradient(#2a2523, #171311);
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: rgb(255 200 120 / 0.55);
+}
+@media (max-width: 40rem) { .stn__floor span + span + span { display: none; } }
+
+.ftr__bottom {
+  display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5); justify-content: space-between; align-items: center;
+  padding-block: var(--s4) var(--s5);
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em;
+}
+@media (prefers-reduced-motion: reduce) { .train__board-track { animation: none; } }
 
 /* ===========================================================================
    The opening film.
@@ -529,3 +617,9 @@
   height: auto;
   object-fit: contain;
 }
+
+/* Full-bleed colour bands. Older pages relied on these without a definition;
+   they borrow the dark register's ink so text inside reads cream. */
+.band--red { background: var(--red); color: #fff; }
+.band--ink { background: var(--black); color: var(--cream); }
+.band--red .label, .band--ink .label { color: rgb(244 239 230 / 0.75); }

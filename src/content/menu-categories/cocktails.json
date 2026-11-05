@@ -5,12 +5,15 @@
   "displayGroup": "drinks",
   "layout": "list",
   "listItems": [
+    "Baby Russian",
     "Blue Lady",
     "Cuba Libre",
     "Espresso Martini",
     "Gin Fizz",
     "Gin Sour",
     "Gin Tonic",
+    "Gryffindor",
+    "Hogwarts House",
     "Jager Bomb",
     "LE SMASH Cup",
     "Long Island Ice Tea",
@@ -23,6 +26,7 @@
     "Pink Lady",
     "Rum Shot",
     "Sex On The Beach",
+    "Strawberry Trap",
     "Tequila Shot",
     "Tequila Sunrise",
     "Tropical Pineapple Mint",
@@ -33,5 +37,12 @@
   "sortOrder": 60,
   "hasLandingPage": false,
   "serviceHours": null,
-  "isActive": true
+  "isActive": true,
+  "listPrices": {
+    "Hogwarts House": 24000,
+    "Strawberry Trap": 15000,
+    "Gryffindor": 28000,
+    "Baby Russian": 20000,
+    "Jager Bomb": 15000
+  }
 }

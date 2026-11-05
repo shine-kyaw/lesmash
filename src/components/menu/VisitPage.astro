@@ -1,0 +1,22 @@
+---
+import type { Branch } from '../../lib/content';
+import { href } from '../../lib/href';
+interface Props { branches: Branch[] }
+const { branches } = Astro.props;
+---
+<div class="mn-visit">
+  <header class="mn-phead"><h2 class="mn-phead__title">Come find us</h2></header>
+  <ul class="mn-rooms">
+    {branches.map((b) => (
+      <li class="mn-room">
+        <h3 class="mn-room__name">{b.name}</h3>
+        <p class="mn-room__addr">{b.addressLine}<br />{b.township}</p>
+      </li>
+    ))}
+  </ul>
+  <div class="mn-allergen">
+    <p class="mn-allergen__title">Ask us about allergens</p>
+    <p class="mn-allergen__body">Allergen information is published only where the restaurant has confirmed it in writing. If you have an allergy, ask staff before ordering.</p>
+  </div>
+  <a class="mn-visit__link" href={href('/visit')}>Rooms &amp; directions</a>
+</div>
