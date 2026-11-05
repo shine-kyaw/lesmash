@@ -222,3 +222,31 @@
 .hm-more__name { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); line-height: 1; }
 .hm-more__name small { display: block; margin-top: 0.5rem; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.12em; opacity: 0.85; }
 @media (min-width: 48rem) { .hm-more__row { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hm-more__item a { min-height: 16rem; } }
+
+/* ------------------------------------------------------------------------
+   Hero revision (5 Nov): the SMASH is set in the brush hand from Reyy's mock
+   and sits in the lower third, over the grill, so the press and the patty —
+   the whole point of the film — stay clear above it.
+   ------------------------------------------------------------------------ */
+.hm-hero { place-items: end center; padding-bottom: clamp(7rem, 19vh, 11.5rem); }
+.hm-hero__le { font-size: clamp(2rem, 1rem + 3.4vw, 4.2rem); transform: rotate(-6deg) translateX(-1.6em); margin-bottom: -0.32em; }
+.hm-hero__word {
+  font-family: var(--font-hand); font-size: min(13vw, 12.5rem); line-height: 1; letter-spacing: 0.01em;
+  -webkit-text-stroke: 0; color: var(--red);
+  text-shadow: 0 0.03em 0 rgb(0 0 0 / 0.55), 0 0.1em 0.5em rgb(0 0 0 / 0.55);
+}
+.hm-hero__sub {
+  display: block; margin-top: 0.6rem; font-family: var(--font-mono); font-size: var(--t-xs);
+  letter-spacing: 0.32em; text-transform: uppercase; color: var(--cream); opacity: 0.85;
+}
+.hm-hero__scrim {
+  background:
+    linear-gradient(180deg, rgb(0 0 0 / 0.45) 0%, transparent 20%, transparent 52%, rgb(0 0 0 / 0.72) 100%);
+}
+@media (max-width: 47.99rem) {
+  .hm-hero__word { font-size: 23vw; }
+  .hm-hero__le { transform: rotate(-6deg) translateX(-1.2em); }
+}
+
+/* Door labels in the same hand, like their mock's boxes. */
+.hm-door__tag { font-family: var(--font-hand); letter-spacing: 0.02em; border-width: 0; box-shadow: 5px 5px 0 rgb(0 0 0 / 0.55); }

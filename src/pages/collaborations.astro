@@ -8,7 +8,10 @@ import CollabClose from '../components/collabs/CollabClose.astro';
 import { title, DESCRIPTIONS } from '../lib/seo';
 ---
 <Base path="/collaborations" title={title('Collaborations')} description={DESCRIPTIONS.collaborations}>
-  <script is:inline>document.documentElement.classList.add('cb-js')</script>
+  <script is:inline>
+    document.documentElement.classList.add('cb-js');
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('cb-3d');
+  </script>
   <CollabHero />
   <CollabWall />
   <CollabClose />
@@ -23,95 +26,207 @@ import { title, DESCRIPTIONS } from '../lib/seo';
   const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
   const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let justDragged = false;
 
-  /* ------------------------------------------------ 1. opening: slam + slot reel + stickers */
+  /* ------------------------------------------------ 1. line-up: slam in + floating poster */
   (() => {
-    const line = $('[data-cb-line]');
-    const track = $('[data-cb-track]');
-    const stickers = $$('[data-cb-sticker]');
-    if (reduced || !line) return;
+    const stack = $('[data-cb-line]');
+    const rows = $$('[data-cb-row]');
 
-    // "Le SMASH ×" lands with weight.
-    gsap.timeline({ delay: 0.1 })
-      .fromTo(line, { opacity: 1, y: -120, scaleY: 1.15, scaleX: 0.94 }, { y: 0, scaleY: 1, scaleX: 1, duration: 0.2, ease: 'power4.in' })
-      .to(line, { scaleY: 0.9, scaleX: 1.06, duration: 0.07, ease: 'power2.out' })
-      .to(line, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'back.out(2)' });
-
-    // Stickers get slapped on, one after another.
-    stickers.forEach((el, i) => {
-      gsap.from(el, { scale: 2.4, opacity: 0, duration: 0.5, delay: 0.45 + i * 0.14, ease: 'back.out(1.7)' });
-    });
-
-    // Slot reel: each step spins down one name and lands with an overshoot.
-    if (track) {
-      const items = track.children.length;
-      let i = 0;
-      const step = () => {
-        const h = (track.firstElementChild as HTMLElement).offsetHeight;
-        i += 1;
-        gsap.timeline({ onComplete: () => { if (i >= items - 1) { i = 0; gsap.set(track, { y: 0 }); } } })
-          .to(track, { y: -i * h, duration: 0.6, ease: 'back.out(1.6)' })
-          .to(track, { scaleY: 1.12, duration: 0.12, ease: 'power1.in', transformOrigin: '50% 0%' }, 0)
-          .to(track, { scaleY: 1, duration: 0.4, ease: 'back.out(2)' }, 0.12);
-      };
-      gsap.delayedCall(1.4, function loop() { step(); gsap.delayedCall(1.8, loop); });
+    if (!reduced) {
+      if (stack) {
+        gsap.timeline({ delay: 0.1 })
+          .fromTo(stack, { opacity: 1, y: -140, scaleY: 1.15, scaleX: 0.94 }, { y: 0, scaleY: 1, scaleX: 1, duration: 0.2, ease: 'power4.in' })
+          .to(stack, { scaleY: 0.9, scaleX: 1.06, duration: 0.07, ease: 'power2.out' })
+          .to(stack, { scaleY: 1, scaleX: 1, duration: 0.5, ease: 'back.out(2)' });
+      }
+      // Each row of the bill slams down in turn, with a squash on impact.
+      rows.forEach((row, i) => {
+        gsap.timeline({ delay: 0.45 + i * 0.11 })
+          .fromTo(row, { opacity: 1, y: -90, scaleY: 1.25, transformOrigin: '50% 100%' }, { y: 0, scaleY: 1, duration: 0.18, ease: 'power4.in' })
+          .to(row, { scaleY: 0.86, scaleX: 1.03, duration: 0.07, ease: 'power2.out' })
+          .to(row, { scaleY: 1, scaleX: 1, duration: 0.4, ease: 'back.out(2.4)', clearProps: 'transform' });
+      });
     }
+
+    // The poster that trails the pointer (fine pointers, desktop width only).
+    const float = $('[data-cb-float]');
+    const fimg = float?.querySelector('img');
+    const fine = matchMedia('(min-width: 56rem) and (hover: hover) and (pointer: fine)');
+    if (!float || !fimg || reduced) return;
+    let mx = 0, my = 0, shown = false, lastX = 0;
+    const qx = gsap.quickTo(float, 'x', { duration: 0.45, ease: 'power3.out' });
+    const qy = gsap.quickTo(float, 'y', { duration: 0.45, ease: 'power3.out' });
+    const qr = gsap.quickTo(float, 'rotation', { duration: 0.5, ease: 'power3.out' });
+    const place = (x: number, y: number) => {
+      const w = float.offsetWidth || 240, h = float.offsetHeight || 320;
+      const bl = ($('[data-cb-bill]')?.getBoundingClientRect().left ?? x) + 90;
+      const px = Math.max(12, Math.min(innerWidth - w - 12, Math.min(x - 30, bl) - w));
+      const py = Math.max(12, Math.min(innerHeight - h - 12, y - h / 2));
+      qx(px); qy(py);
+    };
+    const show = (btn: HTMLElement, x: number, y: number) => {
+      if (!fine.matches) return;
+      const src = btn.dataset.poster!;
+      if (fimg.getAttribute('src') !== src) { fimg.setAttribute('src', src); fimg.setAttribute('width', btn.dataset.w!); fimg.setAttribute('height', btn.dataset.h!); }
+      if (!shown) {
+        shown = true;
+        gsap.set(float, { x: x - 300, y: y - 160 });
+        place(x, y);
+        gsap.killTweensOf(float, 'opacity,scale');
+        gsap.fromTo(float, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.7)' });
+      } else {
+        gsap.fromTo(fimg, { scale: 0.94 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+        place(x, y);
+      }
+    };
+    const hide = () => {
+      if (!shown) return;
+      shown = false;
+      gsap.killTweensOf(float, 'opacity,scale');
+      gsap.to(float, { opacity: 0, scale: 0.7, duration: 0.2, ease: 'power2.in' });
+    };
+    $$('[data-cb-row] button').forEach((btn) => {
+      btn.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { mx = e.clientX; my = e.clientY; lastX = mx; show(btn, mx, my); } });
+      btn.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse' || !shown) return;
+        qr(Math.max(-9, Math.min(9, (e.clientX - lastX) * 0.5)) - 3);
+        lastX = e.clientX;
+        place(e.clientX, e.clientY);
+      });
+      btn.addEventListener('pointerleave', hide);
+      btn.addEventListener('focus', () => {
+        if (!btn.matches(':focus-visible')) return;
+        const r = btn.getBoundingClientRect();
+        show(btn, r.left + r.width * 0.3, r.top + r.height / 2);
+      });
+      btn.addEventListener('blur', hide);
+      btn.addEventListener('click', hide);
+    });
   })();
 
-  /* ------------------------------------------------ 2. wall: pop-ons + drag */
-  const wall = $('[data-cb-wall]');
-  const posters = $$('[data-cb-p]');
-  if (!reduced) {
-    ScrollTrigger.batch(posters, {
-      start: 'top 92%', once: true,
-      onEnter: (batch) => {
-        batch.forEach((el, k) => {
-          const dir = (Number(el.dataset.i) % 2 ? 1 : -1);
-          gsap.fromTo(el, { opacity: 0, scale: 0.45, y: 70, rotation: dir * 14 }, {
-            opacity: 1, scale: 1, y: 0, rotation: 0, duration: 0.7, delay: k * 0.09, ease: 'back.out(1.7)',
-            clearProps: 'scale,rotation',
-          });
-        });
-      },
-    });
-  }
+  /* ------------------------------------------------ 2. the ribbon: posters wrapped round a cylinder */
+  (() => {
+    const sec = $('[data-cb-wallsec]');
+    const stage = $('[data-cb-stage]');
+    const band = $('[data-cb-band]');
+    const cap = $('[data-cb-cap]');
+    if (reduced || !sec || !stage || !band) return;
+    const cards = $$('[data-cb-card]', band);
+    const n = cards.length;
+    const half = n / 2;
+    const rad = Math.PI / 180;
 
-  // Drag to rearrange: mouse/pen only, desktop wall only, clamped to the wall.
-  const desktop = matchMedia('(min-width: 56rem)');
-  let topZ = 50;
-  let justDragged = false;
-  if (wall) {
-    posters.forEach((el) => {
-      let sx = 0, sy = 0, bx = 0, by = 0, active = false, moved = false;
-      el.addEventListener('pointerdown', (e) => {
-        if (!desktop.matches || e.pointerType === 'touch' || e.button !== 0) return;
-        active = true; moved = false;
-        sx = e.clientX; sy = e.clientY;
-        bx = Number(gsap.getProperty(el, 'x')); by = Number(gsap.getProperty(el, 'y'));
-        el.setPointerCapture(e.pointerId);
-      });
-      el.addEventListener('pointermove', (e) => {
-        if (!active) return;
-        const dx = e.clientX - sx, dy = e.clientY - sy;
-        if (!moved && Math.hypot(dx, dy) < 6) return;
-        if (!moved) { moved = true; el.classList.add('is-dragging'); el.style.zIndex = String(++topZ); }
-        const minX = -el.offsetLeft, maxX = wall.clientWidth - el.offsetLeft - el.offsetWidth;
-        const minY = -el.offsetTop, maxY = wall.clientHeight - el.offsetTop - el.offsetHeight;
-        gsap.set(el, { x: Math.min(maxX, Math.max(minX, bx + dx)), y: Math.min(maxY, Math.max(minY, by + dy)) });
-      });
-      const end = (e: PointerEvent) => {
-        if (!active) return;
-        active = false;
-        if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
-        el.classList.remove('is-dragging');
-        if (moved) { justDragged = true; setTimeout(() => { justDragged = false; }, 0); }
-      };
-      el.addEventListener('pointerup', end);
-      el.addEventListener('pointercancel', end);
-    });
-  }
+    type Card = { el: HTMLElement; shade: HTMLElement; btn: HTMLElement; a: number; name: string; date: string; clone: boolean; hit: boolean };
+    const items: Card[] = cards.map((el) => ({
+      el, shade: el.querySelector<HTMLElement>('.cb-poster__shade')!, btn: el.querySelector<HTMLElement>('button')!,
+      a: 0, name: el.dataset.name || '', date: el.dataset.date || '', clone: el.classList.contains('cb-card--clone'), hit: true,
+    }));
 
-  /* ------------------------------------------------ 3. detail dialog */
+    const st = { p: 0, drag: 0 };
+    let R = 600, H = 400, a0 = 0, span = 160, front = -1;
+
+    // Lay the posters edge to edge round the circle, each keeping its own proportions.
+    const layout = () => {
+      const phone = innerWidth < 896;
+      H = Math.min(stage.clientHeight * (phone ? 0.52 : 0.6), phone ? 320 : 470);
+      const widths = items.map((it) => H * Number(it.el.dataset.w) / Number(it.el.dataset.h));
+      const total = widths.reduce((s, w) => s + w, 0);
+      R = total / (2 * Math.PI);
+      let acc = 0;
+      items.forEach((it, i) => {
+        it.a = ((acc + widths[i] / 2) / R) / rad;
+        acc += widths[i];
+        gsap.set(it.el, { width: widths[i], height: H, marginLeft: -widths[i] / 2, marginTop: -H / 2 });
+      });
+      a0 = items[0].a;
+      span = items[half - 1].a - a0;
+      render();
+    };
+
+    const render = () => {
+      const p = st.p;
+      const rot = -a0 - p * span + st.drag;
+      const tx = 13 - 9 * p;        // the band tips forward, then settles
+      const tz = -9 + 7 * p;        // and the twist eases out
+      const amp = H * 0.1 * (1 - 0.55 * p);
+      band.style.transform = `translateZ(${-R}px) rotateZ(${tz}deg) rotateX(${tx}deg) rotateY(${rot}deg)`;
+      let best = -2, bi = 0;
+      items.forEach((it, i) => {
+        const A = it.a + rot;
+        const f = Math.cos(A * rad);
+        const y = Math.sin(A * rad * 1.3) * amp;
+        it.el.style.transform = `rotateY(${it.a}deg) translateZ(${R}px) translateY(${y.toFixed(1)}px)`;
+        const lit = Math.max(0, f);
+        it.shade.style.opacity = (0.82 * (1 - Math.pow(lit, 0.7))).toFixed(3);
+        const hit = f > 0.2;
+        if (hit !== it.hit) { it.hit = hit; it.el.style.pointerEvents = hit ? '' : 'none'; }
+        if (f > best) { best = f; bi = i; }
+      });
+      if (bi !== front && cap) {
+        front = bi;
+        const it = items[bi];
+        cap.replaceChildren();
+        const b = document.createElement('b'); b.textContent = it.name;
+        cap.append(b, it.date);
+      }
+    };
+
+    // Scroll: pinned on desktop (the ribbon travels while the section holds), plain scrub on phones.
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 56rem)', () => {
+      layout();
+      gsap.to(st, { p: 1, ease: 'none', onUpdate: render, scrollTrigger: { trigger: sec, start: 'top top', end: '+=240%', pin: true, scrub: 0.7, invalidateOnRefresh: true, onRefresh: layout } });
+    });
+    mm.add('(max-width: 55.99rem)', () => {
+      layout();
+      gsap.to(st, { p: 1, ease: 'none', onUpdate: render, scrollTrigger: { trigger: stage, start: 'top 85%', end: 'bottom 15%', scrub: 0.6, onRefresh: layout } });
+    });
+
+    // Drag (mouse, pen and touch swipe) turns the ribbon too, with a little momentum.
+    let down = false, moved = false, sx = 0, base = 0, vx = 0, lx = 0, lt = 0;
+    const k = () => (innerWidth < 896 ? 0.3 : 0.2); // degrees per pixel
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      down = true; moved = false; sx = e.clientX; lx = sx; lt = performance.now(); vx = 0; base = st.drag;
+      gsap.killTweensOf(st, 'drag');
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (!down) return;
+      const dx = e.clientX - sx;
+      if (!moved && Math.abs(dx) < 6) return;
+      if (!moved) { moved = true; stage.classList.add('is-grabbing'); stage.setPointerCapture(e.pointerId); }
+      const now = performance.now();
+      vx = (e.clientX - lx) / Math.max(1, now - lt); lx = e.clientX; lt = now;
+      st.drag = base + dx * k();
+      render();
+    });
+    const end = (e: PointerEvent) => {
+      if (!down) return;
+      down = false;
+      stage.classList.remove('is-grabbing');
+      if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+      if (moved) {
+        justDragged = true; setTimeout(() => { justDragged = false; }, 0);
+        gsap.to(st, { drag: st.drag + vx * 160 * k(), duration: 0.9, ease: 'power3.out', onUpdate: render });
+      }
+    };
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
+
+    // Keyboard: focusing a poster turns the ribbon so it faces you.
+    items.forEach((it) => {
+      if (it.clone) return;
+      it.btn.addEventListener('focus', () => {
+        const rot = -a0 - st.p * span;
+        let want = -it.a - rot;                       // drag that puts this card dead front
+        want += Math.round((st.drag - want) / 360) * 360;
+        gsap.to(st, { drag: want, duration: 0.6, ease: 'power3.out', onUpdate: render });
+      });
+    });
+  })();
+
+  /* 3. detail dialog */
   type Img = { src: string; w: number; h: number; alt: string };
   type Collab = {
     id: string; partner: string; title: string; date: string | null; place: string | null;

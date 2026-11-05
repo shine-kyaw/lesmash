@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import RoomCard from '../components/visit/RoomCard.astro';
-import TeamGallery from '../components/visit/TeamGallery.astro';
+import TeamShowcase from '../components/visit/TeamShowcase.astro';
 import '../styles/pages/visit.css';
 import { asset } from '../lib/href';
 import { SITE } from '../lib/site.config.mjs';
@@ -43,8 +43,6 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
     <section class="vs-hero brand-red" aria-labelledby="vs-h1">
       <div class="vs-hero__stickers" aria-hidden="true">
         <img src={asset('/brand/sticker-pork.png')} alt="" width="320" height="320" decoding="async" />
-        <img src={asset('/brand/sticker-fish.png')} alt="" width="320" height="320" decoding="async" />
-        <img src={asset('/brand/sticker-lecoq.png')} alt="" width="320" height="320" decoding="async" />
       </div>
       <div class="wrap">
         <p class="label label--ember">Visit us</p>
@@ -74,9 +72,6 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
           {branches.map((b, i) => (
             <RoomCard stop={i + 1} branch={b} {...(roomPhotos[b.slug] ? { photo: roomPhotos[b.slug].photo, photoAlt: roomPhotos[b.slug].alt, focus: roomPhotos[b.slug].focus } : {})} />
           ))}
-          {/* Their ticker counts three rooms; only two addresses exist, so the
-              third is shown as what it is: not yet on the map. */}
-          <RoomCard stop={branches.length + 1} />
         </div>
 
         {/* One number for all of it: it is the number on their own Facebook
@@ -96,7 +91,7 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
       </div>
     </section>
 
-    <TeamGallery />
+    <TeamShowcase />
 
     <section class="vs-delivery" id="delivery" aria-labelledby="vs-del-h">
       <div class="wrap">

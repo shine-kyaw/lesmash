@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Slot from '../components/Slot.astro';
+import Ticker from '../components/Ticker.astro';
 import '../styles/pages/home.css';
 import { href, asset } from '../lib/href';
 import { EDITORIAL } from '../data/editorial';
@@ -52,9 +53,13 @@ const teasers = [
         <span class="hm-hero__le" aria-hidden="true">Le</span>
         <span class="visually-hidden">Le </span><span class="hm-hero__word" data-hm-word>SMASH</span><span class="visually-hidden"> Burgers &amp; Co.</span>
       </span>
+      <span class="hm-hero__sub" aria-hidden="true">Smashed to order · Yangon</span>
     </h1>
     <a class="hm-hero__cue" href="#doors"><span>Scroll</span><i aria-hidden="true"></i></a>
   </section>
+
+  {/* The client's ticker, under the hero as their mock draws it. */}
+  <Ticker />
 
   {/* 2 — four doors */}
   <section class="hm-doors" id="doors" aria-label="Where to next">
@@ -91,7 +96,6 @@ const teasers = [
                width="689" height="516" loading="lazy" decoding="async" />
         </div>
         <img class="hm-best__sticker hm-best__sticker--a" data-hm-spin="1" src={asset('/brand/sticker-beef.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
-        <img class="hm-best__sticker hm-best__sticker--b" data-hm-spin="-1" src={asset('/brand/sticker-lecoq.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>

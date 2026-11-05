@@ -2,24 +2,25 @@
 import Wordmark from './Wordmark.astro';
 import { SITE } from '../lib/site.config.mjs';
 import { COPY } from '../data/copy';
-import { directionsUrl, primaryPhone, type Branch } from '../lib/content';
+import { directionsUrl, type Branch } from '../lib/content';
 import { asset, href } from '../lib/href';
 
 /**
- * The footer is the carriage doors.
+ * The footer is a platform, and a train keeps arriving at it.
  *
- * Reyy's briefing asks for the footer to be built on a subway-train-door
- * concept, and it is not an arbitrary reference: one of Le SMASH's rooms is
- * fitted out as a carriage — red bench seats, ring handles, poles. So the last
- * thing on every page is a pair of carriage doors that slide open as you
- * arrive, with the stop board above reading "Next stop: Le SMASH".
+ * Reyy's briefing asks for a subway-train footer, and the reference is not
+ * arbitrary: one Le SMASH room is fitted out as a carriage — red bench seats,
+ * ring handles, poles. So the end of every page is the platform at "Le SMASH":
+ * the pages are listed along the platform above the train, a carriage pulls
+ * in, stops, opens its doors on that red interior, closes them and pulls out,
+ * on a loop. The fine print sits on the platform floor below it.
  *
- * The doors are an overlay on the footer, not extra height in front of it: they
- * open across the content and come to rest as the door frames at either edge.
- * Without script, or with reduced motion, they are simply open.
+ * The amber destination board on the train is the site's one running line;
+ * it carries the client's ticker text, so there is no second ticker here.
  *
- * Ordering lives here (the client's call): one Foodpanda button per room that
- * has a listing, plus the brand phone. Social links go outward only.
+ * Ordering lives here (the client's call). Foodpanda goes to each room's own
+ * listing. No Grab store link has been supplied, so Grab opens GrabFood Yangon
+ * until SITE.grabUrl is set.
  */
 interface Props { branches: Branch[] }
 const { branches } = Astro.props;
@@ -36,171 +37,284 @@ const pages = [
   ['/merch', COPY.nav.merch], ['/visit', COPY.nav.visit],
 ] as const;
 
-const order = branches.filter((b) => b.foodpandaUrl);
+const panda = branches.filter((b) => b.foodpandaUrl);
+const grabUrl = (SITE as { grabUrl?: string | null }).grabUrl ?? 'https://www.grab.com/mm/en/food/';
 const year = new Date().getFullYear();
-const stop = ['Next stop', 'Le SMASH', 'Mind the gap', 'Smashed to order'];
+
+const board = [
+  'Next stop: Le SMASH', 'Smashed to order', '3 rooms', '5 kitchens',
+  'Kamayut', 'Yankin', 'Mayangone', 'Hlaing', 'Dine in', 'Takeaway',
+];
+
+/* Carriage geometry, in SVG units (one carriage = 1600 x 300). */
+const doors = [420, 1080];               // left edge of each doorway
+const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [1290, 140], [1450, 110]];
 ---
-<footer class="ftr dark" id="visit-footer" data-doors>
+<footer class="ftr dark" id="visit-footer" data-station>
   <div class="grain" aria-hidden="true"></div>
 
-  {/* Overhead: the handrail with its rings, and the stop board. */}
-  <div class="ftr__rail" aria-hidden="true">
-    {Array.from({ length: 9 }, () => <span class="ring"><i></i></span>)}
-  </div>
-  <div class="ftr__board" aria-hidden="true">
-    <div class="ftr__board-track">
-      {[0, 1, 2].map(() => stop.map((t) => <span>{t}</span>))}
+  <div class="wrap ftr__top">
+    <div class="ftr__brand">
+      <Wordmark size="lg" />
+      <p class="ftr__tag">American flavour. French precision. Born in {SITE.geo}.</p>
     </div>
-  </div>
 
-  <div class="ftr__car">
-    <div class="wrap">
-      {order.length > 0 && (
-        <div class="ftr__order">
-          <div>
-            <p class="label">Order in</p>
-            <p class="ftr__order-head">Smashed, <span class="script">delivered.</span></p>
-          </div>
-          <div class="ftr__order-btns">
-            {order.map((b) => (
-              <a class="ftr__panda" href={b.foodpandaUrl!} target="_blank" rel="noopener noreferrer"
-                 data-analytics="order_click" data-branch={b.slug} data-source="footer">
-                <span class="ftr__panda-room">{b.name}</span>
-                <span class="ftr__panda-via">Order on foodpanda <span aria-hidden="true">→</span></span>
-              </a>
-            ))}
-            {SITE.phone && (
-              <a class="ftr__panda ftr__panda--call" href={'tel:' + SITE.phone.e164}
-                 data-analytics="phone_click" data-source="footer">
-                <span class="ftr__panda-room">Call us</span>
-                <span class="ftr__panda-via">{SITE.phone.display}</span>
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-
-      <div class="ftr__grid">
-        <div>
-          <Wordmark size="lg" />
-          <p class="lede" style="margin-top:var(--s4)">
-            American flavour. French precision. Born in {SITE.geo}.
-          </p>
-        </div>
-
-        <div>
-          <p class="label">{COPY.labels.branches}</p>
-          <ul class="ftr__list" style="margin-top:var(--s4)">
-            {branches.map((branch) => {
-              const phone = primaryPhone(branch);
-              return (
-                <li>
-                  <strong class="ftr__room">{branch.name}</strong>
-                  <span class="ftr__addr">{branch.addressLine}, {branch.township}, {branch.city}</span>
-                  <span style="display:block;margin-top:6px">
-                    <a href={directionsUrl(branch)} target="_blank" rel="noopener noreferrer"
-                       data-analytics="directions_click" data-branch={branch.slug} data-source="footer">
-                      {COPY.cta.directions}
-                    </a>
-                    {phone && <> · <a href={`tel:${phone.e164}`} data-analytics="phone_click"
-                       data-branch={branch.slug} data-source="footer">{phone.display}</a></>}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        <div class="ftr__split">
-          <div>
-            <p class="label">{COPY.footer.follow}</p>
-            <ul class="ftr__list" style="margin-top:var(--s4)">
-              {socials.map((s) => (
-                <li>
-                  <a href={s.href!} target="_blank" rel="noopener noreferrer"
-                     data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p class="label">Pages</p>
-            <ul class="ftr__list" style="margin-top:var(--s4)">
-              {pages.map(([p, label]) => <li><a href={href(p)}>{label}</a></li>)}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="ftr__bottom">
-        <span>&copy; {year} {SITE.brand.legal}</span>
-        <span>{SITE.geo}, Myanmar</span>
-        <a class="ftr__by" href="https://astermade.com" target="_blank" rel="noopener noreferrer"
-           data-analytics="agency_credit_click">
-          <img src={asset('/brand/aster-mark.png')} alt="" width="96" height="96"
-               loading="lazy" decoding="async" />
-          <span>Made by <strong>Aster</strong></span>
+    <div class="ftr__order">
+      <p class="label">Order in</p>
+      <div class="ftr__order-btns">
+        {panda.map((b) => (
+          <a class="ord ord--panda" href={b.foodpandaUrl!} target="_blank" rel="noopener noreferrer"
+             data-analytics="order_click" data-platform="foodpanda" data-branch={b.slug} data-source="footer"
+             aria-label={`Order from ${b.name} on foodpanda`}>
+            <img src={asset('/brand/partners/foodpanda.svg')} alt="" width="22" height="22" />
+            <span><b>foodpanda</b><small>{b.name}</small></span>
+          </a>
+        ))}
+        <a class="ord ord--grab" href={grabUrl} target="_blank" rel="noopener noreferrer"
+           data-analytics="order_click" data-platform="grab" data-source="footer"
+           aria-label="Order on GrabFood">
+          <img src={asset('/brand/partners/grab.svg')} alt="" width="22" height="22" />
+          <span><b>GrabFood</b><small>Yangon</small></span>
         </a>
+        {SITE.phone && (
+          <a class="ord ord--call" href={'tel:' + SITE.phone.e164}
+             data-analytics="phone_click" data-source="footer">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
+            <span><b>Call</b><small>{SITE.phone.display}</small></span>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* The departures line: every page, left to right, along the platform. */}
+  <nav class="wrap ftr__pages" aria-label="Footer">
+    <ol>
+      {pages.map(([p, label]) => <li><a href={href(p)}>{label}</a></li>)}
+    </ol>
+  </nav>
+
+  <div class="wrap ftr__info">
+    {branches.map((b) => (
+      <p>
+        <strong>{b.name}</strong>
+        <span>{b.addressLine}, {b.township}</span>
+        <a href={directionsUrl(b)} target="_blank" rel="noopener noreferrer"
+           data-analytics="directions_click" data-branch={b.slug} data-source="footer">{COPY.cta.directions}</a>
+      </p>
+    ))}
+    <p class="ftr__social">
+      {socials.map((s) => (
+        <a href={s.href!} target="_blank" rel="noopener noreferrer"
+           data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
+      ))}
+    </p>
+  </div>
+
+  {/* ------------------------------------------------------------ the station */}
+  <div class="stn" aria-hidden="true">
+    <div class="stn__wall">
+      <div class="stn__sign"><span class="stn__sign-le">Le</span> SMASH <small>Platform 1 · Smashed to order</small></div>
+      <div class="stn__poster stn__poster--a"><img src={asset('/media/campaigns/grand-opening-fi.jpg')} alt="" loading="lazy" decoding="async" /></div>
+      <div class="stn__poster stn__poster--b"><img src={asset('/media/campaigns/lesmash-pop-up.jpg')} alt="" loading="lazy" decoding="async" /></div>
+      <div class="stn__clock"><i></i><i></i></div>
+    </div>
+
+    <div class="stn__track">
+      <div class="train" data-train>
+        <svg class="train__svg" viewBox="0 0 4840 300" width="4840" height="300" preserveAspectRatio="xMinYMid meet">
+          <defs>
+            <linearGradient id="tb-body" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fbfbf8" /><stop offset=".55" stop-color="#e4e6e1" />
+              <stop offset=".8" stop-color="#c9ccc7" /><stop offset="1" stop-color="#9da19d" />
+            </linearGradient>
+            <linearGradient id="tb-roof" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#8d918e" /><stop offset="1" stop-color="#c5c8c4" />
+            </linearGradient>
+            <linearGradient id="tb-door" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#b8262a" /><stop offset=".5" stop-color="#e03c3e" /><stop offset="1" stop-color="#b8262a" />
+            </linearGradient>
+            <linearGradient id="tb-glass" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3a2a24" /><stop offset=".45" stop-color="#1b1310" /><stop offset="1" stop-color="#2a1d18" />
+            </linearGradient>
+            <linearGradient id="tb-inside" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fff1d6" /><stop offset=".6" stop-color="#f3dcb4" /><stop offset="1" stop-color="#b98f63" />
+            </linearGradient>
+            <linearGradient id="tb-shine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset=".5" stop-color="#fff" stop-opacity=".35" />
+              <stop offset="1" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <filter id="tb-blur" x="-5%" y="0" width="110%" height="100%">
+              <feGaussianBlur data-blur stdDeviation="0 0" />
+            </filter>
+          </defs>
+
+          {/* Three carriages, drawn inline so every door leaf is a real animatable node. */}
+          <g filter="url(#tb-blur)">
+          <rect x="1600" y="96" width="20" height="150" fill="#3a3a3a" />
+          <rect x="3220" y="96" width="20" height="150" fill="#3a3a3a" />
+          {[0, 1620, 3240].map((ox) => (
+            <g transform={`translate(${ox} 0)`}>
+
+              <rect x="4" y="22" width="1592" height="20" rx="10" fill="url(#tb-roof)" />
+              <path d="M4 52 Q4 34 26 34 H1574 Q1596 34 1596 52 V258 H4 Z" fill="url(#tb-body)" />
+              {/* Carved out for the doorways, so the body frames them. */}
+              {doors.map((x) => <rect x={x - 6} y="56" width="172" height="204" fill="none" stroke="#9fa39f" stroke-width="3" />)}
+              <rect x="4" y="44" width="1592" height="10" fill="#d83536" />
+              <rect x="4" y="214" width="1592" height="6" fill="#d83536" />
+              <rect x="4" y="240" width="1592" height="18" fill="#7f8380" />
+              {/* Doorway interiors: over the body, under the door leaves. */}
+              {doors.map((x) => (
+                <g>
+                  <rect x={x} y="58" width="160" height="200" fill="url(#tb-inside)" />
+                  <rect x={x + 18} y="70" width="124" height="54" rx="6" fill="#d83536" opacity=".9" />
+                  <text x={x + 80} y="104" text-anchor="middle" class="tr-txt">Le SMASH</text>
+                  <rect x={x + 78} y="58" width="5" height="200" fill="#c8ccd0" />
+                  <rect x={x} y="196" width="160" height="34" rx="8" fill="#c0262a" />
+                  <rect x={x} y="226" width="160" height="32" fill="#6b4a33" />
+                  <circle cx={x + 40} cy="132" r="8" fill="none" stroke="#d9dcdf" stroke-width="3" />
+                  <circle cx={x + 120} cy="132" r="8" fill="none" stroke="#d9dcdf" stroke-width="3" />
+                </g>
+              ))}
+
+
+              {windows.map(([x, w]) => (
+                <g>
+                  <rect x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-glass)" stroke="#a9ada9" stroke-width="5" />
+                  <rect x={x + 8} y="132" width={w - 16} height="34" rx="6" fill="#a8282b" opacity=".75" />
+                  <rect x={x + 6} y="84" width={w - 12} height="26" rx="12" fill="#ffe7b8" opacity=".14" />
+                  <rect class="tr-glint" x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-shine)" />
+                </g>
+              ))}
+
+              {/* The doors: two leaves each, sliding apart on the outside. */}
+              {doors.map((x) => (
+                <g>
+                  <g class="leaf leaf--l">
+                    <rect x={x} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
+                    <rect x={x + 16} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
+                    <rect x={x + 70} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
+                  </g>
+                  <g class="leaf leaf--r">
+                    <rect x={x + 80} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
+                    <rect x={x + 94} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
+                    <rect x={x + 84} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
+                  </g>
+                  <circle class="door-lamp" cx={x + 80} cy="48" r="5" fill="#ffb43a" />
+                </g>
+              ))}
+
+              {/* Bogies. */}
+              {[230, 1370].map((cx) => (
+                <g>
+                  <rect x={cx - 120} y="256" width="240" height="18" rx="6" fill="#2b2b2b" />
+                  <g class="wheel"><circle cx={cx - 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx - 70} 256 V296 M${cx - 90} 276 H${cx - 50}`} stroke="#666" stroke-width="3" /></g>
+                  <g class="wheel"><circle cx={cx + 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx + 70} 256 V296 M${cx + 50} 276 H${cx + 90}`} stroke="#666" stroke-width="3" /></g>
+                </g>
+              ))}
+            </g>
+          ))}
+          </g>
+        </svg>
+
+        {/* The destination board: the site's one running line, riding on the train. */}
+        <div class="train__board">
+          <div class="train__board-track">
+            {[0, 1].map(() => board.map((t) => <span>{t}</span>))}
+          </div>
+        </div>
       </div>
     </div>
 
-    {/* The doors. Decorative, so hidden from assistive tech and click-through
-        once they start to open. */}
-    <div class="doors" aria-hidden="true">
-      <div class="door door--l"><span class="door__win"></span><span class="door__decal">Le</span></div>
-      <div class="door door--r"><span class="door__win"></span><span class="door__decal">SMASH</span></div>
-    </div>
+    <div class="stn__floor"><span>Mind the gap</span><span>Mind the gap</span><span>Mind the gap</span></div>
+  </div>
+
+  <div class="wrap ftr__bottom">
+    <span>&copy; {year} {SITE.brand.legal}</span>
+    <span>{SITE.geo}, Myanmar</span>
+    <a class="ftr__by" href="https://astermade.com" target="_blank" rel="noopener noreferrer"
+       data-analytics="agency_credit_click">
+      <img src={asset('/brand/aster-mark.png')} alt="" width="96" height="96" loading="lazy" decoding="async" />
+      <span>Made by <strong>Aster</strong></span>
+    </a>
   </div>
 </footer>
 
 <script>
   import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  // Dev only: lets a background preview tab keep real time.
+  if (import.meta.env.DEV) gsap.ticker.lagSmoothing(0);
 
-  const ftr = document.querySelector<HTMLElement>('[data-doors]');
+  const stn = document.querySelector<HTMLElement>('[data-station]');
+  const train = stn?.querySelector<HTMLElement>('[data-train]');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (ftr && !reduce) {
-    gsap.registerPlugin(ScrollTrigger);
-    const left = ftr.querySelector('.door--l');
-    const right = ftr.querySelector('.door--r');
-    const doors = ftr.querySelector<HTMLElement>('.doors');
+  if (stn && train) {
+    const blur = stn.querySelector('[data-blur]');
+    const leavesL = stn.querySelectorAll('.leaf--l');
+    const leavesR = stn.querySelectorAll('.leaf--r');
+    const lamps = stn.querySelectorAll('.door-lamp');
+    const wheels = stn.querySelectorAll('.wheel');
+    const glints = stn.querySelectorAll('.tr-glint');
 
-    // Arm: the doors start closed only once script is known to be running.
-    ftr.classList.add('is-armed');
+    // Where the train stops: the middle carriage centred on wide screens, its
+    // first doorway centred on phones (a whole carriage doesn't fit at 375px).
+    const stopX = () => {
+      const h = train.getBoundingClientRect().height || 1;
+      const k = h / 300;                       // SVG units -> px
+      const vw = stn.clientWidth;
+      const focus = vw < 760 ? 1620 + 500 : 1620 + 800;
+      return vw / 2 - focus * k;
+    };
+    const width = () => train.getBoundingClientRect().width;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ftr,
-        start: 'top 92%',
-        end: 'top 30%',
-        scrub: 0.6,
-        onUpdate: (self) => {
-          // Clicks pass through as soon as there is a gap to click through.
-          if (doors) doors.style.pointerEvents = self.progress > 0.15 ? 'none' : 'auto';
-        },
-      },
-    });
-    // A short hold, then the slide: carriage doors part, pause, and run open.
-    tl.to([left, right], { xPercent: (i) => (i ? 6 : -6), duration: 0.25, ease: 'power1.out' })
-      .to(left, { xPercent: -94, duration: 1, ease: 'power2.inOut' }, '>-0.02')
-      .to(right, { xPercent: 94, duration: 1, ease: 'power2.inOut' }, '<');
+    const open = (d = 0.9) => gsap.timeline()
+      .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
+      .to(leavesL, { x: -78, duration: d, ease: 'power2.inOut' }, '<0.1')
+      .to(leavesR, { x: 78, duration: d, ease: 'power2.inOut' }, '<');
+    const close = (d = 0.8) => gsap.timeline()
+      .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
+      .to([leavesL, leavesR], { x: 0, duration: d, ease: 'power2.inOut' }, '<0.15');
 
-    // The rings swing with how fast you scroll, and settle.
-    const rings = ftr.querySelectorAll('.ring');
-    let swing = 0;
-    ScrollTrigger.create({
-      trigger: ftr,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: (self) => {
-        swing = gsap.utils.clamp(-18, 18, self.getVelocity() / -120);
-        gsap.to(rings, {
-          rotate: (i) => swing * (i % 2 ? 0.8 : 1),
-          duration: 0.5, ease: 'power2.out', overwrite: true,
-          onComplete: () => { gsap.to(rings, { rotate: 0, duration: 1.6, ease: 'elastic.out(1, 0.3)' }); },
-        });
-      },
-    });
+    if (reduce) {
+      gsap.set(train, { x: stopX() });
+      gsap.set(leavesL, { x: -78 }); gsap.set(leavesR, { x: 78 });
+    } else {
+      const spin = gsap.to(wheels, { rotation: 360, transformOrigin: '50% 50%', duration: 0.5, repeat: -1, ease: 'none', paused: true });
+      const loop = gsap.timeline({ repeat: -1, paused: true, defaults: { ease: 'none' } });
+      const speed = { v: 0 };
+      const applySpeed = () => {
+        blur?.setAttribute('stdDeviation', `${(speed.v * 14).toFixed(2)} 0`);
+        spin.timeScale(Math.max(0.001, speed.v * 2.4));
+        gsap.set(glints, { x: -speed.v * 140 });
+      };
+
+      loop
+        // Pull in: fast, braking to a stop, with a little nose-dip on the brakes.
+        .set(train, { x: () => stn.clientWidth + 40, y: 0 })
+        .add(() => spin.play())
+        .fromTo(speed, { v: 1 }, { v: 0, duration: 2.4, ease: 'power2.out', onUpdate: applySpeed })
+        .to(train, { x: () => stopX(), duration: 2.4, ease: 'power3.out' }, '<')
+        .to(train, { y: 2, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.inOut' }, '>-0.1')
+        .add(() => spin.pause())
+        .add(open(), '+=0.35')
+        .to({}, { duration: 3.2 })
+        .add(close())
+        .to({}, { duration: 0.6 })
+        // Pull out: slow start, accelerating away to the left.
+        .add(() => spin.play())
+        .fromTo(speed, { v: 0 }, { v: 1, duration: 2.2, ease: 'power2.in', onUpdate: applySpeed })
+        .to(train, { x: () => -width() - 40, duration: 2.2, ease: 'power3.in' }, '<')
+        .add(() => spin.pause())
+        .to({}, { duration: 1.1 });
+
+      // A faint hum while moving: the body rides on its springs.
+      gsap.to(train.querySelector('.train__svg'), { y: 1.2, duration: 0.11, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+      // Only run while the platform is on screen.
+      new IntersectionObserver(([e]) => (e.isIntersecting ? loop.play() : loop.pause()), { rootMargin: '120px' })
+        .observe(stn);
+      window.addEventListener('resize', () => loop.invalidate());
+    }
   }
 </script>

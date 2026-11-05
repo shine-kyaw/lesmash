@@ -4,33 +4,38 @@ import { asset } from '../../lib/href';
 
 const facts = (c: (typeof COLLABS)[number]) =>
   [c.partner + ': ' + c.title, c.date, c.place].filter(Boolean).join(', ');
+
+/* The ribbon runs all the way round a cylinder, so the set is laid twice.
+   The second set is a visual repeat only: hidden from assistive tech and the tab order. */
+const cards = [
+  ...COLLABS.map((c, i) => ({ c, i, clone: false })),
+  ...COLLABS.map((c, i) => ({ c, i, clone: true })),
+];
 ---
-<section class="cb-wallsec dark" id="wall" aria-labelledby="cb-wall-h">
+<section class="cb-wallsec dark" id="wall" aria-labelledby="cb-wall-h" data-cb-wallsec>
   <div class="wrap cb-wallsec__head">
     <h2 class="cb-wallsec__h" id="cb-wall-h">The wall</h2>
     <p class="cb-wallsec__hint">
-      <span class="cb-hint-mouse">Hover a poster, click for the details. Drag them around.</span>
-      <span class="cb-hint-touch">Tap a poster for the details.</span>
+      <span class="cb-hint-mouse">Scroll or drag the band. Click a poster for the details.</span>
+      <span class="cb-hint-touch">Swipe the band. Tap a poster for the details.</span>
     </p>
   </div>
 
-  <div class="wrap cb-wallwrap">
-    <ul class="cb-wall" data-cb-wall>
-      {COLLABS.map((c, i) => (
-        <li class={`cb-p${c.wall.staple ? ' cb-p--staple' : ''}`} data-cb-p data-i={i}
-            style={`--x:${c.wall.x};--y:${c.wall.y};--w:${c.wall.w};--r:${c.wall.r}deg;--z:${c.wall.z}`}>
-          <button type="button" class="cb-poster" data-cb-open={c.id} aria-haspopup="dialog">
-            <img src={asset(c.poster.src)} alt={c.poster.alt} width={c.poster.w} height={c.poster.h}
+  <div class="cb-stage" data-cb-stage>
+    <ul class="cb-band" data-cb-band>
+      {cards.map(({ c, i, clone }) => (
+        <li class={`cb-card${clone ? ' cb-card--clone' : ''}`} data-cb-card data-i={i}
+            data-w={c.poster.w} data-h={c.poster.h} data-name={c.partner} data-date={c.date ?? ''}
+            aria-hidden={clone ? 'true' : undefined}>
+          <button type="button" class="cb-poster" data-cb-open={c.id} aria-haspopup="dialog" tabindex={clone ? -1 : undefined}>
+            <img src={asset(c.poster.src)} alt={clone ? '' : c.poster.alt} width={c.poster.w} height={c.poster.h}
                  loading="lazy" decoding="async" draggable="false" />
-            <span class="cb-poster__tag" aria-hidden="true">
-              <b>{c.partner}</b>
-              {c.date && <i>{c.date}</i>}
-            </span>
-            <span class="visually-hidden">{facts(c)}. Open details.</span>
+            <span class="cb-poster__shade" aria-hidden="true"></span>
+            {!clone && <span class="visually-hidden">{facts(c)}. Open details.</span>}
           </button>
-          <p class="cb-p__cap" aria-hidden="true"><b>{c.partner}</b>{c.date ? ` · ${c.date}` : ''}</p>
         </li>
       ))}
     </ul>
+    <p class="cb-stage__cap" aria-hidden="true" data-cb-cap></p>
   </div>
 </section>

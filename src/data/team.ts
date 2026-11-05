@@ -2,8 +2,9 @@
  * The crew. Photos are the ten crew/kitchen frames the client supplied.
  *
  * name / role / quote are null on purpose: the client has not sent them yet and
- * nothing here is guessed. Fill a field in and it appears on the profile panel;
- * leave it null and the panel simply shows the photo and a "Crew" tag.
+ * nothing here is guessed. The showcase renders them as an empty profile
+ * template (labelled slots, ruled placeholder lines, a signature stroke); fill a
+ * field in and the real text replaces its placeholder with no other change.
  * (Some jackets in the photos carry printed names — that is not a substitute
  * for the client confirming who is who and how they want to be credited.)
  */

@@ -2,8 +2,7 @@
 /**
  * One stop on the line. Styled as a station: a roundel on the route, a window
  * onto the room, the address (which is the Google Maps link), and the ways to
- * reach it. With no `branch` it renders the "room three" stop — a hollow
- * roundel and no address, because none has been supplied.
+ * reach it.
  */
 import { asset } from '../../lib/href';
 import { directionsUrl, primaryPhone, type Branch } from '../../lib/content';
@@ -12,7 +11,7 @@ import manifest from '../../data/media-manifest.json';
 
 interface Props {
   stop: number;
-  branch?: Branch;
+  branch: Branch;
   photo?: string;
   photoAlt?: string;
   /** CSS object-position for the window crop */
@@ -20,10 +19,9 @@ interface Props {
 }
 const { stop, branch, photo, photoAlt = '', focus = '50% 50%' } = Astro.props;
 const dims = photo ? (manifest as { path: string; width: number; height: number }[]).find((m) => m.path === photo) : undefined;
-const phone = branch ? primaryPhone(branch) : null;
+const phone = primaryPhone(branch);
 ---
-{branch ? (
-  <article class="vs-room" data-room>
+<article class="vs-room" data-room>
     <div class="vs-room__sign">
       <span class="vs-roundel" aria-hidden="true">{stop}</span>
       <span class="vs-room__stop label">Stop {stop}</span>
@@ -73,21 +71,3 @@ const phone = branch ? primaryPhone(branch) : null;
       )}
     </div>
   </article>
-) : (
-  <article class="vs-room vs-room--ghost" data-room>
-    <div class="vs-room__sign">
-      <span class="vs-roundel vs-roundel--ghost" aria-hidden="true">{stop}</span>
-      <span class="vs-room__stop label">Stop {stop}</span>
-    </div>
-    <div class="vs-room__card">
-      <div class="vs-window vs-window--ghost" aria-hidden="true">
-        <img class="vs-ghost__sticker" src={asset('/brand/sticker-lecoq.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
-      </div>
-      <h3 class="vs-room__name">Room three <span class="script">coming into view</span></h3>
-      <p class="vs-ghost__copy">
-        Le SMASH counts three rooms. The third one has no address to show yet,
-        so we are not going to make one up. Watch this stop.
-      </p>
-    </div>
-  </article>
-)}

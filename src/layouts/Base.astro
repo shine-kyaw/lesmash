@@ -4,7 +4,6 @@ import '../styles/components.css';
 import Head from '../components/Head.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import Ticker from '../components/Ticker.astro';
 import { COPY } from '../data/copy';
 import { getBranches } from '../lib/content';
 import { asset } from '../lib/href';
@@ -42,7 +41,6 @@ const branches = await getBranches();
       <slot />
     </main>
 
-    <Ticker />
     <Footer branches={branches} />
 
     <script src={asset('/scripts/app.js')} defer is:inline></script>

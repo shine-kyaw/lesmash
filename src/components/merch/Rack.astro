@@ -4,42 +4,42 @@ import { GARMENTS } from '../../data/merch';
 ---
 <section class="mc-rack-sec" id="rack" aria-labelledby="mc-rack-h">
   <div class="wrap mc-sec-head">
-    <p class="label label--ember">01 · The rack</p>
-    <h2 id="mc-rack-h">Pick one off the rail</h2>
-    <p class="lede">Tees and the YGN jersey, hung up the way they would be in a shop. Tap or click one to take it down and see the other side.</p>
-    <p class="mc-hint label" aria-hidden="true"><span class="mc-hint__fine">Drag the rack sideways</span><span class="mc-hint__touch">Swipe the rail</span> →</p>
+    <p class="label label--ember">01 · The rail</p>
+    <h2 id="mc-rack-h">Take one off the rail</h2>
+    <p class="lede">Move along the rail and each piece swings out to meet you. Click one to take it down and turn it round.</p>
+    <p class="mc-hint label" aria-hidden="true"><span class="mc-hint__fine">Drag a piece to spin it</span><span class="mc-hint__touch">Swipe the rail · tap a piece</span></p>
   </div>
 
-  <div class="mc-rack" data-rack>
-    <div class="mc-rack-track">
-      <div class="mc-rail" aria-hidden="true"></div>
-      <ul class="mc-hangers" role="list">
-        {GARMENTS.map((g) => {
-          const v = g.views[g.start];
-          return (
-            <li class="mc-hang">
-              <button type="button" class="mc-hang-btn" data-garment={g.id} aria-haspopup="dialog"
-                aria-label={`${g.name}, ${g.tag}. Open details`}>
+  <div class="mc-studio" data-studio>
+    <div class="mc-scroll" data-scroll>
+      <div class="mc-stage3d" data-stage3d>
+        <div class="mc-row3d" data-row3d>
+          <div class="mc-rail" aria-hidden="true"><i class="mc-rail__cap mc-rail__cap--l"></i><i class="mc-rail__cap mc-rail__cap--r"></i></div>
+          <ul class="mc-row" role="list">
+            {GARMENTS.map((g) => (
+              <li class="mc-hang" style={`--gw:${(g.w / 700).toFixed(4)};--gh:${(g.h / 700).toFixed(4)};--ar:${g.w}/${g.h}`}>
+                <span class="mc-wall" aria-hidden="true"></span>
                 <span class="mc-pivot" data-pivot>
-                  <svg class="mc-hook" viewBox="0 -10 30 52" aria-hidden="true" focusable="false">
-                    <path d="M15 42 V28 C15 18 5 16 5 5 C5 -4 11 -8 15 -8 C20 -8 25 -4 25 5" />
-                  </svg>
-                  <svg class="mc-arch" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                    <path d="M2 29 Q50 -4 98 29" />
-                  </svg>
-                  <span class="mc-garment" data-photo style={`--ar:${v.ar}`}>
-                    <img src={asset(v.src)} alt={v.alt} style={`object-position:${v.pos}`} loading="lazy" decoding="async" draggable="false" />
+                    <span class="mc-spin" data-spin>
+                      <img class="mc-face mc-edge" src={asset(g.front)} alt="" draggable="false" aria-hidden="true" style="transform:translateZ(-3px)" />
+                      <img class="mc-face mc-edge" src={asset(g.front)} alt="" draggable="false" aria-hidden="true" style="transform:translateZ(-1px)" />
+                      <img class="mc-face mc-edge" src={asset(g.front)} alt="" draggable="false" aria-hidden="true" style="transform:translateZ(1px)" />
+                      <img class="mc-face mc-front" src={asset(g.front)} alt={g.rest === 'front' ? g.frontAlt : ''} loading="lazy" decoding="async" draggable="false" />
+                      <img class="mc-face mc-back" src={asset(g.back)} alt={g.rest === 'back' ? g.backAlt : ''} loading="lazy" decoding="async" draggable="false" />
+                    </span>
                   </span>
-                </span>
-                <span class="mc-cap">
-                  <span class="mc-cap__name">{g.name}</span>
-                  <span class="mc-cap__tag label">{g.tag}</span>
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+                <button type="button" class="mc-hang-btn" data-garment={g.id} aria-haspopup="dialog"
+                  aria-label={`${g.name}, ${g.tag}. Open details`}>
+                  <span class="mc-cap">
+                    <span class="mc-cap__name">{g.name}</span>
+                    <span class="mc-cap__tag label">{g.tag}</span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
