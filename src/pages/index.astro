@@ -36,7 +36,7 @@ const teasers = [
 ];
 ---
 <Base path="/" title={title(null)} description={DESCRIPTIONS.home} schema={schema}>
-  <script is:inline>document.documentElement.classList.add('hm-js')</script>
+  <script is:inline src={asset('/scripts/early/hm.js')}></script>
 
   {/* 1 — the smash. Real text in the h1; the slam is script-driven. */}
   <section class="hm-hero" data-hm-hero aria-label="Le SMASH Burgers &amp; Co.">

@@ -1,4 +1,5 @@
 ---
+import { asset } from '../lib/href';
 import Base from '../layouts/Base.astro';
 import '../styles/pages/collaborations.css';
 import CollabHero from '../components/collabs/CollabHero.astro';
@@ -8,10 +9,8 @@ import CollabClose from '../components/collabs/CollabClose.astro';
 import { title, DESCRIPTIONS } from '../lib/seo';
 ---
 <Base path="/collaborations" title={title('Collaborations')} description={DESCRIPTIONS.collaborations}>
-  <script is:inline>
-    document.documentElement.classList.add('cb-js');
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('cb-3d');
-  </script>
+  {/* External so the CSP (script-src 'self') allows it; it must run before paint. */}
+  <script is:inline src={asset('/scripts/early/cb.js')}></script>
   <CollabHero />
   <CollabWall />
   <CollabClose />

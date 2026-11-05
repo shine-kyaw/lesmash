@@ -14,12 +14,8 @@ import '../styles/pages/story.css';
 <Base path="/story" title={title('Our Story')} description={DESCRIPTIONS.story}>
   {/* Pre-hide flag so animated pieces never flash their end state first.
       Skipped for reduced motion; removed again if the script never reports in. */}
-  <script is:inline>
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('st-js');
-      setTimeout(function () { if (!window.__stReady) document.documentElement.classList.remove('st-js'); }, 5000);
-    }
-  </script>
+  {/* External so the CSP (script-src 'self') allows it; it must run before paint. */}
+  <script is:inline src={asset('/scripts/early/st.js')}></script>
 
   <Folder />
 

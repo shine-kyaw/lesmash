@@ -1,4 +1,5 @@
 ---
+import { asset } from '../lib/href';
 import Base from '../layouts/Base.astro';
 import MerchHead from '../components/merch/MerchHead.astro';
 import Rack from '../components/merch/Rack.astro';
@@ -12,12 +13,8 @@ import { title, DESCRIPTIONS } from '../lib/seo';
 <Base path="/merch" title={title('Merch')} description={DESCRIPTIONS.merch}>
   {/* Pre-hide flag so animated pieces never flash their end state first.
       Skipped for reduced motion; removed again if the script never reports in. */}
-  <script is:inline>
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.documentElement.classList.add('mc-js');
-      setTimeout(function () { if (!window.__mcReady) document.documentElement.classList.remove('mc-js'); }, 5000);
-    }
-  </script>
+  {/* External so the CSP (script-src 'self') allows it; it must run before paint. */}
+  <script is:inline src={asset('/scripts/early/mc.js')}></script>
 
   <MerchHead />
   <Rack />
