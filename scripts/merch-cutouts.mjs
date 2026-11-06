@@ -378,7 +378,7 @@ const PLACE = {
   chest: { cx: 0.6, cy: 0.385, w: 0.085 }, // small mark, wearer's left chest (viewer's right)
   ...JSON.parse(process.env.MERCH_PLACE || '{}'),
 };
-const KEY = { t1: 16, t2: 34, sat: 16, ...JSON.parse(process.env.MERCH_KEY || '{}') };
+const KEY = { t1: 26, t2: 46, sat: 16, ...JSON.parse(process.env.MERCH_KEY || '{}') };
 const CANVAS = { w: 648, h: 700 };
 
 /** separable box blur on a Float32Array, 3 passes ~ gaussian */
@@ -439,8 +439,8 @@ async function keyBackdrop(file) {
   const alpha = new Float32Array(n); for (let k = 0; k < n; k++) alpha[k] = sstep(0.42, 0.9, mb[k]);
   // shadow: backdrop pixels darker than the backdrop become soft black alpha (blurred to kill grain)
   const sh = new Float32Array(n);
-  for (let k = 0; k < n; k++) if (bg[k] && lumDiff[k] < -2) sh[k] = Math.min(0.55, (-lumDiff[k] / 140) * 1.6);
-  const shadow = blurF(sh, w, h, 3, 2);
+  for (let k = 0; k < n; k++) if (bg[k] && lumDiff[k] < -2) sh[k] = Math.min(0.4, (-lumDiff[k] / 140) * 1.4);
+  const shadow = blurF(sh, w, h, 14, 3); // wide blur: smooth falloff, no blotches
   let x0 = w, y0 = h, x1 = 0, y1 = 0;
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (alpha[y * w + x] > 0.5) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   return { rgb: Buffer.from(data), alpha, shadow, bg, w, h, box: { x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1 } };
