@@ -4,7 +4,7 @@
  * visible in the artwork, nothing more.
  *
  * Garment faces are product shots composed by scripts/merch-cutouts.mjs
- * (public/media/merch/cut/). "Worn" views are the client's own model photos.
+ * (public/media/merch/cut/). The gallery is the client's own photos, cropped by `merch-cutouts.mjs shots`.
  */
 export interface WornView {
   label: string;
@@ -30,11 +30,11 @@ export interface Garment {
   rest: 'front' | 'back';
   frontAlt: string;
   backAlt: string;
-  worn: WornView[];
+  /** every real image of this piece: worn, flat-lay, print close-up */
+  gallery: Shot[];
 }
 
-const TEES = '/media/merch/le-smash-t-shirt-mockup.jpg';
-const TEE_AR = 400 / 542;
+const S = '/media/merch/shots/';
 const CUT = '/media/merch/cut/';
 
 export const GARMENTS: Garment[] = [
@@ -44,9 +44,10 @@ export const GARMENTS: Garment[] = [
     front: CUT + 'tee-white-front.webp', back: CUT + 'tee-white-back.webp', w: 648, h: 700, rest: 'back',
     frontAlt: 'White Graphic Tee, front, with a small Le Burgers & Co. mark on the chest.',
     backAlt: 'White Graphic Tee, back, the Le SMASH monogram in black with SMASH in red.',
-    worn: [
-      { label: 'Back', src: TEES, pos: '0% 50%', ar: TEE_AR, alt: 'Model in the white Graphic Tee seen from behind, the monogram across the back.' },
-      { label: 'Front', src: TEES, pos: '33.333% 50%', ar: TEE_AR, alt: 'Model in the white Graphic Tee seen from the front.' },
+    gallery: [
+      { label: 'Back', src: S + 'white-back.webp', w: 640, h: 867, alt: 'Model in the white Graphic Tee seen from behind, the monogram across the back.' },
+      { label: 'Front', src: S + 'white-front.webp', w: 640, h: 867, alt: 'Model in the white Graphic Tee seen from the front, small mark on the chest.' },
+      { label: 'The print', src: S + 'art-white.webp', w: 900, h: 900, alt: 'The Le SMASH monogram in black with SMASH in red, on white cloth.' },
     ],
   },
   {
@@ -55,9 +56,10 @@ export const GARMENTS: Garment[] = [
     front: CUT + 'tee-black-front.webp', back: CUT + 'tee-black-back.webp', w: 648, h: 700, rest: 'back',
     frontAlt: 'Black Graphic Tee, front, with a small Le Burgers & Co. mark on the chest.',
     backAlt: 'Black Graphic Tee, back, the Le SMASH monogram in white with SMASH in red.',
-    worn: [
-      { label: 'Back', src: TEES, pos: '66.667% 50%', ar: TEE_AR, alt: 'Model in the black Graphic Tee seen from behind.' },
-      { label: 'Front', src: TEES, pos: '100% 50%', ar: TEE_AR, alt: 'Model in the black Graphic Tee seen from the front.' },
+    gallery: [
+      { label: 'Back', src: S + 'black-back.webp', w: 640, h: 867, alt: 'Model in the black Graphic Tee seen from behind, the monogram in white with SMASH in red.' },
+      { label: 'Front', src: S + 'black-front.webp', w: 640, h: 867, alt: 'Model in the black Graphic Tee seen from the front, small mark on the chest.' },
+      { label: 'The print', src: S + 'art-black.webp', w: 900, h: 900, alt: 'The Le SMASH monogram in white with SMASH in red, on black cloth.' },
     ],
   },
   {
@@ -66,9 +68,11 @@ export const GARMENTS: Garment[] = [
     front: CUT + 'tee-pixel-front.webp', back: CUT + 'tee-pixel-back.webp', w: 647, h: 700, rest: 'back',
     frontAlt: 'Black Graphic Tee, front, with a small red flame mark on the chest.',
     backAlt: 'Black Graphic Tee, back, a red pixel flame made of handwritten squares.',
-    worn: [
-      { label: 'Back', src: '/media/merch/1.jpg', pos: '0% 50%', ar: 708 / 1083, alt: 'Model in the black tee seen from behind, the red pixel flame across the back.' },
-      { label: 'Front', src: '/media/merch/1.jpg', pos: '100% 50%', ar: 888 / 1083, alt: 'Model in the black tee seen from the front with the small flame on the chest.' },
+    gallery: [
+      { label: 'Back', src: S + 'pixel-back.webp', w: 760, h: 1083, alt: 'Model in the black tee seen from behind, the red pixel flame across the back.' },
+      { label: 'Front', src: S + 'pixel-front.webp', w: 800, h: 1083, alt: 'Model in the black tee seen from the front with the small flame on the chest.' },
+      { label: 'Flat', src: S + 'pixel-flat.webp', w: 1100, h: 864, alt: 'The black tee laid flat, the pixel flame of handwritten squares across the back.' },
+      { label: 'Close up', src: S + 'pixel-close.webp', w: 900, h: 743, alt: 'Close up of the pixel flame: red squares with handwritten phrases and doodles.' },
     ],
   },
   {
@@ -77,7 +81,10 @@ export const GARMENTS: Garment[] = [
     front: CUT + 'jersey-front.webp', back: CUT + 'jersey-back.webp', w: 423, h: 820, rest: 'front',
     frontAlt: 'Black basketball jersey, front, YGN 01 in white with red and white diagonal stripes.',
     backAlt: 'Black basketball jersey, back, a red 01 above LAWRENCE.',
-    worn: [],
+    gallery: [
+      { label: 'Both sides', src: S + 'jersey.webp', w: 1000, h: 1200, alt: 'The YGN jersey on hangers, front and back.' },
+      { label: 'Close up', src: S + 'jersey-close.webp', w: 800, h: 880, alt: 'Close up of the jersey back: a red 01 above LAWRENCE.' },
+    ],
   },
 ];
 

@@ -1,7 +1,7 @@
 ---
 import { GARMENTS } from '../../data/merch';
 import { asset } from '../../lib/href';
-const data = GARMENTS.map((g) => ({ ...g, front: asset(g.front), back: asset(g.back), worn: g.worn.map((v) => ({ ...v, src: asset(v.src) })) }));
+const data = GARMENTS.map((g) => ({ ...g, front: asset(g.front), back: asset(g.back), gallery: g.gallery.map((v) => ({ ...v, src: asset(v.src) })) }));
 ---
 <dialog class="mc-detail" id="mc-detail" aria-labelledby="mc-d-name">
   <div class="mc-d-panel" data-panel>
@@ -22,16 +22,15 @@ const data = GARMENTS.map((g) => ({ ...g, front: asset(g.front), back: asset(g.b
         </div>
         <div class="mc-d-worn" data-worn aria-hidden="true"><img data-wimg src="" alt="" draggable="false" /></div>
       </div>
-      <p class="mc-d-hint label" aria-hidden="true">Drag to turn it</p>
+      <p class="mc-d-hint label" aria-hidden="true" data-hint>Drag to turn it</p>
     </div>
     <div class="mc-d-copy" data-copy>
       <p class="label label--ember" data-d-tag></p>
       <h2 id="mc-d-name" data-d-name></h2>
       <p class="mc-d-note" data-d-note></p>
-      <div class="mc-d-actions">
-        <button type="button" class="btn btn--ghost mc-d-worn-btn" data-worn-toggle aria-pressed="false">See it worn</button>
-        <div class="mc-d-views" data-d-views role="group" aria-label="Worn view" hidden></div>
-      </div>
+      <p class="mc-d-cap label" data-d-cap aria-live="polite"></p>
+      <div class="mc-d-thumbs" data-thumbs role="group" aria-label="More views"></div>
+      <p class="mc-d-keys label" aria-hidden="true">Tap a picture · swipe or arrow keys</p>
     </div>
   </div>
 </dialog>

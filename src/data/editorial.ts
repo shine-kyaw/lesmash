@@ -58,7 +58,7 @@ export const EDITORIAL = {
     'C-08',
     'agency draft, client approve',
     'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, and how many patties come in each burger. Those numbers are what make this paragraph worth reading, and the patty count is the one fact the old copy promised and the menu cannot yet show.',
-    'A smash burger is thin on purpose. A ball of beef hits a hot plancha and is pressed flat — once, hard — and that press is what builds the dark, lacy crust around the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of the part people came for. It is a technique, not a size.'
+    'A smash burger is thin on purpose. Ball of beef, hot plancha, one hard press. That press builds the dark, lacy crust round the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of what people came for. It’s a technique, not a size.'
   ),
 
   /**
@@ -95,7 +95,7 @@ export const EDITORIAL = {
     'C-17',
     'agency draft, client approve',
     'Confirm the invitation and who it is aimed at. Anything about investment level, territory or support belongs in the private follow-up, not here.',
-    'Le SMASH is open to conversations with partners who want to bring a room to a new city. We are looking for operators who care about the food as much as the numbers, and we would rather have one good conversation than fifty enquiries.'
+    'Want to bring Le SMASH to a new city? Let’s talk. We want operators who care about the food as much as the numbers, and we’d rather have one good conversation than fifty enquiries.'
   ),
 
   /**
@@ -125,7 +125,7 @@ export const EDITORIAL = {
     'C-11',
     'agency draft, client approve',
     'Do not publish this until the photography honours it. A promise the pictures break is worse than no promise.',
-    'Every photograph here is the portion you are served, plated the way the kitchen plates it during service. Nothing is built taller for the camera, and nothing is in the frame that is not in the price. If a burger comes with two patties, you can count two patties in the picture.'
+    'What you see is what you get. Every photo shows the portion as it’s plated during service. Nothing built taller for the camera, nothing in frame that’s not in the price. Two patties on the menu means two patties in the picture.'
   ),
 
   /**
@@ -139,7 +139,7 @@ export const EDITORIAL = {
     'C-07',
     'agency draft, client approve',
     'Confirm this framing. If prices should appear after all, that is a schema field and a card row, not a rebuild — but the brief says otherwise.',
-    'The dishes Le SMASH is known for, without prices. Ask in the room, or on delivery, for what anything costs today.'
+    'The dishes Le SMASH is known for, no prices on the page. Ask in the room, or on delivery, what anything costs today.'
   ),
 
   /** C-14 — agency-authored, factual, ready. */
@@ -147,6 +147,6 @@ export const EDITORIAL = {
     'C-14',
     'agency',
     'Explains that delivery runs through Foodpanda.',
-    'Delivery runs through Foodpanda. Pick your branch and we will take you straight to its listing.'
+    'Delivery runs through Foodpanda. Pick your branch and we’ll send you straight to its listing.'
   ),
 } as const;

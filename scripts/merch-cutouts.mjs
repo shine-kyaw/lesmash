@@ -357,3 +357,245 @@ if (which === 'webp' || which === 'all') {
     console.log(n + '.webp', (info.size / 1024).toFixed(0) + 'KB');
   }
 }
+
+/* ============================================================
+   photo  node scripts/merch-cutouts.mjs photo
+   Takes the four photoreal blank-tee shots (public/media/merch/photo/
+   tee-{white,black}-{front,back}.jpg, grey studio backdrop), keys the backdrop
+   to alpha (hanger + soft shadow kept), prints the client's real artwork onto the
+   cloth (multiply on white; screen driven by the cloth's own shading on black;
+   drape warp + ink softening) and writes cut/tee-*-{front,back}.webp, the same
+   names the rack already uses. Not part of `all`.
+   Env (for tests / tuning): MERCH_PHOTO_DIR, MERCH_PHOTO_OUT, MERCH_PLACE (JSON,
+   e.g. {"back":{"cx":0.5,"cy":0.5,"w":0.3}}), MERCH_KEY (JSON, {"t1":16,"t2":34}).
+   Placement is a fraction of the garment's bounding box (hanger included):
+   cx / cy / w = centre x, centre y, print width.
+   ============================================================ */
+const PHOTO_DIR = process.env.MERCH_PHOTO_DIR || 'public/media/merch/photo/';
+const PHOTO_OUT = process.env.MERCH_PHOTO_OUT || OUT;
+const PLACE = {
+  back: { cx: 0.5, cy: 0.53, w: 0.3 },     // monogram, between the shoulder blades
+  chest: { cx: 0.6, cy: 0.385, w: 0.085 }, // small mark, wearer's left chest (viewer's right)
+  ...JSON.parse(process.env.MERCH_PLACE || '{}'),
+};
+const KEY = { t1: 16, t2: 34, sat: 16, ...JSON.parse(process.env.MERCH_KEY || '{}') };
+const CANVAS = { w: 648, h: 700 };
+
+/** separable box blur on a Float32Array, 3 passes ~ gaussian */
+function blurF(src, w, h, r, passes = 3) {
+  r = Math.max(1, Math.round(r));
+  const a = Float32Array.from(src), b = new Float32Array(w * h);
+  for (let p = 0; p < passes; p++) {
+    for (let y = 0; y < h; y++) { // horizontal
+      let s = 0; const o = y * w;
+      for (let x = -r; x <= r; x++) s += a[o + Math.min(w - 1, Math.max(0, x))];
+      for (let x = 0; x < w; x++) {
+        b[o + x] = s / (2 * r + 1);
+        s += a[o + Math.min(w - 1, x + r + 1)] - a[o + Math.max(0, x - r)];
+      }
+    }
+    for (let x = 0; x < w; x++) { // vertical
+      let s = 0;
+      for (let y = -r; y <= r; y++) s += b[Math.min(h - 1, Math.max(0, y)) * w + x];
+      for (let y = 0; y < h; y++) {
+        a[y * w + x] = s / (2 * r + 1);
+        s += b[Math.min(h - 1, y + r + 1) * w + x] - b[Math.max(0, y - r) * w + x];
+      }
+    }
+  }
+  return a;
+}
+const sstep = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+/** key the backdrop: returns { rgb, alpha (0..1), shadow, bg, w, h, box } */
+async function keyBackdrop(file) {
+  const { data, info } = await sharp(file).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const w = info.width, h = info.height, n = w * h;
+  // per-row backdrop colour from the left / right edge strips (copes with vignette + gradient)
+  const edge = (x0, x1) => {
+    const o = new Float32Array(h * 3);
+    for (let y = 0; y < h; y++) for (let c = 0; c < 3; c++) {
+      let s = 0; for (let x = x0; x < x1; x++) s += data[(y * w + x) * 3 + c]; o[y * 3 + c] = s / (x1 - x0);
+    }
+    return o;
+  };
+  const L = edge(0, 8), R = edge(w - 8, w);
+  const refAt = (x, y, c) => L[y * 3 + c] + (R[y * 3 + c] - L[y * 3 + c]) * (x / (w - 1));
+  const lumDiff = new Float32Array(n), dist = new Float32Array(n), neutral = new Uint8Array(n);
+  for (let k = 0; k < n; k++) {
+    const x = k % w, y = (k / w) | 0;
+    const r = data[k * 3], g = data[k * 3 + 1], b = data[k * 3 + 2];
+    const rr = refAt(x, y, 0), rg = refAt(x, y, 1), rb = refAt(x, y, 2);
+    dist[k] = Math.hypot(r - rr, g - rg, b - rb);
+    lumDiff[k] = 0.299 * (r - rr) + 0.587 * (g - rg) + 0.114 * (b - rb);
+    neutral[k] = Math.max(r, g, b) - Math.min(r, g, b) < KEY.sat ? 1 : 0;
+  }
+  const bg = flood(w, h, (k) => dist[k] < KEY.t1 || (lumDiff[k] < 0 && lumDiff[k] > -KEY.t2 && neutral[k] && dist[k] < KEY.t2 * 1.4));
+  let bgN = 0; for (let k = 0; k < n; k++) bgN += bg[k];
+  if (bgN > n * 0.93 || bgN < n * 0.2) console.warn(`  ! backdrop key covers ${(bgN / n * 100).toFixed(0)}% of ${file} (expected 35-80%) - tune MERCH_KEY`);
+  // object alpha: softened mask, nudged inward so no grey halo survives
+  const m = new Float32Array(n); for (let k = 0; k < n; k++) m[k] = bg[k] ? 0 : 1;
+  const mb = blurF(m, w, h, 1, 2);
+  const alpha = new Float32Array(n); for (let k = 0; k < n; k++) alpha[k] = sstep(0.42, 0.9, mb[k]);
+  // shadow: backdrop pixels darker than the backdrop become soft black alpha (blurred to kill grain)
+  const sh = new Float32Array(n);
+  for (let k = 0; k < n; k++) if (bg[k] && lumDiff[k] < -2) sh[k] = Math.min(0.55, (-lumDiff[k] / 140) * 1.6);
+  const shadow = blurF(sh, w, h, 3, 2);
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (alpha[y * w + x] > 0.5) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  return { rgb: Buffer.from(data), alpha, shadow, bg, w, h, box: { x0, y0, x1, y1, w: x1 - x0 + 1, h: y1 - y0 + 1 } };
+}
+
+/** load an art cut-out scaled to `width`, returned as raw RGBA */
+async function artRaw(file, width) {
+  const { data, info } = await sharp(OUT + file).ensureAlpha().resize({ width, kernel: 'lanczos3' }).raw().toBuffer({ resolveWithObject: true });
+  return { data, w: info.width, h: info.height };
+}
+
+/** print `art` onto the keyed photo. dark = screen driven by cloth shading on black, else multiply on white. */
+function printOnto(k, art, place, dark) {
+  const { w, h, rgb, box } = k, n = w * h;
+  const lum01 = new Float32Array(n);
+  for (let i = 0; i < n; i++) lum01[i] = (0.299 * rgb[i * 3] + 0.587 * rgb[i * 3 + 1] + 0.114 * rgb[i * 3 + 2]) / 255;
+  const big = blurF(lum01, w, h, box.w * 0.06);                  // overall light on the garment
+  const mid = blurF(lum01, w, h, Math.max(2, box.w * 0.006));    // fold shading, grain removed
+  const warpL = blurF(lum01, w, h, box.w * 0.02);                // drives the drape warp
+  const cx = box.x0 + box.w * place.cx, cy = box.y0 + box.h * place.cy;
+  const ax0 = Math.round(cx - art.w / 2), ay0 = Math.round(cy - art.h / 2);
+  const amp = box.w * 0.55, lim = box.w * 0.012, hw = art.w / 2;
+  const inkLift = 0.1; // printed black is never pure black
+  const out = Buffer.from(rgb);
+  const samp = (x, y, c) => {
+    x -= ax0; y -= ay0;
+    if (x < 0 || y < 0 || x >= art.w - 1 || y >= art.h - 1) return 0;
+    const xi = x | 0, yi = y | 0, fx = x - xi, fy = y - yi, o = (yi * art.w + xi) * 4 + c, rw = art.w * 4;
+    return (art.data[o] * (1 - fx) + art.data[o + 4] * fx) * (1 - fy) + (art.data[o + rw] * (1 - fx) + art.data[o + rw + 4] * fx) * fy;
+  };
+  for (let y = Math.max(1, ay0 - 12); y < Math.min(h - 1, ay0 + art.h + 12); y++) {
+    for (let x = Math.max(1, ax0 - 12); x < Math.min(w - 1, ax0 + art.w + 12); x++) {
+      const i = y * w + x;
+      // drape: follow the cloth's light gradient + a slight cylinder bulge so the print wraps
+      const gx = (warpL[i + 1] - warpL[i - 1]) * amp, gy = (warpL[i + w] - warpL[i - w]) * amp;
+      const u = (x - cx) / hw;
+      const dx = Math.max(-lim, Math.min(lim, gx)) - u * u * u * art.w * 0.012;
+      const dy = Math.max(-lim, Math.min(lim, gy)) + u * u * art.h * 0.01;
+      const sx = x - dx, sy = y - dy;
+      const a0 = samp(sx, sy, 3) / 255;
+      if (a0 < 0.004) continue;
+      const rel = mid[i] / (big[i] + (dark ? 0.03 : 0.0001)); // folds < 1, lit ridges > 1
+      const grain = 1 - 0.1 * Math.abs(lum01[i] - mid[i]) * 18; // ink dips into the weave
+      const a = Math.min(1, a0 * (dark ? 0.97 : 0.97) * Math.max(0.82, Math.min(1, grain)));
+      for (let c = 0; c < 3; c++) {
+        const v = samp(sx, sy, c), base = rgb[i * 3 + c];
+        let res;
+        if (!dark) {
+          const ink = 255 * (inkLift + (1 - inkLift) * (v / 255));
+          res = (base * ink) / 255; // multiply
+        } else {
+          const lit = Math.min(1, (v / 255) * 0.97 * Math.pow(Math.max(0.55, Math.min(1.7, rel)), 1.1));
+          const bs = base / 255;
+          res = 255 * (1 - (1 - bs) * (1 - lit)); // screen
+        }
+        out[i * 3 + c] = Math.round(base * (1 - a) + res * a);
+      }
+    }
+  }
+  return out;
+}
+
+/** rgb + alpha (+ shadow) -> straight RGBA */
+function toRGBA(k, rgb) {
+  const n = k.w * k.h, o = Buffer.alloc(n * 4);
+  for (let i = 0; i < n; i++) {
+    const a = k.alpha[i], s = k.bg[i] ? k.shadow[i] : 0;
+    const fa = a + (1 - a) * s;
+    if (fa <= 0.002) continue;
+    for (let c = 0; c < 3; c++) o[i * 4 + c] = Math.round((rgb[i * 3 + c] * a) / fa);
+    o[i * 4 + 3] = Math.round(fa * 255);
+  }
+  return o;
+}
+
+async function photoStep() {
+  const combos = [['white', 'front'], ['white', 'back'], ['black', 'front'], ['black', 'back']];
+  const file = (c, s) => `${PHOTO_DIR}tee-${c}-${s}.jpg`;
+  const missing = combos.map(([c, s]) => file(c, s)).filter((f) => !fs.existsSync(f));
+  if (missing.length) {
+    console.error(`photo: nothing to do yet. Missing ${missing.length} of 4 blank-tee photos:\n  ${missing.join('\n  ')}\nDrop them in (1136x1408 JPG, light-grey studio background) and run again.`);
+    process.exit(1);
+  }
+  for (const a of ['art-monogram-ink.png', 'art-monogram-light.png', 'art-chest-ink.png', 'art-chest-light.png', 'art-flame-chest.png']) {
+    if (!fs.existsSync(OUT + a)) { console.error(`photo: ${OUT}${a} is missing. Run: node scripts/merch-cutouts.mjs art`); process.exit(1); }
+  }
+  fs.mkdirSync(PHOTO_OUT, { recursive: true });
+  const keyed = {};
+  for (const [c, s] of combos) { keyed[c + s] = await keyBackdrop(file(c, s)); console.log(`keyed ${c}-${s}`, JSON.stringify(keyed[c + s].box)); }
+  const built = [];
+  const job = async (name, c, s, artFile, place) => {
+    const k = keyed[c + s];
+    const art = await artRaw(artFile, Math.round(k.box.w * place.w));
+    built.push({ name, k, rgba: toRGBA(k, printOnto(k, art, place, c === 'black')) });
+  };
+  await job('tee-white-back', 'white', 'back', 'art-monogram-ink.png', PLACE.back);
+  await job('tee-white-front', 'white', 'front', 'art-chest-ink.png', PLACE.chest);
+  await job('tee-black-back', 'black', 'back', 'art-monogram-light.png', PLACE.back);
+  await job('tee-black-front', 'black', 'front', 'art-chest-light.png', PLACE.chest);
+  await job('tee-pixel-front', 'black', 'front', 'art-flame-chest.png', PLACE.chest); // flame mark on the blank black front
+
+  /* one shared crop + scale so every face has the same proportions, centred on the garment, top-aligned */
+  const pad = 14;
+  const cw = Math.max(...built.map((b) => b.k.box.w)) + pad * 2;
+  const ch = Math.max(...built.map((b) => b.k.box.h)) + pad * 2 + 26;
+  const scale = Math.min(CANVAS.w / cw, CANVAS.h / ch);
+  for (const b of built) {
+    const { w, h, box } = b.k;
+    const buf = Buffer.alloc(cw * ch * 4);
+    const left = Math.round(box.x0 + box.w / 2 - cw / 2), top = box.y0 - pad;
+    for (let y = 0; y < ch; y++) {
+      const sy = y + top; if (sy < 0 || sy >= h) continue;
+      for (let x = 0; x < cw; x++) { const sx = x + left; if (sx < 0 || sx >= w) continue; b.rgba.copy(buf, (y * cw + x) * 4, (sy * w + sx) * 4, (sy * w + sx) * 4 + 4); }
+    }
+    const fw = Math.round(cw * scale), fh = Math.round(ch * scale);
+    const face = await sharp(buf, { raw: { width: cw, height: ch, channels: 4 } }).resize(fw, fh, { kernel: 'lanczos3' }).png().toBuffer();
+    const cwid = b.name === 'tee-pixel-front' ? 647 : CANVAS.w; // pixel tee keeps its 647x700 face size
+    const info = await sharp({ create: { width: cwid, height: CANVAS.h, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+      .composite([{ input: face, left: Math.round((cwid - fw) / 2), top: 0 }]).webp({ quality: 84, alphaQuality: 90 }).toFile(`${PHOTO_OUT}${b.name}.webp`);
+    console.log(b.name, `${info.width}x${info.height}`, (info.size / 1024).toFixed(0) + 'KB');
+  }
+}
+if (which === 'photo') await photoStep();
+
+/* ============================================================
+   shots  node scripts/merch-cutouts.mjs shots
+   Crops the client's real photos into the gallery views of the detail panel
+   (public/media/merch/shots/*.webp): each model separately, flat-lay, jersey,
+   a zoom on the print, and the artwork on plain cloth colour.
+   ============================================================ */
+async function shots() {
+  const D = 'public/media/merch/shots/';
+  fs.mkdirSync(D, { recursive: true });
+  const T = 'le-smash-t-shirt-mockup.jpg';
+  const jobs = [
+    ['white-back', T, { left: 0, top: 0, width: 400, height: 542 }, 640],
+    ['white-front', T, { left: 400, top: 0, width: 400, height: 542 }, 640],
+    ['black-back', T, { left: 800, top: 0, width: 400, height: 542 }, 640],
+    ['black-front', T, { left: 1200, top: 0, width: 400, height: 542 }, 640],
+    ['pixel-back', '1.jpg', { left: 0, top: 0, width: 760, height: 1083 }, 760],
+    ['pixel-front', '1.jpg', { left: 800, top: 0, width: 800, height: 1083 }, 800],
+    ['pixel-flat', '2.jpg', { left: 100, top: 250, width: 1400, height: 1100 }, 1100],
+    ['pixel-close', '2.jpg', { left: 600, top: 780, width: 400, height: 330 }, 900],
+    ['jersey', 'le-smash-jersey-final-1.jpg', { left: 300, top: 0, width: 1000, height: 1200 }, 1000],
+    ['jersey-close', 'le-smash-jersey-final-1.jpg', { left: 840, top: 360, width: 300, height: 330 }, 800],
+  ];
+  for (const [name, file, box, w] of jobs) {
+    const info = await sharp(SRC + file).extract(box).resize({ width: w, kernel: 'lanczos3' }).webp({ quality: 80 }).toFile(`${D}${name}.webp`);
+    console.log(name, `${info.width}x${info.height}`, (info.size / 1024).toFixed(0) + 'KB');
+  }
+  /* the print itself, on plain cloth */
+  for (const [name, art, bg] of [['art-white', 'art-monogram-ink.png', '#ecebe6'], ['art-black', 'art-monogram-light.png', '#18181b']]) {
+    const a = await sharp(OUT + art).resize({ width: 640, height: 640, fit: 'inside' }).png().toBuffer();
+    const info = await sharp({ create: { width: 900, height: 900, channels: 3, background: bg } }).composite([{ input: a, gravity: 'center' }]).webp({ quality: 84 }).toFile(`${D}${name}.webp`);
+    console.log(name, `${info.width}x${info.height}`, (info.size / 1024).toFixed(0) + 'KB');
+  }
+}
+if (which === 'shots') await shots();

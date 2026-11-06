@@ -2,6 +2,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+if (import.meta.env.DEV) gsap.ticker.lagSmoothing(0);
 
 const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => Array.from(r.querySelectorAll<T>(s));
@@ -175,135 +176,158 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
   });
 })();
 
-/* ============================================================== ring ===== */
+/* ========================================================= campaigns ===== */
+/* Desktop: one pinned stage. A ribbon of nine poster cards is placed every
+   update from a parametric curve (position, tangent rotateZ, twist rotateY/X,
+   translateZ swell), then each card is blended from its ribbon pose into its
+   grid slot. Mobile: a bent, swipeable band. Reduced motion: the grid only. */
 (() => {
-  const ring = $<HTMLElement>('[data-gl-ring]');
-  const rot = $<HTMLElement>('[data-gl-rot]');
-  if (!ring || !rot) return;
-  const cards = $$<HTMLButtonElement>('[data-gl-card]', rot);
-  const shades = cards.map((c) => $<HTMLElement>('.gl-card__shade', c)!);
-  const n = cards.length;
-  const step = 360 / n;
-  const numEl = $('[data-gl-ring-num]')!;
-  const titleEl = $('[data-gl-ring-title]')!;
-  const st = { rot: 0 };
-  let R = 600, chord = 280, front = -1;
-  let tween: gsap.core.Tween | null = null;
-  let dragging = false, hovering = false, focused = false, inView = false, idleUntil = 0, moved = false;
-
-  const layout = () => {
-    const ws = cards.map((c) => c.offsetWidth).sort((a, b) => a - b);
-    const wmax = ws[n - 1], wmid = ws[Math.floor(n / 2)];
-    chord = (wmax + wmid) / 2 + 18;
-    R = chord / (2 * Math.sin(Math.PI / n));
-    ring.style.setProperty('--R', `${R}px`);
-    cards.forEach((c, i) => c.style.setProperty('--a', `${i * step}deg`));
-    render();
-  };
-  const wrap180 = (a: number) => ((((a + 180) % 360) + 360) % 360) - 180;
-  function render() {
-    gsap.set(rot, { z: -R, rotationY: -st.rot });
-    for (let i = 0; i < n; i++) {
-      const d = Math.abs(wrap180(i * step - st.rot));
-      shades[i].style.opacity = String(Math.min(0.78, (d / 80) * 0.78));
-    }
-    const f = ((Math.round(st.rot / step) % n) + n) % n;
-    if (f !== front) {
-      front = f;
-      numEl.textContent = `${pad(f + 1)} / ${pad(n)}`;
-      titleEl.textContent = cards[f].dataset.cap || '';
-    }
-  }
-  const settle = (target: number, dur = 1.1, ease = 'back.out(1.15)') => {
-    tween?.kill();
-    tween = gsap.to(st, { rot: Math.round(target / step) * step, duration: dur, ease, onUpdate: render, overwrite: true });
-  };
-  const go = (d: number) => { idleUntil = performance.now() + 3500; settle(Math.round(st.rot / step) * step + d * step, 0.9); };
-  const degPerPx = () => step / chord;
-
-  // drag
-  let sx = 0, lx = 0, lt = 0, v = 0, pid = -1;
-  ring.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
-    tween?.kill(); dragging = true; moved = false; sx = lx = e.clientX; lt = e.timeStamp; v = 0; pid = e.pointerId;
-  });
-  ring.addEventListener('pointermove', (e) => {
-    if (!dragging || e.pointerId !== pid) return;
-    const dx = e.clientX - lx;
-    if (!moved && Math.abs(e.clientX - sx) > 6) { moved = true; ring.classList.add('is-drag'); try { ring.setPointerCapture(pid); } catch {} }
-    if (!moved) return;
-    st.rot -= dx * degPerPx();
-    const dt = Math.max(1, e.timeStamp - lt);
-    v = 0.7 * v + 0.3 * (-dx * degPerPx() / dt);
-    lx = e.clientX; lt = e.timeStamp;
-    render();
-  });
-  const end = (e: PointerEvent) => {
-    if (!dragging || e.pointerId !== pid) return;
-    dragging = false; ring.classList.remove('is-drag');
-    idleUntil = performance.now() + 3000;
-    if (moved) {
-      const fresh = performance.now() - lt < 120 ? v : 0;
-      const dist = gsap.utils.clamp(-step * 6, step * 6, fresh * 380);
-      settle(st.rot + dist, 0.8 + Math.min(1, Math.abs(dist) / (step * 4)), 'power3.out');
-    }
-  };
-  ring.addEventListener('pointerup', end);
-  ring.addEventListener('pointercancel', end);
-  ring.addEventListener('click', (e) => {
-    if (moved) { moved = false; return; }
-    const c = (e.target as HTMLElement).closest<HTMLElement>('[data-gl-card]');
-    if (c) lb.open('campaigns', cards.indexOf(c as HTMLButtonElement));
+  const pin = $<HTMLElement>('[data-cp-pin]');
+  const ribbon = $<HTMLElement>('[data-cp-ribbon]');
+  if (!pin || !ribbon) return;
+  const items = $$<HTMLElement>('[data-cp-item]', ribbon);
+  const N = items.length;
+  const a = $<HTMLElement>('[data-cp-a]')!;
+  const b = $<HTMLElement>('[data-cp-b]')!;
+  const label = $<HTMLElement>('[data-cp-label]')!;
+  const hint = $<HTMLElement>('[data-cp-hint]')!;
+  const buttons = items.map((it) => $<HTMLButtonElement>('button', it)!);
+  const open = (i: number) => lb.open('campaigns', i);
+  ribbon.addEventListener('click', (e) => {
+    const it = (e.target as HTMLElement).closest<HTMLElement>('[data-cp-item]');
+    if (it) open(Number(it.dataset.cpI));
   });
 
-  // wheel (sideways only, so page scroll is never hijacked)
-  let wt = 0;
-  ring.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) * 1.2) return;
-    e.preventDefault();
-    tween?.kill();
-    st.rot += e.deltaX * degPerPx() * 0.9;
-    render();
-    idleUntil = performance.now() + 3000;
-    clearTimeout(wt);
-    wt = window.setTimeout(() => settle(st.rot, 0.6, 'power3.out'), 140);
-  }, { passive: false });
+  const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  const outCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+  const smooth = (t: number) => t * t * (3 - 2 * t);
+  const mm = gsap.matchMedia();
 
-  // keys
-  ring.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
-    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lb.open('campaigns', front); }
-  });
-  $('[data-gl-ring-prev]')!.addEventListener('click', () => go(-1));
-  $('[data-gl-ring-next]')!.addEventListener('click', () => go(1));
+  /* ----------------------------------------------------------- desktop --- */
+  mm.add('(min-width: 56.25rem) and (prefers-reduced-motion: no-preference)', () => {
+    type Pose = { x: number; y: number; z: number; rz: number; ry: number; rx: number; s: number };
+    const GAP = 0.125;                         // card spacing along the curve
+    const HEAD_END = 1 + (N - 1) * GAP + 0.14; // head travel until the last card has left
+    const FLY0 = 0.6, FLY_STAGGER = 0.018, FLY_DUR = 0.2, SETTLE = 0.945;
+    let W = 0, H = 0, gw = 250, gh = 333;
+    let grid: Pose[] = [];
+    let settled = false;
+    const st = { p: 0 };
 
-  ring.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovering = true; });
-  ring.addEventListener('pointerleave', () => { hovering = false; });
-  ring.addEventListener('focusin', () => { focused = true; });
-  ring.addEventListener('focusout', () => { focused = false; });
+    // The ribbon curve. s runs 0..1 from off the bottom-left to off the top-right.
+    const px = (s: number) => (-1.4 + 2.8 * s) * W * 0.5;
+    const py = (s: number) => (0.9 - 1.8 * s - 0.5 * Math.sin(6.9115 * s)) * H * 0.5;
+    const ribbonPose = (s: number): Pose => {
+      const e = 0.01;
+      const rz = Math.atan2(py(s + e) - py(s - e), px(s + e) - px(s - e)) * 57.2958;
+      const swell = Math.exp(-(((s - 0.5) / 0.22) ** 2));
+      return {
+        x: px(s), y: py(s), z: 340 * swell,
+        rz: Math.max(-30, Math.min(30, rz)),
+        ry: 46 * Math.sin(6.2832 * s + 0.6),
+        rx: 26 * Math.sin(5.0265 * s + 1.2),
+        s: 0.95,
+      };
+    };
 
-  // slow idle spin
-  if (!reduced) {
-    gsap.ticker.add((_t, dtMs) => {
-      if (!inView || dragging || hovering || focused || tween?.isActive() || root.classList.contains('gl-lb-open')) return;
-      if (performance.now() < idleUntil) return;
-      st.rot += 0.045 * (dtMs / 16.7);
-      render();
+    const measure = () => {
+      W = pin.clientWidth; H = pin.clientHeight;
+      const top = 88, bottom = 52, gx = 16, gy = 16;
+      const areaH = H - top - bottom;
+      gw = Math.min((W - 2 * (W * 0.04) - 4 * gx) / 5, (areaH - gy) / 2 / (4 / 3));
+      gh = gw * (4 / 3);
+      pin.style.setProperty('--cw', `${gw}px`);
+      pin.style.setProperty('--ch', `${gh}px`);
+      ribbon.style.setProperty('--cw', `${gw}px`);
+      ribbon.style.setProperty('--ch', `${gh}px`);
+      const cy = (top + (H - bottom)) / 2 - H / 2;
+      grid = items.map((_, i) => {
+        const row = i < 5 ? 0 : 1, count = row ? N - 5 : 5, col = row ? i - 5 : i;
+        const x = (col - (count - 1) / 2) * (gw + gx);
+        const y = cy + (row - 0.5) * (gh + gy);
+        return { x, y, z: 0, rz: 0, ry: 0, rx: 0, s: 1 };
+      });
+    };
+
+    const render = (p: number) => {
+      const head = clamp01((p - 0.08) / (FLY0 - 0.08)) * HEAD_END;
+      for (let i = 0; i < N; i++) {
+        const q = clamp01((p - (FLY0 + i * FLY_STAGGER)) / FLY_DUR);
+        let o: Pose;
+        if (q <= 0) o = ribbonPose(head - i * GAP);
+        else {
+          const f = ribbonPose(Math.min(HEAD_END - i * GAP, 1.25)), g = grid[i], t = outCubic(q);
+          o = {
+            x: f.x + (g.x - f.x) * t,
+            y: f.y + (g.y - f.y) * t - Math.sin(Math.PI * q) * H * 0.1,
+            z: f.z * (1 - t), rz: f.rz * (1 - t), ry: f.ry * (1 - t), rx: f.rx * (1 - t),
+            s: f.s + (1 - f.s) * t,
+          };
+        }
+        items[i].style.transform =
+          `translate3d(${o.x.toFixed(1)}px,${o.y.toFixed(1)}px,${o.z.toFixed(1)}px) rotateZ(${o.rz.toFixed(2)}deg) rotateY(${o.ry.toFixed(2)}deg) rotateX(${o.rx.toFixed(2)}deg) scale(${o.s.toFixed(3)})`;
+      }
+      // headline: slides in from opposite sides, then leaves as the grid arrives
+      const inn = outCubic(clamp01(p / 0.12)), out = smooth(clamp01((p - 0.5) / 0.14));
+      const fade = String(1 - out);
+      a.style.transform = `translate3d(${(-(1 - inn) * W * 0.8 - out * W * 0.25).toFixed(1)}px,0,0)`;
+      b.style.transform = `translate3d(${((1 - inn) * W * 0.8 + out * W * 0.25).toFixed(1)}px,0,0)`;
+      a.style.opacity = b.style.opacity = label.style.opacity = fade;
+      hint.style.opacity = String(smooth(clamp01((p - 0.93) / 0.05)));
+      const s = p >= SETTLE;
+      if (s !== settled) {
+        settled = s;
+        ribbon.classList.toggle('is-settled', s);
+        buttons.forEach((bt) => { bt.tabIndex = s ? 0 : -1; });
+      }
+    };
+
+    measure(); render(0);
+    const ro = new ResizeObserver(() => { measure(); render(st.p); });
+    ro.observe(pin);
+    gsap.to(st, {
+      p: 1, ease: 'none', onUpdate: () => render(st.p),
+      scrollTrigger: { trigger: pin, start: 'top top', end: () => `+=${Math.round(innerHeight * 3.8)}`, pin: true, scrub: 1, anticipatePin: 1, invalidateOnRefresh: true },
     });
-  }
+    return () => {
+      ro.disconnect();
+      ribbon.classList.remove('is-settled');
+      [...items, a, b, label, hint].forEach((el) => { el.style.transform = ''; el.style.opacity = ''; });
+      buttons.forEach((bt) => { bt.tabIndex = -1; });
+    };
+  });
 
-  layout();
-  addEventListener('resize', () => { layout(); });
-  let intro = false;
-  new IntersectionObserver((es) => {
-    inView = es[0].isIntersecting;
-    if (inView && !intro && !reduced) {
-      intro = true;
-      st.rot = -step * 5; render();
-      tween = gsap.to(st, { rot: 0, duration: 1.9, ease: 'power3.out', onUpdate: render });
-    }
-  }, { threshold: 0.25 }).observe(ring);
+  /* ------------------------------------------------------------ mobile --- */
+  mm.add('(max-width: 56.24rem) and (prefers-reduced-motion: no-preference)', () => {
+    let raf = 0, centres: number[] = [], half = 1;
+    const measure = () => {
+      half = ribbon.clientWidth / 2;
+      centres = items.map((it) => it.offsetLeft + it.offsetWidth / 2);
+    };
+    const bend = () => {
+      raf = 0;
+      const mid = ribbon.scrollLeft + half;
+      for (let i = 0; i < N; i++) {
+        const d = Math.max(-1.6, Math.min(1.6, (centres[i] - mid) / half));
+        items[i].style.transform =
+          `translate3d(0,${(d * d * 16).toFixed(1)}px,${(-Math.abs(d) * 90).toFixed(1)}px) rotateY(${(-d * 30).toFixed(1)}deg) rotateZ(${(d * 3).toFixed(2)}deg)`;
+      }
+    };
+    const queue = () => { if (!raf) raf = requestAnimationFrame(bend); };
+    buttons.forEach((bt) => { bt.tabIndex = 0; });
+    measure(); bend();
+    ribbon.addEventListener('scroll', queue, { passive: true });
+    const ro = new ResizeObserver(() => { measure(); bend(); });
+    ro.observe(ribbon);
+    // images lazy-load after first layout; remeasure once they settle
+    addEventListener('load', () => { measure(); bend(); }, { once: true });
+    return () => {
+      ribbon.removeEventListener('scroll', queue);
+      ro.disconnect(); cancelAnimationFrame(raf);
+      items.forEach((it) => { it.style.transform = ''; });
+      buttons.forEach((bt) => { bt.tabIndex = -1; });
+    };
+  });
 })();
 
 /* ===================================================== events wall pop === */

@@ -47,7 +47,7 @@ export const GALLERY_SECTIONS: GallerySection[] = [
   {
     slug: 'campaigns',
     name: 'Campaigns',
-    blurb: 'Shot for a season, a launch or a single idea.',
+    blurb: 'A season, a launch, one big idea.',
     ratio: '4x5',
     fit: 'contain',
     items: [
@@ -85,7 +85,7 @@ export const GALLERY_SECTIONS: GallerySection[] = [
   {
     slug: 'events',
     name: 'Events and Pop-Ups',
-    blurb: 'Nights out of the room — markets, takeovers, one-offs.',
+    blurb: 'Markets, takeovers, one-offs.',
     ratio: '3x2',
     items: [
       { src: '01-opening-arch.jpg', alt: 'A red, black and white balloon arch outside the shopfront on opening day' },
@@ -167,7 +167,7 @@ export const GALLERY_SECTIONS: GallerySection[] = [
   {
     slug: 'collaborations',
     name: 'Collaborations',
-    blurb: 'Work with other brands, restaurants, artists and venues.',
+    blurb: 'Us plus other brands, restaurants, artists and venues.',
     ratio: '4x5',
     fit: 'contain',
     items: [

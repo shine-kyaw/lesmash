@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import GalleryTile from '../components/GalleryTile.astro';
 import { GALLERY_SECTIONS, GALLERY_COUNT } from '../data/gallery';
-import { SHOWCASE, POSTERS, EVENTS, FEED } from '../data/gallery-v2';
+import { SHOWCASE, CAMPAIGNS, EVENTS, FEED } from '../data/gallery-v2';
 import { href, asset } from '../lib/href';
 import { title, DESCRIPTIONS } from '../lib/seo';
 import { breadcrumbSchema } from '../lib/schema';
@@ -82,44 +82,42 @@ const WALL = [
   </section>
 
   {/* ============================================================ 2. Campaigns */}
-  <section class="gl-camp dark" id="campaigns" aria-labelledby="gl-camp-h">
-    <div class="wrap gl-camp__head">
-      <p class="label label--ember">Campaign highlight</p>
-      <h2 id="gl-camp-h" class="gl-h2">Campaigns we invested <span class="script">heavily in.</span></h2>
-      <p class="lede">
-        Our own campaigns and the collaborations we have thrown with friends.
-        Drag to spin the ring, tap a poster to see it whole.
-      </p>
-    </div>
+  <section class="gl-camp dark" id="campaigns" aria-labelledby="gl-camp-h" data-cp>
+    <div class="gl-cp" data-cp-pin>
+      <div class="gl-cp__intro wrap">
+        <p class="label label--ember gl-cp__label" data-cp-label>Campaign highlight</p>
+        <h2 id="gl-camp-h" class="gl-h2 gl-cp__h">
+          <span class="gl-cp__a" data-cp-a>Campaigns we</span>
+          <span class="gl-cp__b" data-cp-b>went all in on.</span>
+        </h2>
+        <p class="lede gl-cp__lede">
+          Our posters, and the parties we threw with friends.
+          Tap one to see it whole.
+        </p>
+      </div>
 
-    <div class="gl-ring" data-gl-ring tabindex="0" role="group" aria-roledescription="carousel"
-         aria-label="Campaign posters. Left and right arrow keys rotate the ring; Enter opens the front poster.">
-      <div class="gl-ring__rot" data-gl-rot>
-        {POSTERS.map((p, i) => {
-          const r = p.w / p.h;
-          const k = r > 1.2 ? 1.3 : r > 0.95 ? 1.08 : 1;
-          return (
-            <button class="gl-card" type="button" tabindex="-1" data-gl-card data-gl-lb="campaigns"
-                    data-full={asset(p.src)} data-cap={p.title} data-i={i}
-                    style={`--r:${r.toFixed(4)};--k:${k}`}>
+      <ul class="gl-cp__ribbon" data-cp-ribbon aria-label="Campaign posters">
+        {CAMPAIGNS.map((p, i) => (
+          <li class="gl-cp__item" data-cp-item data-cp-i={i}>
+            <button class="gl-cp__card" type="button" tabindex="-1" aria-label={`Open poster: ${p.title}`}>
               <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" draggable="false" />
-              <span class="gl-card__shade" aria-hidden="true"></span>
             </button>
-          );
-        })}
-      </div>
+          </li>
+        ))}
+      </ul>
+      <p class="gl-cp__hint" data-cp-hint aria-hidden="true">Tap a poster.</p>
     </div>
 
-    <div class="wrap gl-camp__foot">
-      <p class="gl-ring__cap" aria-live="polite">
-        <span class="gl-ring__num" data-gl-ring-num>01 / {pad(POSTERS.length)}</span>
-        <span class="gl-ring__title" data-gl-ring-title>{POSTERS[0].title}</span>
-      </p>
-      <div class="gl-show__ctl">
-        <button class="gl-round" type="button" data-gl-ring-prev aria-label="Previous poster">&#8592;</button>
-        <button class="gl-round" type="button" data-gl-ring-next aria-label="Next poster">&#8594;</button>
-      </div>
-    </div>
+    <ul class="gl-cp__grid" data-cp-grid>
+      {CAMPAIGNS.map((p) => (
+        <li>
+          <button class="gl-cp__tile" type="button" data-gl-lb="campaigns"
+                  data-full={asset(p.src)} data-cap={p.title}>
+            <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" draggable="false" />
+          </button>
+        </li>
+      ))}
+    </ul>
   </section>
 
   {/* ============================================================ 3. Events */}
@@ -127,7 +125,7 @@ const WALL = [
     <div class="wrap">
       <p class="label label--ember">Events &amp; nights</p>
       <h2 id="gl-ev-h" class="gl-h2">When the room <span class="script">fills up.</span></h2>
-      <p class="lede">Parties, DJs and long nights in the carriage. Tap a picture to enlarge it.</p>
+      <p class="lede">Parties, DJs, late nights in the carriage. Tap to enlarge.</p>
 
       <ul class="gl-wall" data-gl-wall>
         {EVENTS.map((p, i) => (
@@ -147,7 +145,7 @@ const WALL = [
     <div class="wrap">
       <p class="label">From the feed</p>
       <h2 id="gl-fd-h" class="gl-h2">Fresh off <span class="script">our posts.</span></h2>
-      <p class="lede">The collages we put out on social, as posted.</p>
+      <p class="lede">Straight from our socials.</p>
 
       <ul class="gl-posts">
         {FEED.map((p) => (
@@ -173,8 +171,8 @@ const WALL = [
         Everything we<br /><span class="script">have made so far.</span>
       </h2>
       <p class="lede" style="margin-top:var(--s5)">
-        Le SMASH is a restaurant that also makes things — campaigns, pop-ups,
-        collaborations. {GALLERY_COUNT} pictures, in {GALLERY_SECTIONS.length} parts.
+        A burger place that also makes posters, pop-ups and collabs.
+        {GALLERY_COUNT} pictures, {GALLERY_SECTIONS.length} parts.
       </p>
     </div>
   </section>

@@ -1,15 +1,12 @@
 ---
 /**
- * Meet Our Team: a pinned, scroll-driven showcase.
+ * Meet the crew. Ten square photos in a normal grid. Click one and the grid
+ * flies onto a slowly swaying ring around a profile card (phones: a full-width
+ * profile sheet with a swipeable strip). No pinning, no scroll hijack.
  *
- * Flow (from the client's deck): select member -> portrait appears -> quote
- * reveals -> signature draws. Desktop pins the section and spends about one
- * viewport of scroll on each of the crew; phones stack one block per member and
- * reveal each as it scrolls in; reduced motion shows everything, stacked.
- *
- * The profile card is a deliberate template. Name, role and quote slots are
- * empty until the client supplies them in src/data/team.ts; fill a field in and
- * the real text replaces the ruled placeholder with no other change.
+ * The profile is a deliberate template: Name / Position / In their words stay as
+ * ruled blanks until src/data/team.ts has the real text, then the text replaces
+ * the rules. atWork / dish fill the two dashed frames the same way.
  */
 import { asset } from '../../lib/href';
 import { TEAM } from '../../data/team';
@@ -21,7 +18,6 @@ const members = TEAM.map((m, i) => {
   return { ...m, src: asset(m.photo), w: d?.width ?? 1080, h: d?.height ?? 1080, i };
 });
 const N = members.length;
-const pad = (n: number) => String(n).padStart(2, '0');
 const SIG = 'M4 30 C 26 4, 44 6, 58 24 S 92 40, 118 20 S 160 2, 186 22 S 236 38, 262 16 S 290 10, 296 14';
 ---
 <section class="vs-team" id="team" aria-labelledby="vs-team-h">
@@ -36,66 +32,77 @@ const SIG = 'M4 30 C 26 4, 44 6, 58 24 S 92 40, 118 20 S 160 2, 186 22 S 236 38,
         personalities, one shared love for smashing burgers.
       </p>
     </header>
-  </div>
 
-  <div class="vs-tm" data-tm>
-    <div class="vs-tm__stage">
-      {members.map((m) => (
-        <article class="vs-m" data-m aria-label={`Crew member ${m.i + 1} of ${N}`}>
-          <figure class="vs-m__photo" data-photo>
-            <img src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" />
-          </figure>
+    <div class="vs-tm" data-tm data-state="grid">
+      <p class="vs-tm__hint label">Pick a face</p>
+      <div class="vs-tm__stage" data-stage>
+        <ul class="vs-tm__grid" data-grid>
+          {members.map((m) => (
+            <li>
+              <button type="button" class="vs-tile" data-tile={m.i}
+                data-src={m.src} data-alt={m.alt} data-w={m.w} data-h={m.h}
+                data-name={m.name ?? ''} data-role={m.role ?? ''} data-quote={m.quote ?? ''}
+                data-atwork={m.atWork ? asset(m.atWork) : ''} data-dish={m.dish ? asset(m.dish) : ''}
+                aria-label={`Open crew member ${m.i + 1} of ${N}`}>
+                <img src={m.src} alt={m.alt} width={m.w} height={m.h} loading="lazy" decoding="async" />
+              </button>
+            </li>
+          ))}
+        </ul>
 
-          <div class="vs-m__card" data-card>
-            <div class="vs-m__row" data-name>
-              <span class="vs-m__slot">Name</span>
-              {m.name
-                ? <h3 class="vs-m__name">{m.name}</h3>
-                : <span class="vs-m__rule vs-m__rule--name" aria-hidden="true"></span>}
-            </div>
+        <div class="vs-pn" data-panel>
+          <div class="vs-pn__top">
+            <button type="button" class="vs-pn__back" data-back>
+              <span aria-hidden="true">&larr;</span> Back to the grid
+            </button>
+            <p class="vs-pn__count" aria-live="polite"><b data-cur>01</b> / {String(N).padStart(2, '0')}</p>
+          </div>
 
-            <div class="vs-m__row" data-role>
-              <span class="vs-m__slot">Role</span>
-              {m.role
-                ? <p class="vs-m__role">{m.role}</p>
-                : <span class="vs-m__rule vs-m__rule--role" aria-hidden="true"></span>}
-            </div>
+          <div class="vs-pn__main">
+            <figure class="vs-pn__photo" data-pphoto>
+              <img data-pimg alt="" width="1080" height="1080" decoding="async" />
+              <img data-pimg alt="" width="1080" height="1080" decoding="async" />
+            </figure>
 
-            <div class="vs-m__quote" data-quote>
-              <span class="vs-m__slot">In their words</span>
-              <span class="vs-m__qmark" aria-hidden="true">&ldquo;</span>
-              {m.quote
-                ? <blockquote class="vs-m__text"><p>{m.quote}</p></blockquote>
-                : (
-                  <span class="vs-m__lines" aria-hidden="true"><i></i><i></i><i></i></span>
-                )}
-            </div>
-
-            <div class="vs-m__sig" data-sig>
-              <span class="vs-m__slot">Signature</span>
-              <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <line class="vs-m__base" x1="2" y1="40" x2="298" y2="40" />
-                <path class="vs-m__stroke" d={SIG} pathLength="1" />
-              </svg>
+            <div class="vs-pn__body">
+              <div class="vs-pn__row" data-row="name" data-empty="1">
+                <span class="vs-pn__lab">Name</span>
+                <div class="vs-pn__val"><h3 class="vs-pn__txt vs-pn__txt--name" data-txt></h3><i class="vs-pn__rule vs-pn__rule--name" data-rule></i></div>
+              </div>
+              <div class="vs-pn__row" data-row="role" data-empty="1">
+                <span class="vs-pn__lab">Position</span>
+                <div class="vs-pn__val"><p class="vs-pn__txt vs-pn__txt--role" data-txt></p><i class="vs-pn__rule" data-rule></i></div>
+              </div>
+              <div class="vs-pn__qrow">
+                <div class="vs-pn__row vs-pn__row--quote" data-row="quote" data-empty="1">
+                  <span class="vs-pn__lab">In their words</span>
+                  <div class="vs-pn__val"><p class="vs-pn__txt vs-pn__txt--quote" data-txt></p><span class="vs-pn__rule vs-pn__rule--lines" data-rule aria-hidden="true"><i></i><i></i><i></i></span></div>
+                </div>
+                <svg class="vs-pn__sig" viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <line class="vs-pn__base" x1="2" y1="40" x2="298" y2="40" />
+                  <path class="vs-pn__stroke" data-sig d={SIG} pathLength="1" />
+                </svg>
+              </div>
             </div>
           </div>
-        </article>
-      ))}
-    </div>
 
-    <nav class="vs-rail" aria-label="Crew members">
-      <p class="vs-rail__count" aria-live="polite"><b data-cur>01</b> / {pad(N)}</p>
-      <ol class="vs-rail__thumbs">
-        {members.map((m) => (
-          <li>
-            <button type="button" class="vs-rail__btn" data-go={m.i} aria-label={`Show crew member ${m.i + 1} of ${N}`} aria-current={m.i === 0 ? 'true' : undefined}>
-              <img src={m.src} alt="" width={m.w} height={m.h} loading="lazy" decoding="async" />
-            </button>
-          </li>
-        ))}
-      </ol>
-      <span class="vs-rail__bar" aria-hidden="true"><span data-fill></span></span>
-    </nav>
+          <div class="vs-pn__slots">
+            <div class="vs-pn__frame" data-frame="atwork"><span class="vs-pn__flab">At work</span><img alt="" hidden /></div>
+            <div class="vs-pn__frame" data-frame="dish"><span class="vs-pn__flab">Signature dish</span><img alt="" hidden /></div>
+          </div>
+
+          <ul class="vs-pn__strip" data-strip>
+            {members.map((m) => (
+              <li>
+                <button type="button" data-go={m.i} aria-label={`Show crew member ${m.i + 1} of ${N}`}>
+                  <img src={m.src} alt="" width={m.w} height={m.h} loading="lazy" decoding="async" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

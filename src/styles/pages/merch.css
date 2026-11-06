@@ -39,7 +39,11 @@ html.mc-locked { overflow: hidden; }
   background: radial-gradient(ellipse 80% 70% at 50% 0%, #fdfcf9 0%, #efece6 60%, #e4e0d8 100%);
   padding-block: clamp(var(--s8), 9vw, var(--s9)) clamp(var(--s7), 7vw, var(--s8));
 }
-.mc-studio { --u: clamp(210px, 20.5vw, 290px); }
+.mc-studio { --u: clamp(210px, 20.5vw, 290px); --sx: 50%; position: relative; }
+/* studio light: a soft key that tracks the pointer, and falloff to the edges */
+.mc-studio::before, .mc-studio::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.mc-studio::before { background: radial-gradient(ellipse 34% 70% at var(--sx) 30%, rgb(255 250 240 / 0.5), transparent 70%); mix-blend-mode: soft-light; }
+.mc-studio::after { background: linear-gradient(90deg, rgb(60 48 36 / 0.2), transparent 22%, transparent 78%, rgb(60 48 36 / 0.2)), linear-gradient(transparent 62%, rgb(60 48 36 / 0.12)); }
 .mc-scroll { padding-block: 36px 24px; }
 .mc-stage3d { perspective: 1300px; perspective-origin: 50% 12%; }
 .mc-row3d { position: relative; transform-style: preserve-3d; transform-origin: 50% 0; }
@@ -47,7 +51,14 @@ html.mc-locked { overflow: hidden; }
   position: absolute; left: -3vw; right: -3vw; top: 14px; height: 13px; border-radius: 7px;
   background: linear-gradient(#fdfdfd, #b9bfc4 38%, #eef0f2 56%, #5b6166);
   box-shadow: 0 12px 16px -8px rgb(0 0 0 / 0.38), inset 0 0 0 1px rgb(255 255 255 / 0.4);
+  overflow: hidden;
 }
+/* specular streak sliding along the chrome with the light, plus a thin reflected floor line */
+.mc-rail::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 9% 140% at var(--sx, 50%) 28%, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0) 100%);
+}
+.mc-rail::after { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 1px; background: rgb(0 0 0 / 0.3); }
 .mc-rail__cap { position: absolute; top: -9px; width: 14px; height: 31px; border-radius: 5px; background: linear-gradient(90deg, #6b7176, #f1f3f4 45%, #7a8085); box-shadow: 0 6px 8px -3px rgb(0 0 0 / 0.4); }
 .mc-rail__cap--l { left: 3vw; } .mc-rail__cap--r { right: 3vw; }
 .mc-row {
@@ -75,8 +86,10 @@ html.mc-locked { overflow: hidden; }
   position: absolute; left: 50%; top: 26px; pointer-events: none;
   width: calc(var(--u) * var(--gw) * 0.9); height: calc(var(--u) * var(--gh) * 0.88);
   margin-left: calc(var(--u) * var(--gw) * -0.45);
-  background: radial-gradient(ellipse at 50% 45%, rgb(40 30 20 / 0.3), transparent 66%);
-  filter: blur(12px); transform: translate(20px, 28px) scale(calc(1 + var(--hw, 0) * 0.18)); opacity: 0.6;
+  background:
+    radial-gradient(ellipse 46% 40% at 50% 38%, rgb(30 22 14 / 0.42), transparent 74%),
+    radial-gradient(ellipse 70% 64% at 50% 46%, rgb(40 30 20 / 0.24), transparent 78%);
+  filter: blur(11px); transform: translate(calc(14px + var(--hw, 0) * 12px), calc(26px + var(--hw, 0) * 14px)) scale(calc(1 + var(--hw, 0) * 0.2)); opacity: 0.6;
 }
 .mc-hang-btn {
   position: absolute; inset: 0; z-index: 3; display: block; width: 100%; background: none; border: 0; padding: 0;
@@ -197,20 +210,28 @@ html.mc-locked { overflow: hidden; }
 .mc-d-3d { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1500px; perspective-origin: 50% 20%; }
 .mc-d-spin { position: relative; height: 92%; aspect-ratio: var(--ar); transform-style: preserve-3d; transform-origin: 50% 0; }
 .mc-d-floor { position: absolute; left: 30%; right: 30%; bottom: 0; height: 4%; background: radial-gradient(ellipse at 50% 50%, rgb(0 0 0 / 0.25), transparent 70%); filter: blur(6px); }
-.mc-d-worn { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; }
-.mc-d-worn img { height: 100%; max-width: 100%; aspect-ratio: var(--wr, 0.74); object-fit: cover; border-radius: 6px; box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.5); }
+.mc-d-worn { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; pointer-events: none; touch-action: pan-y; }
+.mc-d-worn img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; border-radius: 6px; box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.5); }
 .mc-detail.is-worn .mc-d-worn { pointer-events: auto; }
 .mc-d-hint { position: absolute; left: 0; right: 0; bottom: -1.6rem; text-align: center; color: var(--ink-3); }
 .mc-detail.is-worn .mc-d-hint { visibility: hidden; }
 .mc-d-copy { display: grid; gap: var(--s3); align-content: center; }
 .mc-d-copy h2 { font-size: var(--t-xl); line-height: 0.95; }
 .mc-d-note { color: var(--ink-2); max-width: 36ch; }
-.mc-d-actions { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; margin-top: var(--s2); }
-.mc-d-views { display: inline-flex; gap: 6px; }
-.mc-d-views[hidden], .mc-d-actions [hidden] { display: none; }
-.mc-d-view { font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label); padding: 0.55rem 0.9rem; border-radius: 999px; border: 1px solid var(--ink-3); background: transparent; color: var(--ink); cursor: pointer; }
-.mc-d-view[aria-pressed="true"] { background: var(--black); color: var(--cream); border-color: var(--black); }
-.mc-d-worn-btn { color: var(--ink); border-color: var(--ink); }
+.mc-d-cap { color: var(--ember); margin-top: var(--s2); min-height: 1.4em; }
+.mc-d-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; max-width: 460px; }
+.mc-d-thumb {
+  position: relative; display: grid; grid-template-rows: 1fr auto; gap: 6px; padding: 6px 6px 8px; border: 2px solid transparent; border-radius: 10px;
+  background: rgb(255 255 255 / 0.55); color: var(--ink); cursor: pointer; text-align: center;
+  font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label);
+  transition: transform 0.25s var(--ease), border-color 0.2s, background 0.2s;
+}
+.mc-d-thumb img { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 30%; border-radius: 6px; background: #e9e5dd; pointer-events: none; }
+.mc-d-thumb:first-child img { object-fit: contain; padding: 4px; }
+.mc-d-thumb:hover { transform: translateY(-3px) rotate(-1deg); }
+.mc-d-thumb[aria-pressed="true"] { border-color: var(--ink); background: #fff; }
+.mc-d-thumb:focus-visible { outline: 3px solid var(--ember); outline-offset: 2px; }
+.mc-d-keys { color: var(--ink-3); margin-top: var(--s2); }
 @media (max-width: 760px) {
   .mc-d-panel { grid-template-columns: 1fr; padding-top: 4rem; gap: var(--s5); }
   .mc-d-fig { height: 52vh; }

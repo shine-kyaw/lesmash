@@ -53,30 +53,71 @@
 .gl-show--pin .gl-pic--b { margin-top: 0; align-self: end; }
 .gl-show--pin .gl-show__ctl { display: none; }
 
-/* ================================================== 2. Ring ============== */
+/* ================================================== 2. Campaigns ========= */
 .gl-camp { position: relative; padding-block: clamp(var(--s8), 9vw, var(--s9)); overflow: hidden; scroll-margin-top: 4.5rem; }
-.gl-ring {
-  --u: clamp(10.5rem, 6rem + 8vw, 15rem);
-  position: relative; height: calc(var(--u) * 1.95); margin-top: var(--s6);
-  perspective: 1700px; perspective-origin: 50% 45%; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
+.gl-cp__h { text-transform: uppercase; line-height: 0.95; }
+.gl-cp__a, .gl-cp__b { display: block; }
+.gl-cp__b { font-size: 1.45em; font-family: var(--font-script); font-weight: 400; text-transform: none; color: var(--red); }
+.gl-cp__ribbon, .gl-cp__hint { display: none; }
+
+/* The grid: the end state everywhere, and the whole thing on mobile / reduced motion. */
+.gl-cp__grid {
+  list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+  max-width: var(--wide); margin: var(--s6) auto 0; padding: 0 var(--gutter);
 }
-.gl-ring.is-drag { cursor: grabbing; }
-.gl-ring:focus-visible { outline-offset: -4px; }
-.gl-ring__rot { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
-.gl-card {
-  position: absolute; left: 50%; top: 50%; padding: 0; border: 0; background: var(--paper-3); cursor: inherit;
-  width: calc(var(--u) * var(--k)); aspect-ratio: var(--r); margin-left: calc(var(--u) * var(--k) / -2);
-  transform: translateY(-50%) rotateY(var(--a, 0deg)) translateZ(var(--R, 600px));
-  backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--r); overflow: hidden;
-  box-shadow: 0 18px 40px rgb(0 0 0 / 0.5);
+.gl-cp__grid li { width: calc(50% - 6px); }
+.gl-cp__tile, .gl-cp__card {
+  display: block; width: 100%; padding: 0; border: 0; background: var(--paper-3); cursor: pointer;
+  border-radius: var(--r); overflow: hidden; box-shadow: 0 14px 32px rgb(0 0 0 / 0.5);
 }
-.gl-card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-.gl-card__shade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
-.gl-camp__foot { display: flex; justify-content: space-between; align-items: center; gap: var(--s4); margin-top: var(--s6); }
-.gl-ring__cap { display: grid; gap: 2px; margin: 0; }
-.gl-ring__num { font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); color: var(--ink-3); }
-.gl-ring__title { font-family: var(--font-display); font-size: var(--t-md); text-transform: uppercase; }
-@media (max-width: 40rem) { .gl-ring { perspective: 900px; } }
+.gl-cp__tile { aspect-ratio: 3 / 4; transition: transform 0.3s var(--ease); }
+.gl-cp__tile:hover, .gl-cp__tile:focus-visible { transform: translateY(-8px) rotate(-1.5deg); }
+.gl-cp__tile img, .gl-cp__card img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+@media (min-width: 56.25rem) { .gl-cp__grid li { width: calc((100% - 48px) / 5); } }
+
+/* Desktop: pinned, scroll-scrubbed ribbon. JS places every card each frame. */
+@media (min-width: 56.25rem) and (prefers-reduced-motion: no-preference) {
+  .gl-camp { padding: 0; overflow: visible; }
+  .gl-cp { position: relative; height: 100vh; height: 100svh; overflow: clip; }
+  .gl-cp__lede, .gl-cp__grid { display: none; }
+  .gl-cp__label { position: absolute; left: var(--gutter); top: 6.2rem; margin: 0; z-index: 1; will-change: opacity; }
+  .gl-cp__a, .gl-cp__b {
+    position: absolute; white-space: nowrap; margin: 0; z-index: 1; line-height: 0.9;
+    font-size: clamp(2.8rem, 8.2vw, 8.5rem); will-change: transform, opacity;
+  }
+  .gl-cp__a { left: 4vw; top: 21%; }
+  .gl-cp__b { right: 4vw; top: 41%; font-size: clamp(3.2rem, 9.4vw, 9.8rem); }
+  .gl-cp__ribbon {
+    display: block; position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; z-index: 2;
+    perspective: 1300px; perspective-origin: 50% 50%; pointer-events: none;
+  }
+  .gl-cp__item {
+    position: absolute; left: 50%; top: 50%; width: var(--cw, 250px); height: var(--ch, 333px);
+    margin: calc(var(--ch, 333px) / -2) 0 0 calc(var(--cw, 250px) / -2); will-change: transform;
+  }
+  .gl-cp__card { height: 100%; pointer-events: none; transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease); }
+  .gl-cp__ribbon.is-settled .gl-cp__card { pointer-events: auto; }
+  .gl-cp__ribbon.is-settled .gl-cp__card:hover,
+  .gl-cp__ribbon.is-settled .gl-cp__card:focus-visible { transform: translateY(-12px) rotate(-1.5deg) scale(1.03); box-shadow: 0 26px 50px rgb(0 0 0 / 0.6); }
+  .gl-cp__hint {
+    display: block; position: absolute; left: 0; right: 0; bottom: 1.1rem; margin: 0; text-align: center; z-index: 2;
+    font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); text-transform: uppercase;
+    color: var(--ink-3); opacity: 0; will-change: opacity;
+  }
+}
+
+/* Mobile: a curved, swipeable band, then the grid. */
+@media (max-width: 56.24rem) and (prefers-reduced-motion: no-preference) {
+  .gl-cp__ribbon {
+    display: flex; gap: 14px; list-style: none; margin: var(--s6) 0 0; padding: 28px 19vw 40px; position: relative;
+    overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+    perspective: 800px; perspective-origin: 50% 50%;
+  }
+  .gl-cp__ribbon::-webkit-scrollbar { display: none; }
+  .gl-cp__item { flex: 0 0 62vw; scroll-snap-align: center; will-change: transform; }
+  .gl-cp__card { aspect-ratio: 3 / 4; }
+}
+@media (prefers-reduced-motion: reduce) { .gl-cp__tile { transition: none; } }
 
 /* ================================================== 3. Events wall ======= */
 .gl-events { position: relative; overflow: hidden; scroll-margin-top: 4.5rem; }

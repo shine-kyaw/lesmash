@@ -6,21 +6,20 @@ import { directionsUrl, type Branch } from '../lib/content';
 import { asset, href } from '../lib/href';
 
 /**
- * The footer is a platform, and a train keeps arriving at it.
+ * The footer is a platform, and a train keeps pulling in.
  *
- * Reyy's briefing asks for a subway-train footer, and the reference is not
- * arbitrary: one Le SMASH room is fitted out as a carriage — red bench seats,
- * ring handles, poles. So the end of every page is the platform at "Le SMASH":
- * the pages are listed along the platform above the train, a carriage pulls
- * in, stops, opens its doors on that red interior, closes them and pulls out,
- * on a loop. The fine print sits on the platform floor below it.
+ * One Le SMASH room is fitted out as a carriage — red benches, ring handles,
+ * poles — so the last thing on every page is the platform at Le SMASH. A
+ * carriage brakes in, its four doors open, and each doorway holds one way to
+ * get fed: foodpanda for either room, GrabFood, or a phone call. Hover or tab
+ * into the station and the train waits with its doors open.
  *
- * The amber destination board on the train is the site's one running line;
- * it carries the client's ticker text, so there is no second ticker here.
+ * On a phone only one doorway fits on screen, so the four buttons sit in a row
+ * under the train instead. Without script, or with reduced motion, the train
+ * just stands at the platform, doors open.
  *
- * Ordering lives here (the client's call). Foodpanda goes to each room's own
- * listing. No Grab store link has been supplied, so Grab opens GrabFood Yangon
- * until SITE.grabUrl is set.
+ * No Grab store link has been supplied, so Grab opens GrabFood Yangon until
+ * SITE.grabUrl is set.
  */
 interface Props { branches: Branch[] }
 const { branches } = Astro.props;
@@ -37,92 +36,59 @@ const pages = [
   ['/merch', COPY.nav.merch], ['/visit', COPY.nav.visit],
 ] as const;
 
-const panda = branches.filter((b) => b.foodpandaUrl);
 const grabUrl = (SITE as { grabUrl?: string | null }).grabUrl ?? 'https://www.grab.com/mm/en/food/';
 const year = new Date().getFullYear();
+
+/* The four ways in, one per doorway. */
+type Way = { href: string; kind: 'panda' | 'grab' | 'call'; title: string; sub: string; label: string; platform: string; branch?: string };
+const ways: Way[] = [
+  ...branches.filter((b) => b.foodpandaUrl).map((b) => ({
+    href: b.foodpandaUrl!, kind: 'panda' as const, title: 'foodpanda', sub: b.name,
+    label: `Order from ${b.name} on foodpanda`, platform: 'foodpanda', branch: b.slug,
+  })),
+  { href: grabUrl, kind: 'grab', title: 'GrabFood', sub: 'Yangon', label: 'Order on GrabFood', platform: 'grab' },
+  ...(SITE.phone ? [{ href: 'tel:' + SITE.phone.e164, kind: 'call' as const, title: 'Call us', sub: SITE.phone.display, label: `Call Le SMASH on ${SITE.phone.display}`, platform: 'phone' }] : []),
+].slice(0, 4);
 
 const board = [
   'Next stop: Le SMASH', 'Smashed to order', '3 rooms', '5 kitchens',
   'Kamayut', 'Yankin', 'Mayangone', 'Hlaing', 'Dine in', 'Takeaway',
 ];
 
-/* Carriage geometry, in SVG units (one carriage = 1600 x 300). */
-const doors = [420, 1080];               // left edge of each doorway
-const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [1290, 140], [1450, 110]];
+/* Carriage geometry, in SVG units (one carriage = 1600 x 300, four doors). */
+const doors = [150, 530, 910, 1290];
+const windows = [[30, 100], [340, 160], [720, 160], [1100, 160], [1470, 100]];
+const MID = 1620;                         // x of the middle carriage
 ---
-<footer class="ftr dark" id="visit-footer" data-station>
+<footer class="ftr dark" id="visit-footer" data-station-root>
   <div class="grain" aria-hidden="true"></div>
 
   <div class="wrap ftr__top">
     <div class="ftr__brand">
       <Wordmark size="lg" />
-      <p class="ftr__tag">American flavour. French precision. Born in {SITE.geo}.</p>
+      <p class="ftr__tag">Smashed to order in {SITE.geo}. Come hungry.</p>
     </div>
-
-    <div class="ftr__order">
-      <p class="label">Order in</p>
-      <div class="ftr__order-btns">
-        {panda.map((b) => (
-          <a class="ord ord--panda" href={b.foodpandaUrl!} target="_blank" rel="noopener noreferrer"
-             data-analytics="order_click" data-platform="foodpanda" data-branch={b.slug} data-source="footer"
-             aria-label={`Order from ${b.name} on foodpanda`}>
-            <img src={asset('/brand/partners/foodpanda.svg')} alt="" width="22" height="22" />
-            <span><b>foodpanda</b><small>{b.name}</small></span>
-          </a>
-        ))}
-        <a class="ord ord--grab" href={grabUrl} target="_blank" rel="noopener noreferrer"
-           data-analytics="order_click" data-platform="grab" data-source="footer"
-           aria-label="Order on GrabFood">
-          <img src={asset('/brand/partners/grab.svg')} alt="" width="22" height="22" />
-          <span><b>GrabFood</b><small>Yangon</small></span>
-        </a>
-        {SITE.phone && (
-          <a class="ord ord--call" href={'tel:' + SITE.phone.e164}
-             data-analytics="phone_click" data-source="footer">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
-            <span><b>Call</b><small>{SITE.phone.display}</small></span>
-          </a>
-        )}
-      </div>
-    </div>
-  </div>
-
-  {/* The departures line: every page, left to right, along the platform. */}
-  <nav class="wrap ftr__pages" aria-label="Footer">
-    <ol>
-      {pages.map(([p, label]) => <li><a href={href(p)}>{label}</a></li>)}
-    </ol>
-  </nav>
-
-  <div class="wrap ftr__info">
-    {branches.map((b) => (
-      <p>
-        <strong>{b.name}</strong>
-        <span>{b.addressLine}, {b.township}</span>
-        <a href={directionsUrl(b)} target="_blank" rel="noopener noreferrer"
-           data-analytics="directions_click" data-branch={b.slug} data-source="footer">{COPY.cta.directions}</a>
-      </p>
-    ))}
-    <p class="ftr__social">
-      {socials.map((s) => (
-        <a href={s.href!} target="_blank" rel="noopener noreferrer"
-           data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
+    <div class="ftr__rooms">
+      {branches.map((b) => (
+        <p>
+          <strong>{b.name}</strong>
+          <span>{b.addressLine}, {b.township}</span>
+          <a href={directionsUrl(b)} target="_blank" rel="noopener noreferrer"
+             data-analytics="directions_click" data-branch={b.slug} data-source="footer">{COPY.cta.directions}</a>
+        </p>
       ))}
-    </p>
+    </div>
   </div>
 
   {/* ------------------------------------------------------------ the station */}
-  <div class="stn" aria-hidden="true">
-    <div class="stn__wall">
-      <div class="stn__sign"><span class="stn__sign-le">Le</span> SMASH <small>Platform 1 · Smashed to order</small></div>
-      <div class="stn__poster stn__poster--a"><img src={asset('/media/campaigns/grand-opening-fi.jpg')} alt="" loading="lazy" decoding="async" /></div>
-      <div class="stn__poster stn__poster--b"><img src={asset('/media/campaigns/lesmash-pop-up.jpg')} alt="" loading="lazy" decoding="async" /></div>
-      <div class="stn__clock"><i></i><i></i></div>
+  <div class="stn" data-station>
+    <div class="stn__wall" aria-hidden="true">
+      <div class="stn__sign"><span class="stn__sign-le">Le</span> SMASH <small>Platform 1</small></div>
     </div>
 
     <div class="stn__track">
       <div class="train" data-train>
-        <svg class="train__svg" viewBox="0 0 4840 300" width="4840" height="300" preserveAspectRatio="xMinYMid meet">
+        <svg class="train__svg" viewBox="0 0 4840 300" width="4840" height="300" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false">
           <defs>
             <linearGradient id="tb-body" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="#fbfbf8" /><stop offset=".55" stop-color="#e4e6e1" />
@@ -149,76 +115,84 @@ const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [129
             </filter>
           </defs>
 
-          {/* Three carriages, drawn inline so every door leaf is a real animatable node. */}
           <g filter="url(#tb-blur)">
-          <rect x="1600" y="96" width="20" height="150" fill="#3a3a3a" />
-          <rect x="3220" y="96" width="20" height="150" fill="#3a3a3a" />
-          {[0, 1620, 3240].map((ox) => (
-            <g transform={`translate(${ox} 0)`}>
+            <rect x="1600" y="96" width="20" height="150" fill="#3a3a3a" />
+            <rect x="3220" y="96" width="20" height="150" fill="#3a3a3a" />
+            {[0, MID, 3240].map((ox) => (
+              <g transform={`translate(${ox} 0)`}>
+                <rect x="4" y="22" width="1592" height="20" rx="10" fill="url(#tb-roof)" />
+                <path d="M4 52 Q4 34 26 34 H1574 Q1596 34 1596 52 V258 H4 Z" fill="url(#tb-body)" />
+                {doors.map((x) => <rect x={x - 6} y="56" width="172" height="204" fill="none" stroke="#9fa39f" stroke-width="3" />)}
+                <rect x="4" y="44" width="1592" height="10" fill="#d83536" />
+                <rect x="4" y="214" width="1592" height="6" fill="#d83536" />
+                <rect x="4" y="240" width="1592" height="18" fill="#7f8380" />
 
-              <rect x="4" y="22" width="1592" height="20" rx="10" fill="url(#tb-roof)" />
-              <path d="M4 52 Q4 34 26 34 H1574 Q1596 34 1596 52 V258 H4 Z" fill="url(#tb-body)" />
-              {/* Carved out for the doorways, so the body frames them. */}
-              {doors.map((x) => <rect x={x - 6} y="56" width="172" height="204" fill="none" stroke="#9fa39f" stroke-width="3" />)}
-              <rect x="4" y="44" width="1592" height="10" fill="#d83536" />
-              <rect x="4" y="214" width="1592" height="6" fill="#d83536" />
-              <rect x="4" y="240" width="1592" height="18" fill="#7f8380" />
-              {/* Doorway interiors: over the body, under the door leaves. */}
-              {doors.map((x) => (
-                <g>
-                  <rect x={x} y="58" width="160" height="200" fill="url(#tb-inside)" />
-                  <rect x={x + 18} y="70" width="124" height="54" rx="6" fill="#d83536" opacity=".9" />
-                  <text x={x + 80} y="104" text-anchor="middle" class="tr-txt">Le SMASH</text>
-                  <rect x={x + 78} y="58" width="5" height="200" fill="#c8ccd0" />
-                  <rect x={x} y="196" width="160" height="34" rx="8" fill="#c0262a" />
-                  <rect x={x} y="226" width="160" height="32" fill="#6b4a33" />
-                  <circle cx={x + 40} cy="132" r="8" fill="none" stroke="#d9dcdf" stroke-width="3" />
-                  <circle cx={x + 120} cy="132" r="8" fill="none" stroke="#d9dcdf" stroke-width="3" />
-                </g>
-              ))}
-
-
-              {windows.map(([x, w]) => (
-                <g>
-                  <rect x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-glass)" stroke="#a9ada9" stroke-width="5" />
-                  <rect x={x + 8} y="132" width={w - 16} height="34" rx="6" fill="#a8282b" opacity=".75" />
-                  <rect x={x + 6} y="84" width={w - 12} height="26" rx="12" fill="#ffe7b8" opacity=".14" />
-                  <rect class="tr-glint" x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-shine)" />
-                </g>
-              ))}
-
-              {/* The doors: two leaves each, sliding apart on the outside. */}
-              {doors.map((x) => (
-                <g>
-                  <g class="leaf leaf--l">
-                    <rect x={x} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
-                    <rect x={x + 16} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
-                    <rect x={x + 70} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
+                {/* Doorway interiors: over the body, under the leaves. */}
+                {doors.map((x) => (
+                  <g>
+                    <rect x={x} y="58" width="160" height="200" fill="url(#tb-inside)" />
+                    <rect x={x + 78} y="58" width="5" height="200" fill="#c8ccd0" />
+                    <rect x={x} y="200" width="160" height="30" rx="8" fill="#c0262a" />
+                    <rect x={x} y="226" width="160" height="32" fill="#6b4a33" />
                   </g>
-                  <g class="leaf leaf--r">
-                    <rect x={x + 80} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
-                    <rect x={x + 94} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
-                    <rect x={x + 84} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
-                  </g>
-                  <circle class="door-lamp" cx={x + 80} cy="48" r="5" fill="#ffb43a" />
-                </g>
-              ))}
+                ))}
 
-              {/* Bogies. */}
-              {[230, 1370].map((cx) => (
-                <g>
-                  <rect x={cx - 120} y="256" width="240" height="18" rx="6" fill="#2b2b2b" />
-                  <g class="wheel"><circle cx={cx - 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx - 70} 256 V296 M${cx - 90} 276 H${cx - 50}`} stroke="#666" stroke-width="3" /></g>
-                  <g class="wheel"><circle cx={cx + 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx + 70} 256 V296 M${cx + 50} 276 H${cx + 90}`} stroke="#666" stroke-width="3" /></g>
-                </g>
-              ))}
-            </g>
-          ))}
+                {windows.map(([x, w]) => (
+                  <g>
+                    <rect x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-glass)" stroke="#a9ada9" stroke-width="5" />
+                    <rect x={x + 8} y="132" width={w - 16} height="34" rx="6" fill="#a8282b" opacity=".75" />
+                    <rect x={x + 6} y="84" width={w - 12} height="26" rx="12" fill="#ffe7b8" opacity=".14" />
+                    <rect class="tr-glint" x={x} y="78" width={w} height="96" rx="22" fill="url(#tb-shine)" />
+                  </g>
+                ))}
+
+                {doors.map((x) => (
+                  <g>
+                    <g class="leaf leaf--l">
+                      <rect x={x} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
+                      <rect x={x + 16} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
+                      <rect x={x + 70} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
+                    </g>
+                    <g class="leaf leaf--r">
+                      <rect x={x + 80} y="58" width="80" height="200" fill="url(#tb-door)" stroke="#8d1b1e" stroke-width="2" />
+                      <rect x={x + 94} y="80" width="50" height="86" rx="14" fill="url(#tb-glass)" stroke="#e9ebe8" stroke-width="5" />
+                      <rect x={x + 84} y="140" width="6" height="40" rx="3" fill="#e9ebe8" />
+                    </g>
+                    <circle class="door-lamp" cx={x + 80} cy="48" r="5" fill="#ffb43a" />
+                  </g>
+                ))}
+
+                {[230, 1370].map((cx) => (
+                  <g>
+                    <rect x={cx - 120} y="256" width="240" height="18" rx="6" fill="#2b2b2b" />
+                    <g class="wheel"><circle cx={cx - 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx - 70} 256 V296 M${cx - 90} 276 H${cx - 50}`} stroke="#666" stroke-width="3" /></g>
+                    <g class="wheel"><circle cx={cx + 70} cy="276" r="22" fill="#1d1d1d" stroke="#555" stroke-width="4" /><path d={`M${cx + 70} 256 V296 M${cx + 50} 276 H${cx + 90}`} stroke="#666" stroke-width="3" /></g>
+                  </g>
+                ))}
+              </g>
+            ))}
           </g>
         </svg>
 
-        {/* The destination board: the site's one running line, riding on the train. */}
-        <div class="train__board">
+        {/* What waits in each doorway of the middle carriage. */}
+        <ul class="ways ways--doors" aria-label="Order or call">
+          {ways.map((w, i) => (
+            <li class="ways__door" style={`--dx:${((MID + doors[i]) / 4840 * 100).toFixed(4)}%`} data-door>
+              <a class={`way way--${w.kind}`} href={w.href} target={w.kind === 'call' ? undefined : '_blank'}
+                 rel={w.kind === 'call' ? undefined : 'noopener noreferrer'} aria-label={w.label}
+                 data-analytics={w.kind === 'call' ? 'phone_click' : 'order_click'} data-platform={w.platform}
+                 data-branch={w.branch} data-source="footer-train">
+                {w.kind === 'call'
+                  ? <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
+                  : <img src={asset(`/brand/partners/${w.kind === 'panda' ? 'foodpanda' : 'grab'}.svg`)} alt="" width="26" height="26" />}
+                <b>{w.title}</b>
+                <small>{w.sub}</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="train__board" aria-hidden="true">
           <div class="train__board-track">
             {[0, 1].map(() => board.map((t) => <span>{t}</span>))}
           </div>
@@ -226,12 +200,38 @@ const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [129
       </div>
     </div>
 
-    <div class="stn__floor"><span>Mind the gap</span><span>Mind the gap</span><span>Mind the gap</span></div>
+    <div class="stn__floor" aria-hidden="true"><span>Mind the gap</span><span>Mind the gap</span><span>Mind the gap</span></div>
+
+    {/* Phones: the same four, under the train. */}
+    <ul class="ways ways--row" aria-label="Order or call">
+      {ways.map((w) => (
+        <li>
+          <a class={`way way--${w.kind}`} href={w.href} target={w.kind === 'call' ? undefined : '_blank'}
+             rel={w.kind === 'call' ? undefined : 'noopener noreferrer'} aria-label={w.label}
+             data-analytics={w.kind === 'call' ? 'phone_click' : 'order_click'} data-platform={w.platform}
+             data-branch={w.branch} data-source="footer-row">
+            {w.kind === 'call'
+              ? <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
+              : <img src={asset(`/brand/partners/${w.kind === 'panda' ? 'foodpanda' : 'grab'}.svg`)} alt="" width="22" height="22" />}
+            <b>{w.title}</b>
+            <small>{w.sub}</small>
+          </a>
+        </li>
+      ))}
+    </ul>
   </div>
 
   <div class="wrap ftr__bottom">
+    <nav class="ftr__pages" aria-label="Footer">
+      {pages.map(([p, label]) => <a href={href(p)}>{label}</a>)}
+    </nav>
+    <p class="ftr__social">
+      {socials.map((s) => (
+        <a href={s.href!} target="_blank" rel="noopener noreferrer"
+           data-analytics="social_click" data-platform={s.label.toLowerCase()}>{s.label}</a>
+      ))}
+    </p>
     <span>&copy; {year} {SITE.brand.legal}</span>
-    <span>{SITE.geo}, Myanmar</span>
     <a class="ftr__by" href="https://astermade.com" target="_blank" rel="noopener noreferrer"
        data-analytics="agency_credit_click">
       <img src={asset('/brand/aster-mark.png')} alt="" width="96" height="96" loading="lazy" decoding="async" />
@@ -250,36 +250,37 @@ const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [129
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (stn && train) {
+    stn.classList.add('is-live');
     const blur = stn.querySelector('[data-blur]');
     const leavesL = stn.querySelectorAll('.leaf--l');
     const leavesR = stn.querySelectorAll('.leaf--r');
     const lamps = stn.querySelectorAll('.door-lamp');
     const wheels = stn.querySelectorAll('.wheel');
     const glints = stn.querySelectorAll('.tr-glint');
+    const panels = stn.querySelectorAll<HTMLElement>('[data-door]');
+    const SHUT = 'inset(0% 50% 0% 50%)';
+    const OPEN = 'inset(0% 0% 0% 0%)';
 
-    // Where the train stops: the middle carriage centred on wide screens, its
-    // first doorway centred on phones (a whole carriage doesn't fit at 375px).
+    // Where it stops: the middle carriage centred; on phones, its first doorway.
     const stopX = () => {
-      const h = train.getBoundingClientRect().height || 1;
-      const k = h / 300;                       // SVG units -> px
+      const k = (train.getBoundingClientRect().height || 1) / 300;
       const vw = stn.clientWidth;
-      const focus = vw < 760 ? 1620 + 500 : 1620 + 800;
+      const focus = vw < 760 ? 1620 + 230 : 1620 + 800;
       return vw / 2 - focus * k;
     };
     const width = () => train.getBoundingClientRect().width;
 
-    const open = (d = 0.9) => gsap.timeline()
-      .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
-      .to(leavesL, { x: -78, duration: d, ease: 'power2.inOut' }, '<0.1')
-      .to(leavesR, { x: 78, duration: d, ease: 'power2.inOut' }, '<');
-    const close = (d = 0.8) => gsap.timeline()
-      .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
-      .to([leavesL, leavesR], { x: 0, duration: d, ease: 'power2.inOut' }, '<0.15');
+    const setOpen = () => {
+      gsap.set(leavesL, { x: -78 }); gsap.set(leavesR, { x: 78 });
+      gsap.set(panels, { clipPath: OPEN });
+    };
 
     if (reduce) {
       gsap.set(train, { x: stopX() });
-      gsap.set(leavesL, { x: -78 }); gsap.set(leavesR, { x: 78 });
+      setOpen();
+      window.addEventListener('resize', () => gsap.set(train, { x: stopX() }));
     } else {
+      gsap.set(panels, { clipPath: SHUT });
       const spin = gsap.to(wheels, { rotation: 360, transformOrigin: '50% 50%', duration: 0.5, repeat: -1, ease: 'none', paused: true });
       const loop = gsap.timeline({ repeat: -1, paused: true, defaults: { ease: 'none' } });
       const speed = { v: 0 };
@@ -289,31 +290,56 @@ const windows = [[70, 140], [230, 140], [640, 120], [780, 120], [920, 120], [129
         gsap.set(glints, { x: -speed.v * 140 });
       };
 
+      let hold = false;        // pointer or focus is in the station
+      let held = false;        // the loop is paused because of it
+      let onScreen = false;
+
       loop
-        // Pull in: fast, braking to a stop, with a little nose-dip on the brakes.
         .set(train, { x: () => stn.clientWidth + 40, y: 0 })
         .add(() => spin.play())
-        .fromTo(speed, { v: 1 }, { v: 0, duration: 2.4, ease: 'power2.out', onUpdate: applySpeed })
-        .to(train, { x: () => stopX(), duration: 2.4, ease: 'power3.out' }, '<')
+        .fromTo(speed, { v: 1 }, { v: 0, duration: 2.6, ease: 'power2.out', onUpdate: applySpeed })
+        .to(train, { x: () => stopX(), duration: 2.6, ease: 'power3.out' }, '<')
         .to(train, { y: 2, duration: 0.18, yoyo: true, repeat: 1, ease: 'sine.inOut' }, '>-0.1')
         .add(() => spin.pause())
-        .add(open(), '+=0.35')
-        .to({}, { duration: 3.2 })
-        .add(close())
+        .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true }, '+=0.3')
+        .to(leavesL, { x: -78, duration: 0.95, ease: 'power2.inOut' }, '<0.1')
+        .to(leavesR, { x: 78, duration: 0.95, ease: 'power2.inOut' }, '<')
+        .to(panels, { clipPath: OPEN, duration: 0.95, ease: 'power2.inOut', stagger: 0.04 }, '<')
+        .addLabel('open')
+        .add(() => { if (hold) { loop.pause(); held = true; } })
+        .to({}, { duration: 5 })
+        .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
+        .to([leavesL, leavesR], { x: 0, duration: 0.85, ease: 'power2.inOut' }, '<0.15')
+        .to(panels, { clipPath: SHUT, duration: 0.85, ease: 'power2.inOut' }, '<')
         .to({}, { duration: 0.6 })
-        // Pull out: slow start, accelerating away to the left.
         .add(() => spin.play())
         .fromTo(speed, { v: 0 }, { v: 1, duration: 2.2, ease: 'power2.in', onUpdate: applySpeed })
         .to(train, { x: () => -width() - 40, duration: 2.2, ease: 'power3.in' }, '<')
         .add(() => spin.pause())
-        .to({}, { duration: 1.1 });
+        .to({}, { duration: 1.2 });
 
-      // A faint hum while moving: the body rides on its springs.
+      const release = () => {
+        hold = false;
+        if (held) { held = false; if (onScreen) loop.resume(); }
+      };
+      stn.addEventListener('pointerenter', () => { hold = true; });
+      stn.addEventListener('pointerleave', release);
+
+      // Keyboard: tabbing to a doorway brings the train in and holds it open.
+      stn.addEventListener('focusin', () => {
+        hold = true;
+        if (!held) { loop.pause(); loop.seek('open'); held = true; }
+      });
+      stn.addEventListener('focusout', (e) => {
+        if (!stn.contains(e.relatedTarget as Node)) release();
+      });
+
       gsap.to(train.querySelector('.train__svg'), { y: 1.2, duration: 0.11, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
-      // Only run while the platform is on screen.
-      new IntersectionObserver(([e]) => (e.isIntersecting ? loop.play() : loop.pause()), { rootMargin: '120px' })
-        .observe(stn);
+      new IntersectionObserver(([e]) => {
+        onScreen = e.isIntersecting;
+        if (onScreen && !held) loop.play(); else if (!onScreen) loop.pause();
+      }, { rootMargin: '120px' }).observe(stn);
       window.addEventListener('resize', () => loop.invalidate());
     }
   }

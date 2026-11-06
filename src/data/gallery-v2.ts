@@ -102,3 +102,19 @@ export const FEED: Pic[] = [
   F('preview-5.jpg', 1400, 1081, 'Social post collage: Peri peri chicken with fries, “Bring on the heat”, and African bird’s eye chili.'),
   F('preview-6.jpg', 1080, 1080, 'Social post collage: Burmese lettering, a bite into a saucy chicken burger, a pile of chillies, and a free tee offer.'),
 ];
+
+/* The nine campaigns on the client's slide, in grid order (5 on top, 4 below). */
+const CAMPAIGN_FILES = [
+  'blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg',
+  'lesmash-pop-up.jpg',
+  'dj-final-1jpg.jpg',
+  'pull-up-ig-size.jpg',
+  'invitation.jpg',
+  'grand-opening-fi.jpg',
+  'le-smash-x-britto-s-invitation.jpg',
+  'a5.jpg',
+  'father-s-day-jpg-1.jpg',
+];
+export const CAMPAIGNS: Poster[] = CAMPAIGN_FILES.map(
+  (f) => POSTERS.find((p) => p.src.endsWith('/' + f))!,
+);

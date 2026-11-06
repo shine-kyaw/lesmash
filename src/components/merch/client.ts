@@ -27,12 +27,12 @@ interface Item {
   rest: number;          // 0 = front shows, 180 = back shows
   w: number; wt: number; // hover weight (current / target)
   side: number;          // which way the hover turn leans
-  ang: number; av: number; // spring swing (deg)
+  ang: number; av: number; hem: number; // spring swing (deg); hem trails the shoulders
   spinA: number; spinV: number; dragging: boolean; lastDrag: number;
   drop: number; hid: boolean; phase: number; dim: number;
 }
-interface WornView { label: string; src: string; pos: string; ar: number; alt: string }
-interface Garment { id: string; name: string; tag: string; note: string; front: string; back: string; w: number; h: number; rest: 'front' | 'back'; frontAlt: string; backAlt: string; worn: WornView[] }
+interface Shot { label: string; src: string; w: number; h: number; alt: string }
+interface Garment { id: string; name: string; tag: string; note: string; front: string; back: string; w: number; h: number; rest: 'front' | 'back'; frontAlt: string; backAlt: string; gallery: Shot[] }
 const garments: Garment[] = JSON.parse($('#mc-garment-data')?.textContent || '[]');
 
 const studio = $('[data-studio]');
@@ -42,13 +42,13 @@ const items: Item[] = $$('.mc-hang').map((li, i) => {
   const rest = g && g.rest === 'back' ? 180 : 0;
   return {
     li, btn: $('.mc-hang-btn', li)!, pivot: $('[data-pivot]', li)!, spin: $('[data-spin]', li)!, wall: $('.mc-wall', li)!,
-    rest, w: 0, wt: 0, side: 1, ang: 0, av: 0, spinA: rest, spinV: 0, dragging: false, lastDrag: -9,
+    rest, w: 0, wt: 0, side: 1, ang: 0, av: 0, hem: 0, spinA: rest, spinV: 0, dragging: false, lastDrag: -9,
     drop: reduce ? 1 : 0, hid: false, phase: i * 1.7, dim: 0,
   };
 });
 
 let rackSeen = false;
-let ptrX = -1e4, ptrIn = false, focusIdx = -1, tilt = 0, tiltT = 0;
+let ptrX = -1e4, ptrIn = false, focusIdx = -1, tilt = 0, tiltT = 0, sheen = 50;
 const nearest = (a: number) => Math.round(a / 180) * 180;
 
 function paint(it: Item, t: number) {
@@ -57,7 +57,10 @@ function paint(it: Item, t: number) {
   const y = (1 - it.drop) * -520;
   const z = 170 * it.w - 70 * it.dim;
   const s = 1 + 0.2 * it.w - 0.05 * it.dim;
-  it.pivot.style.transform = `translate3d(0,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateZ(${(it.ang + idle).toFixed(2)}deg) rotateX(${(15 * it.w).toFixed(2)}deg) scale(${s.toFixed(3)})`;
+  // secondary motion: the hem lags the shoulders (a shear from the hanger down) and breathes on its own beat
+  const breeze = reduce ? 0 : Math.sin(t * 0.9 + it.phase - 0.9) * 0.55 * (1 - it.w);
+  const skew = clamp((it.ang - it.hem) * 0.9 + breeze, -5, 5);
+  it.pivot.style.transform = `translate3d(0,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateZ(${(it.ang + idle).toFixed(2)}deg) rotateX(${(15 * it.w).toFixed(2)}deg) skewX(${skew.toFixed(2)}deg) scale(${s.toFixed(3)})`;
   it.spin.style.transform = `rotateY(${(it.spinA + 24 * it.w * it.side).toFixed(2)}deg)`;
   it.li.style.setProperty('--dim', it.dim.toFixed(3));
   it.li.style.setProperty('--hw', it.w.toFixed(3));
@@ -97,6 +100,7 @@ function rackStep(dt: number, t: number) {
       [items[i - 1], items[i + 1]].forEach((n, j) => { if (n) n.av += (j === 0 ? 1 : -1) * dir * dw * 70; });
     }
     it.ang += it.av * dt;
+    it.hem += (it.ang - it.hem) * (1 - Math.exp(-dt * 5.2));
     // spin inertia, then settle onto a face
     if (!it.dragging && !reduce) {
       if (Math.abs(it.spinV) > 22) {
@@ -115,6 +119,10 @@ function rackStep(dt: number, t: number) {
   tiltT = ptrIn ? clamp(((ptrX - (rect.left + rect.width / 2)) / rect.width) * -5, -3, 3) : 0;
   tilt += (tiltT - tilt) * (1 - Math.exp(-dt * 3));
   row3d!.style.transform = `rotateY(${tilt.toFixed(2)}deg)`;
+  // light + chrome sheen follow the pointer (or drift when nobody is there)
+  const sT = ptrIn ? clamp(((ptrX - rect.left) / rect.width) * 100, 0, 100) : 50 + Math.sin(t * 0.25) * 18;
+  sheen += (sT - sheen) * (1 - Math.exp(-dt * 4));
+  studio!.style.setProperty('--sx', sheen.toFixed(1) + '%');
 }
 
 if (studio && row3d && items.length) {
@@ -188,11 +196,12 @@ if (dlg && garments.length && items.length) {
   const copy = $('[data-copy]', d)!;
   const worn = $('[data-worn]', d)!;
   const wimg = $<HTMLImageElement>('[data-wimg]', d)!;
-  const wbtn = $<HTMLButtonElement>('[data-worn-toggle]', d)!;
-  const viewsEl = $('[data-d-views]', d)!;
+  const thumbs = $('[data-thumbs]', d)!;
+  const cap = $('[data-d-cap]', d)!;
+  const hint = $('[data-hint]', d)!;
   const threeD = $('[data-3d]', d)!;
   let g: Garment | null = null, src: Item | null = null, trigger: HTMLElement | null = null;
-  let ang = 0, vel = 0, drag = false, lastTouch = -99, busy = false, isWorn = false, raf = 0, last = 0;
+  let ang = 0, vel = 0, drag = false, lastTouch = -99, busy = false, shot = -1, raf = 0, last = 0;
 
   const tick = (time: number) => {
     const dt = Math.min(0.05, (time - last) / 1000); last = time;
@@ -204,9 +213,9 @@ if (dlg && garments.length && items.length) {
     raf = requestAnimationFrame(tick);
   };
 
-  let dx0 = 0, dl = 0, dtm = 0;
+  let dx0 = 0, dl = 0, dtm = 0, sx0 = 0, swiping = false;
   stage.addEventListener('pointerdown', (e: PointerEvent) => {
-    if (isWorn) return;
+    if (shot >= 0) { sx0 = e.clientX; swiping = true; return; }
     drag = true; dx0 = dl = e.clientX; dtm = performance.now(); vel = 0; lastTouch = performance.now();
     stage.setPointerCapture(e.pointerId);
   });
@@ -218,35 +227,42 @@ if (dlg && garments.length && items.length) {
     dl = e.clientX; dtm = now; lastTouch = now;
   });
   const up = () => { drag = false; lastTouch = performance.now(); };
-  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointerup', (e: PointerEvent) => {
+    if (swiping) { swiping = false; const dx = e.clientX - sx0; if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1); }
+    up();
+  });
   stage.addEventListener('pointercancel', up);
   d.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') { ang -= 40; lastTouch = performance.now(); }
-    if (e.key === 'ArrowRight') { ang += 40; lastTouch = performance.now(); }
+    const dir = e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowRight' ? 1 : 0;
+    if (!dir) return;
+    if (shot >= 0 || e.shiftKey) { step(dir); e.preventDefault(); } else { ang += 40 * dir; lastTouch = performance.now(); }
   });
 
-  function setWorn(on: boolean, view?: number) {
-    if (!g || !g.worn.length) return;
-    isWorn = on;
-    wbtn.setAttribute('aria-pressed', String(on));
-    wbtn.textContent = on ? 'See the garment' : 'See it worn';
-    viewsEl.hidden = !on;
+  /** idx -1 = the garment turning in 3D; 0.. = a real photo from the gallery */
+  function setShot(idx: number) {
+    if (!g) return;
+    const n = g.gallery.length;
+    if (idx >= n) idx = -1; else if (idx < -1) idx = n - 1;
+    const was = shot;
+    shot = idx;
+    const on = idx >= 0;
+    $$('button', thumbs).forEach((b, i) => b.setAttribute('aria-pressed', String(i - 1 === idx)));
     if (on) {
-      const facing = Math.round(((ang % 360) + 360) % 360 / 180) % 2; // 0 front, 1 back
-      const idx = view ?? (g.worn.length === 2 ? (facing ? 0 : 1) : 0);
-      const v = g.worn[idx];
-      d.style.setProperty('--wr', String(v.ar));
-      wimg.src = v.src; wimg.alt = v.alt; wimg.style.objectPosition = v.pos;
-      $$('button', viewsEl).forEach((b, i) => b.setAttribute('aria-pressed', String(i === idx)));
+      const v = g.gallery[idx];
+      d.style.setProperty('--wr', String(v.w / v.h));
+      wimg.src = v.src; wimg.alt = v.alt;
+      cap.textContent = v.label;
       worn.removeAttribute('aria-hidden');
-    } else worn.setAttribute('aria-hidden', 'true');
+    } else { cap.textContent = 'Spin it'; worn.setAttribute('aria-hidden', 'true'); }
+    hint.textContent = on ? 'Swipe for the next one' : 'Drag to turn it';
     d.classList.toggle('is-worn', on);
+    if (was === idx) return;
     if (!reduce) {
       gsap.to(threeD, { opacity: on ? 0 : 1, scale: on ? 0.94 : 1, duration: 0.45, ease: 'power2.out' });
-      gsap.to(worn, { opacity: on ? 1 : 0, scale: on ? 1 : 1.03, duration: 0.5, ease: 'power2.out' });
+      gsap.fromTo(worn, { opacity: on ? (was >= 0 ? 0.2 : 0) : 1, scale: 1.02 }, { opacity: on ? 1 : 0, scale: 1, duration: 0.45, ease: 'power2.out' });
     } else { gsap.set(threeD, { opacity: on ? 0 : 1 }); gsap.set(worn, { opacity: on ? 1 : 0 }); }
   }
-  wbtn.addEventListener('click', () => setWorn(!isWorn));
+  const step = (dir: number) => setShot(shot + dir);
 
   function open(id: string, btn: HTMLElement) {
     const gi = garments.findIndex((x) => x.id === id);
@@ -258,16 +274,18 @@ if (dlg && garments.length && items.length) {
     d.style.setProperty('--ar', `${g.w}/${g.h}`);
     fImg.src = g.front; fImg.alt = g.frontAlt; bImg.src = g.back; bImg.alt = '';
     eImgs.forEach((e) => { e.src = g!.front; });
-    wbtn.hidden = !g.worn.length;
-    viewsEl.innerHTML = '';
-    g.worn.forEach((v, i) => {
+    thumbs.innerHTML = '';
+    const mk = (label: string, img: string, i: number) => {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'mc-d-view'; b.textContent = v.label;
-      b.addEventListener('click', () => setWorn(true, i));
-      viewsEl.appendChild(b);
-    });
-    isWorn = false; wbtn.setAttribute('aria-pressed', 'false'); wbtn.textContent = 'See it worn'; viewsEl.hidden = true; d.classList.remove('is-worn');
-    gsap.set(threeD, { opacity: 1, scale: 1 }); gsap.set(worn, { opacity: 0 });
+      b.type = 'button'; b.className = 'mc-d-thumb'; b.setAttribute('aria-label', i < 0 ? 'Spin it, the garment in 3D' : label);
+      b.innerHTML = `<img src="${img}" alt="" draggable="false" decoding="async" /><span>${i < 0 ? 'Spin it' : label}</span>`;
+      b.addEventListener('click', () => setShot(i));
+      thumbs.appendChild(b);
+    };
+    mk('Spin it', g.rest === 'back' ? g.back : g.front, -1);
+    g.gallery.forEach((v, i) => mk(v.label, v.src, i));
+    shot = -2; setShot(-1);
+    gsap.set(threeD, { opacity: 1, scale: 1 }); gsap.set(worn, { opacity: 0, scale: 1 });
     ang = src.spinA; vel = 0; lastTouch = performance.now();
 
     const from = src.pivot.getBoundingClientRect();

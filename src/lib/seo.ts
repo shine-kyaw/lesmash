@@ -12,19 +12,19 @@ export function title(pageTitle: string | null): string {
 
 export const DESCRIPTIONS: Record<string, string> = {
   home:
-    'Le SMASH Burgers & Co. — an American-flavoured, French-precision burger house born in Yangon. Three rooms, five kitchens. See the menu, the archive, and where to find us.',
+    'Le SMASH Burgers & Co. Smash burgers in Yangon: American flavour, French precision, three rooms, five kitchens. Menu, photos and where to find us.',
   menu:
-    'The full Le SMASH menu in Yangon — the burger collection, brunch, mains, salads, snacks, drinks and cocktails.',
+    'The full Le SMASH menu in Yangon: burgers, brunch, mains, salads, snacks, drinks and cocktails.',
   gallery:
-    'The Le SMASH archive — campaigns, pop-ups, food and product photography, spaces, behind the scenes and collaborations.',
+    'Le SMASH posters, pop-ups, parties and plates, plus the rooms, the kitchen and the collabs.',
   story:
-    'How Le SMASH started in Yangon: from pop-up stalls and bazaars to a room of our own at Junction Square.',
+    'How Le SMASH got going in Yangon: pop-ups and bazaars, the Junction Square opening, then a new room.',
   collaborations:
-    'Le SMASH collaborations in Yangon: pop-ups, parties and projects with Blind Tiger, Britto’s, TagU, RTH, Ellie’s, Ah-so and Ar-T.',
+    'Pop-ups, parties and projects Le SMASH has done in Yangon with Blind Tiger, Britto’s, TagU, RTH, Ellie’s, Ah-so and Ar-T.',
   merch:
-    'Le SMASH merch: graphic tees, the YGN jersey, the tote and the mugs.',
+    'Le SMASH merch: graphic tees, the YGN jersey, a tote, mugs and cups.',
   visit:
-    'Le SMASH rooms in Yangon, where we deliver across the city, and the crew behind every smash.',
+    'Find Le SMASH in Yangon: both rooms, where we deliver, and the crew behind the grill.',
   notFound:
-    'That page could not be found. Head to the Le SMASH menu or back to the home page.',
+    'Wrong turn. Head to the Le SMASH menu or back to the home page.',
 };

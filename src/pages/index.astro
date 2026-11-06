@@ -30,7 +30,7 @@ const doors = [
 ];
 
 const teasers = [
-  { name: 'Gallery', note: 'The archive', to: '/gallery', img: '/media/events/mhk2601-copy.jpg', pos: '50% 40%' },
+  { name: 'Gallery', note: 'Posters, parties, plates', to: '/gallery', img: '/media/events/mhk2601-copy.jpg', pos: '50% 40%' },
   { name: 'Collaborations', note: 'Le SMASH × friends', to: '/collaborations', img: '/media/campaigns/announcement.jpg', pos: '50% 45%' },
   { name: 'Merch', note: 'Wear it', to: '/merch', img: '/media/merch/le-smash-t-shirt-mockup.jpg', pos: '30% 40%' },
 ];
@@ -41,7 +41,7 @@ const teasers = [
   {/* 1 — the smash. Real text in the h1; the slam is script-driven. */}
   <section class="hm-hero" data-hm-hero aria-label="Le SMASH Burgers &amp; Co.">
     <div class="hm-hero__stage" data-hm-stage>
-      <video class="hm-hero__video" autoplay muted loop playsinline preload="auto"
+      <video class="hm-hero__video" autoplay muted playsinline preload="auto"
              poster={asset('/media/home/hero-poster.jpg')} aria-hidden="true" tabindex="-1" data-hm-video>
         <source src={asset('/media/home/hero-720.mp4')} type="video/mp4" media="(max-width: 767px)" />
         <source src={asset('/media/home/hero.mp4')} type="video/mp4" />
@@ -51,7 +51,7 @@ const teasers = [
     <h1 class="hm-hero__title" data-hm-title>
       <span class="hm-hero__slam" data-hm-slam>
         <span class="hm-hero__le" aria-hidden="true">Le</span>
-        <span class="visually-hidden">Le </span><span class="hm-hero__word" data-hm-word>SMASH</span><span class="visually-hidden"> Burgers &amp; Co.</span>
+        <span class="visually-hidden">Le </span><span class="hm-hero__word" data-hm-word aria-hidden="true">{[...'SMASH'].map((c) => <span class="hm-ch" data-hm-ch>{c}</span>)}</span><span class="visually-hidden">SMASH</span><span class="visually-hidden"> Burgers &amp; Co.</span>
       </span>
       <span class="hm-hero__sub" aria-hidden="true">Smashed to order · Yangon</span>
     </h1>
@@ -163,78 +163,85 @@ const teasers = [
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ------------------------------------------------------------ 1. hero */
+  /*
+   * The film is one press: the plate meets the beef at about 0.5s and stops at
+   * about 0.85s, then four seconds of sizzle. So the letters drop in over the
+   * beef and get smashed flat by the same plate, on the same frame, then spring
+   * back up as the patty spreads. The film plays once and holds on its last
+   * frame (the steam is still rising there) instead of jump-cutting back.
+   */
   (() => {
     const video = $<HTMLVideoElement>('[data-hm-video]');
     const slamEl = $('[data-hm-slam]');
     const word = $('[data-hm-word]');
+    const chars = $$('[data-hm-ch]');
     const stage = $('[data-hm-stage]');
-    const title = $('[data-hm-title]');
-    if (!video || !slamEl || !word) return;
+    const le = $('.hm-hero__le');
+    const sub = $('.hm-hero__sub');
+    if (!video || !slamEl || !word || !chars.length) return;
 
     if (reduced) {
       video.removeAttribute('autoplay');
       video.pause();
-      return; // poster + static SMASH (CSS shows it)
+      return;
     }
 
-    const PRESS = 0.5; // seconds into the clip the press lands
-    const LEAD = 0.14; // length of the fast-in half of the slam
+    const CONTACT = 0.5;     // plate touches the beef (clip time, s)
+    const FLAT = 0.85;       // plate stops
     let fired = false;
-    let breathe: gsap.core.Tween | null = null;
-    let last = 0;
 
-    const shake = () => {
-      const targets = [stage, title].filter(Boolean);
-      gsap.fromTo(targets, { x: 0, y: 0 }, {
-        keyframes: [
-          { x: 7, y: -9, duration: 0.045 }, { x: -6, y: 6, duration: 0.045 },
-          { x: 4, y: -3, duration: 0.05 }, { x: 0, y: 0, duration: 0.08 },
-        ], ease: 'power2.out', overwrite: 'auto',
-      });
-    };
+    gsap.set(slamEl, { opacity: 1 });
+    gsap.set(chars, { yPercent: -120, opacity: 0, scaleY: 1.18, scaleX: 0.9, transformOrigin: '50% 100%' });
+    gsap.set([le, sub], { opacity: 0, y: 14 });
 
-    const slam = () => {
+    // The letters hang above the patty before the press, one after another.
+    const hang = gsap.timeline({ paused: true })
+      .to(chars, { yPercent: 0, opacity: 1, duration: 0.42, ease: 'power3.out', stagger: 0.05 })
+      .to(le, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.1);
+
+    const press = () => {
       if (fired) return;
       fired = true;
-      breathe?.kill();
-      gsap.set(word, { scale: 1 });
+      const span = (FLAT - CONTACT) / (video.playbackRate || 1);
       gsap.timeline()
-        .fromTo(slamEl, { opacity: 0, scaleX: 1.5, scaleY: 1.5, rotation: -3 },
-          { opacity: 1, scaleX: 1.07, scaleY: 0.88, rotation: 0, duration: LEAD, ease: 'power4.in' })
-        .add(shake)
-        .to(slamEl, { scaleX: 1, scaleY: 1, duration: 0.55, ease: 'back.out(2)' })
-        .add(() => {
-          breathe = gsap.to(word, { scale: 1.02, duration: 1.7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
-        });
+        // Squashed by the plate: flatter, wider, spreading out from the centre.
+        .to(chars, {
+          scaleY: 0.62, scaleX: 1.22, duration: span, ease: 'power2.in',
+          x: (i: number) => (i - (chars.length - 1) / 2) * 6,
+        })
+        .to(stage, { y: 3, duration: 0.06, yoyo: true, repeat: 1, ease: 'power1.inOut' }, '<' + (span * 0.8).toFixed(2))
+        // The pressure comes off: letters rise back, a little wider than before.
+        .to(chars, { scaleY: 1, scaleX: 1.04, x: 0, duration: 0.9, ease: 'power3.out' }, '+=0.25')
+        .to(sub, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '<0.2')
+        // And the frame drifts in slowly while it sizzles.
+        .fromTo(stage, { scale: 1 }, { scale: 1.06, duration: 6, ease: 'none' }, '<');
     };
 
-    const reset = () => {
-      fired = false;
-      breathe?.kill();
-      gsap.killTweensOf(slamEl);
-      gsap.set(slamEl, { opacity: 0, scaleX: 1, scaleY: 1 });
-    };
-
+    let hung = false;
     const tick = (t: number) => {
-      if (t < last - 0.5) reset(); // the loop wrapped
-      last = t;
-      if (!fired && t >= PRESS - LEAD && t < PRESS + 1.5) slam();
+      if (!hung && t > 0.02) { hung = true; hang.play(); }
+      if (!fired && t >= CONTACT) press();
     };
 
-    // timeupdate is the coarse backstop: it still fires when frame callbacks are throttled.
+    video.playbackRate = 0.85;   // the press reads heavier a touch slower
     video.addEventListener('timeupdate', () => tick(video.currentTime));
     if ('requestVideoFrameCallback' in video) {
-      const loop = (_now: number, meta: { mediaTime: number }) => {
+      const loop = (_n: number, meta: { mediaTime: number }) => {
         tick(meta.mediaTime);
-        (video as any).requestVideoFrameCallback(loop);
+        if (!fired) (video as any).requestVideoFrameCallback(loop);
       };
       (video as any).requestVideoFrameCallback(loop);
-    } else {
-      setInterval(() => { if (!video.paused) tick(video.currentTime); }, 40);
     }
+    // Hold on the last frame rather than snapping back to the raw patty.
+    video.addEventListener('ended', () => { video.pause(); });
 
-    // Autoplay refused (data saver, low power): slam once anyway so the page is never blank.
-    setTimeout(() => { if (!fired && (video.paused || video.currentTime === 0)) slam(); }, 1600);
+    // Autoplay refused (data saver, low power): run the same sequence on a timer.
+    setTimeout(() => {
+      if (!hung && (video.paused || video.currentTime === 0)) {
+        hung = true; hang.play();
+        gsap.delayedCall(0.6, press);
+      }
+    }, 1400);
     video.play?.().catch(() => {});
   })();
 
