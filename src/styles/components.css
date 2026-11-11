@@ -210,7 +210,6 @@
 
 .ftr__top { display: grid; gap: var(--s5); align-items: end; }
 @media (min-width: 54rem) { .ftr__top { grid-template-columns: auto 1fr; } }
-.ftr__tag { margin-top: var(--s3); color: var(--ink-2); font-size: var(--t-sm); }
 .ftr__rooms { display: flex; flex-wrap: wrap; gap: var(--s3) var(--s6); font-size: var(--t-xs); color: var(--ink-3); }
 @media (min-width: 54rem) { .ftr__rooms { justify-content: flex-end; text-align: right; } }
 .ftr__rooms p { display: grid; gap: 2px; }
@@ -240,17 +239,6 @@
 .stn__track { --th: clamp(150px, 19vw, 270px); position: relative; height: var(--th); padding-top: clamp(70px, 7.5vw, 100px); box-sizing: content-box; }
 .train { position: absolute; left: 0; bottom: 0; height: var(--th); width: calc(var(--th) * 4840 / 300); will-change: transform; }
 .train__svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.train__board {
-  position: absolute; top: 6%; height: 7.5%; overflow: hidden; border-radius: 4px;
-  left: calc((1620 + 728) / 4840 * 100%); width: calc(144 / 4840 * 100%);
-  background: #120d0b; border: 2px solid #2b2420;
-}
-.train__board-track {
-  display: inline-flex; gap: 2.4em; height: 100%; align-items: center; white-space: nowrap;
-  font-family: var(--font-mono); font-weight: 600; font-size: clamp(8px, 0.9vw, 13px); letter-spacing: 0.2em;
-  text-transform: uppercase; color: #ffb43a; text-shadow: 0 0 6px rgb(255 160 40 / 0.8);
-  animation: slide 26s linear infinite;
-}
 
 /* The ways in. In the doorways on wide screens, a row on phones. */
 .ways { list-style: none; margin: 0; padding: 0; }
@@ -312,7 +300,6 @@
 .ftr__pages a, .ftr__social a { color: var(--ink-2); text-decoration: none; text-transform: uppercase; }
 .ftr__pages a:hover, .ftr__social a:hover { color: var(--cream); }
 .ftr__social { display: flex; gap: var(--s4); margin: 0; }
-@media (prefers-reduced-motion: reduce) { .train__board-track { animation: none; } }
 
 /* ===========================================================================
    The opening film.

@@ -1,10 +1,5 @@
 /* Gallery — every class is .gl- so nothing collides with other pages. */
 .gl-h2 { font-size: var(--t-xl); margin-top: var(--s4); }
-.gl-sticker { position: absolute; pointer-events: none; width: clamp(5rem, 12vw, 9rem); height: auto; z-index: 3; }
-.gl-sticker--a { left: 2%; bottom: 3%; transform: rotate(-12deg); }
-.gl-sticker--b { right: 2%; top: 2%; transform: rotate(10deg); }
-@media (max-width: 47.99rem) { .gl-sticker--a { display: none; } .gl-sticker--b { width: 4.5rem; } }
-
 .gl-round {
   width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid currentColor; background: transparent;
   color: inherit; font-size: 1.25rem; cursor: pointer; display: inline-grid; place-items: center;
@@ -21,10 +16,6 @@
 .gl-show__title { font-size: clamp(2.4rem, 1rem + 5.6vw, 6.25rem); line-height: 0.95; }
 .gl-hl { display: inline-block; background: var(--cream); color: var(--black); padding: 0 0.15em; transform: rotate(-2deg); }
 .gl-show__lede { font-size: clamp(1.0625rem, 1.5vw, 1.375rem); line-height: 1.5; color: var(--ink-2); max-width: 34ch; }
-.gl-count { font-family: var(--font-display); font-size: var(--t-lg); display: flex; gap: 0.4em; align-items: baseline; }
-.gl-count__sep, .gl-count__tot { color: var(--ink-3); }
-.gl-bar { height: 4px; background: var(--line); border-radius: 2px; max-width: 18rem; overflow: hidden; }
-.gl-bar i { display: block; height: 100%; width: 100%; background: var(--cream); transform-origin: 0 50%; transform: scaleX(0.125); }
 .gl-jump { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); }
 .gl-jump a { font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: var(--track-label); text-decoration: none; border-bottom: 1px solid var(--ink-3); padding-bottom: 2px; }
 .gl-jump a:hover { border-color: var(--cream); }
@@ -58,7 +49,7 @@
 .gl-cp__h { text-transform: uppercase; line-height: 0.95; }
 .gl-cp__a, .gl-cp__b { display: block; }
 .gl-cp__b { font-size: 1.45em; font-family: var(--font-script); font-weight: 400; text-transform: none; color: var(--red); }
-.gl-cp__ribbon, .gl-cp__hint { display: none; }
+.gl-cp__ribbon { display: none; }
 
 /* The grid: the end state everywhere, and the whole thing on mobile / reduced motion. */
 .gl-cp__grid {
@@ -80,7 +71,6 @@
   .gl-camp { padding: 0; overflow: visible; }
   .gl-cp { position: relative; height: 100vh; height: 100svh; overflow: clip; }
   .gl-cp__lede, .gl-cp__grid { display: none; }
-  .gl-cp__label { position: absolute; left: var(--gutter); top: 6.2rem; margin: 0; z-index: 1; will-change: opacity; }
   .gl-cp__a, .gl-cp__b {
     position: absolute; white-space: nowrap; margin: 0; z-index: 1; line-height: 0.9;
     font-size: clamp(2.8rem, 8.2vw, 8.5rem); will-change: transform, opacity;
@@ -99,11 +89,6 @@
   .gl-cp__ribbon.is-settled .gl-cp__card { pointer-events: auto; }
   .gl-cp__ribbon.is-settled .gl-cp__card:hover,
   .gl-cp__ribbon.is-settled .gl-cp__card:focus-visible { transform: translateY(-12px) rotate(-1.5deg) scale(1.03); box-shadow: 0 26px 50px rgb(0 0 0 / 0.6); }
-  .gl-cp__hint {
-    display: block; position: absolute; left: 0; right: 0; bottom: 1.1rem; margin: 0; text-align: center; z-index: 2;
-    font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); text-transform: uppercase;
-    color: var(--ink-3); opacity: 0; will-change: opacity;
-  }
 }
 
 /* Mobile: a curved, swipeable band, then the grid. */
@@ -139,8 +124,6 @@
 @media (min-width: 80rem) { .gl-posts { columns: 4; } }
 .gl-post { break-inside: avoid; margin: 0 0 var(--s4); background: #fff; color: #17120f; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 28px rgb(0 0 0 / 0.3); transition: transform 320ms var(--ease); }
 .gl-post:hover { transform: translateY(-6px) rotate(-1deg); }
-.gl-post__bar { display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s3); font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.gl-post__bar img { width: 1.6rem; height: 1.6rem; border-radius: 50%; }
 .gl-post__img { overflow: hidden; }
 .gl-post__img img { width: 100%; height: auto; display: block; transition: transform 600ms var(--ease); }
 .gl-post:hover .gl-post__img img { transform: scale(1.06); }

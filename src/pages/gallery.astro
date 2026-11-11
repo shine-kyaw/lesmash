@@ -41,14 +41,6 @@ const WALL = [
           American flavour. French precision. Yangon-born. Three rooms, five kitchens — and counting.
         </p>
 
-        <div class="gl-count" aria-live="polite">
-          <span class="visually-hidden">Picture pair </span>
-          <span class="gl-count__cur" data-gl-cur>01</span>
-          <span class="gl-count__sep" aria-hidden="true">/</span><span class="visually-hidden"> of </span>
-          <span class="gl-count__tot">{pad(SHOWCASE.length)}</span>
-        </div>
-        <div class="gl-bar" aria-hidden="true"><i data-gl-bar></i></div>
-
         <div class="gl-show__ctl">
           <button class="gl-round" type="button" data-gl-prev aria-label="Previous pair">&#8592;</button>
           <button class="gl-round" type="button" data-gl-next aria-label="Next pair">&#8594;</button>
@@ -78,21 +70,18 @@ const WALL = [
         </div>
       </div>
     </div>
-    <img class="gl-sticker gl-sticker--a" src={asset('/brand/sticker-beef.png')} alt="" aria-hidden="true" width="300" height="300" />
   </section>
 
   {/* ============================================================ 2. Campaigns */}
   <section class="gl-camp dark" id="campaigns" aria-labelledby="gl-camp-h" data-cp>
     <div class="gl-cp" data-cp-pin>
       <div class="gl-cp__intro wrap">
-        <p class="label label--ember gl-cp__label" data-cp-label>Campaign highlight</p>
         <h2 id="gl-camp-h" class="gl-h2 gl-cp__h">
           <span class="gl-cp__a" data-cp-a>Campaigns we</span>
           <span class="gl-cp__b" data-cp-b>went all in on.</span>
         </h2>
         <p class="lede gl-cp__lede">
           Our posters, and the parties we threw with friends.
-          Tap one to see it whole.
         </p>
       </div>
 
@@ -105,7 +94,6 @@ const WALL = [
           </li>
         ))}
       </ul>
-      <p class="gl-cp__hint" data-cp-hint aria-hidden="true">Tap a poster.</p>
     </div>
 
     <ul class="gl-cp__grid" data-cp-grid>
@@ -123,9 +111,8 @@ const WALL = [
   {/* ============================================================ 3. Events */}
   <section class="gl-events section" id="events" aria-labelledby="gl-ev-h">
     <div class="wrap">
-      <p class="label label--ember">Events &amp; nights</p>
       <h2 id="gl-ev-h" class="gl-h2">When the room <span class="script">fills up.</span></h2>
-      <p class="lede">Parties, DJs, late nights in the carriage. Tap to enlarge.</p>
+      <p class="lede">Parties, DJs, late nights in the carriage.</p>
 
       <ul class="gl-wall" data-gl-wall>
         {EVENTS.map((p, i) => (
@@ -143,17 +130,11 @@ const WALL = [
   {/* ============================================================ 4. Feed */}
   <section class="gl-feed brand-red section" id="feed" aria-labelledby="gl-fd-h">
     <div class="wrap">
-      <p class="label">From the feed</p>
       <h2 id="gl-fd-h" class="gl-h2">Fresh off <span class="script">our posts.</span></h2>
-      <p class="lede">Straight from our socials.</p>
 
       <ul class="gl-posts">
         {FEED.map((p) => (
           <li class="gl-post">
-            <div class="gl-post__bar">
-              <img src={asset('/brand/logo-badge.png')} alt="" aria-hidden="true" width="64" height="64" loading="lazy" />
-              <span>Le SMASH Burgers &amp; Co.</span>
-            </div>
             <button type="button" class="gl-post__img" data-gl-lb="feed" data-full={asset(p.src)} data-cap="">
               <img src={asset(p.src)} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
             </button>
@@ -166,7 +147,6 @@ const WALL = [
   {/* ============================================================ 5. Archive */}
   <section class="gl-archive-head section" id="archive" style="padding-bottom:var(--s6)">
     <div class="wrap">
-      <p class="label label--ember">The archive</p>
       <h2 class="gl-h2" style="margin-top:var(--s4)">
         Everything we<br /><span class="script">have made so far.</span>
       </h2>
@@ -217,7 +197,6 @@ const WALL = [
 
   <section class="section dark gl-end">
     <div class="wrap">
-      <p class="label">Hungry now?</p>
       <h2 class="gl-h2" style="margin-top:var(--s4)">Come and add <span class="script">your own.</span></h2>
       <div class="btn-row" style="margin-top:var(--s6)">
         <a class="btn btn--ember" href={href('/menu')}>See the menu</a>

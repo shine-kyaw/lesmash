@@ -13,12 +13,10 @@ const pageNodes = Array.from(pagesEl.querySelectorAll<HTMLElement>(':scope > .mn
 const toggle = root.querySelector<HTMLButtonElement>('[data-toggle]')!;
 const toggleLabel = root.querySelector<HTMLElement>('[data-toggle-label]')!;
 const controls = root.querySelector<HTMLElement>('[data-controls]')!;
-const help = root.querySelector<HTMLElement>('[data-help]')!;
 const curl = root.querySelector<HTMLButtonElement>('[data-curl]')!;
 const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]')!;
 const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]')!;
 const countEl = root.querySelector<HTMLElement>('[data-count]')!;
-const dotsEl = root.querySelector<HTMLElement>('[data-dots]')!;
 const jumpLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-jump]'));
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -144,31 +142,12 @@ function ui() {
   nextBtn.disabled = f >= maxF();
   curl.hidden = f >= maxF() || mode !== 'book';
   root.dataset.view = String(f);
-  Array.from(dotsEl.children).forEach((d, i) => {
-    d.classList.toggle('is-on', i === f);
-    d.setAttribute('aria-current', i === f ? 'true' : 'false');
-  });
   jumpLinks.forEach((a) => {
     const target = Number(a.dataset.jump);
     const view = desktop ? Math.ceil(target / 2) : target;
     a.classList.toggle('is-on', mode === 'book' && view === f);
   });
   nextBtn.querySelector('.mn-nav__tx')!.textContent = f === 0 ? 'Flip' : 'Next';
-}
-
-function buildDots() {
-  dotsEl.innerHTML = '';
-  for (let i = 0; i < views(); i++) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'mn-dot';
-    b.setAttribute(
-      'aria-label',
-      desktop ? (i === 0 ? 'Cover' : i === leaves.length ? 'Back cover' : `Pages ${2 * i}–${2 * i + 1}`) : `Page ${i + 1}`
-    );
-    b.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(b);
-  }
 }
 
 /* --------------------------------------------------------------- animation */
@@ -376,10 +355,8 @@ function enterBook() {
   // keep the same page on screen across a resize
   f = desktop ? Math.ceil(keepPage / 2) : keepPage;
   f = Math.min(f, maxF());
-  buildDots();
   stack();
   controls.hidden = false;
-  help.hidden = false;
   toggle.setAttribute('aria-pressed', 'false');
   toggleLabel.textContent = 'View as list';
   startPeeking();
@@ -395,7 +372,6 @@ function enterList() {
   root.classList.add('mn--list');
   gsap.set(book, { clearProps: 'all' });
   controls.hidden = true;
-  help.hidden = true;
   curl.hidden = true;
   toggle.setAttribute('aria-pressed', 'true');
   toggleLabel.textContent = 'Flip-book view';

@@ -8,11 +8,6 @@ html.mc-locked { overflow: hidden; }
   background: var(--red); color: #fff;
   padding: calc(72px + clamp(2.5rem, 7vw, 5rem)) 0 clamp(3rem, 8vw, 6rem);
 }
-.mc-head__pattern {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0.1; mix-blend-mode: multiply; z-index: -1; pointer-events: none;
-}
-.mc-head__kicker { color: rgb(255 255 255 / 0.85); margin-bottom: var(--s4); }
 .mc-h1 {
   font-size: clamp(3.4rem, 1rem + 15vw, 11.5rem);
   line-height: 0.86; letter-spacing: -0.02em; color: var(--cream);
@@ -27,10 +22,6 @@ html.mc-locked { overflow: hidden; }
 .mc-sec-head { display: grid; gap: var(--s3); margin-bottom: var(--s6); }
 .mc-sec-head h2 { font-size: var(--t-xl); }
 .mc-sec-head--dark .lede { color: rgb(255 255 255 / 0.72); }
-.mc-line__label { color: var(--brass); }
-.mc-hint { margin-top: var(--s2); color: var(--ink-3); }
-.mc-hint__touch { display: none; }
-@media (pointer: coarse), (max-width: 760px) { .mc-hint__fine { display: none; } .mc-hint__touch { display: inline; } }
 
 /* ---------- The rail (3D) ---------- */
 .mc-rack-sec {

@@ -5,11 +5,8 @@ import { asset } from '../../lib/href';
 const names = COLLABS.map((c) => c.partner).join(', ');
 ---
 <section class="cb-hero dark" data-cb-hero aria-labelledby="cb-h1">
-  <img class="cb-hero__monogram" src={asset('/brand/pattern-monogram.png')} alt="" width="900" height="898" decoding="async" />
-
   <div class="wrap cb-hero__inner">
     <div class="cb-hero__head">
-      <p class="label cb-hero__kicker">Collaborations</p>
       <h1 class="cb-hero__title" id="cb-h1">
         <span class="visually-hidden">Le SMASH × {names}</span>
         <span class="cb-hero__stack" aria-hidden="true" data-cb-line>
@@ -43,5 +40,4 @@ const names = COLLABS.map((c) => c.partner).join(', ');
   </div>
 
   <div class="cb-float" data-cb-float aria-hidden="true"><img src="" alt="" decoding="async" /></div>
-  <a class="cb-hero__cue" href="#wall"><span>The wall</span><i aria-hidden="true"></i></a>
 </section>

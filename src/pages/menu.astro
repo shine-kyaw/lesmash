@@ -33,7 +33,6 @@ const pageLabel = (p: (typeof pages)[number]) =>
 <Base path="/menu" title={title('Menu')} description={DESCRIPTIONS.menu} schema={schema}>
   <section class="mn-head">
     <div class="wrap">
-      <p class="label label--ember">The menu</p>
       <h1 class="mn-head__title">Flip it. <span class="script">Pick it.</span> Smash it.</h1>
       <nav class="mn-jump" aria-label="Jump to a section of the menu">
         {jumps.map((j) => (
@@ -78,11 +77,9 @@ const pageLabel = (p: (typeof pages)[number]) =>
       <button type="button" class="mn-nav" data-prev aria-label="Previous page"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="mn-meter">
         <p class="mn-count" aria-live="polite"><span data-count>01</span> / <span data-of>{pad(pages.length)}</span></p>
-        <div class="mn-dots" data-dots role="group" aria-label="Pages"></div>
       </div>
       <button type="button" class="mn-nav mn-nav--next" data-next aria-label="Next page"><span class="mn-nav__tx">Flip</span><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
-    <p class="mn-help" data-help hidden><span class="mn-help__d">Click, drag or use the arrow keys.</span><span class="mn-help__m">Swipe to turn the page.</span></p>
   </section>
 
   <section class="section band--ink mn-foot">

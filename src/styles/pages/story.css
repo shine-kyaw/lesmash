@@ -141,10 +141,6 @@ html:not(.st-js) .st-open__stage { position: relative; }
 .st-chapter { position: relative; padding-block: clamp(4rem, 10vw, 8rem); overflow-x: clip; }
 .st-chapter--raised { background: var(--paper-2); }
 .st-chapter__grid { display: grid; gap: var(--s7); align-items: start; }
-.st-chapter__num {
-  font-family: var(--font-display); font-size: clamp(3.5rem, 9vw, 7rem); line-height: 0.9;
-  color: transparent; -webkit-text-stroke: 2px var(--ember); margin-bottom: var(--s3);
-}
 .st-chapter__kicker { margin-bottom: var(--s3); }
 .st-chapter__title { font-size: var(--t-lg); margin-bottom: var(--s5); }
 .st-chapter__body > * + * { margin-top: var(--s4); }

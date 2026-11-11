@@ -103,8 +103,6 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
   if (!sec || !track) return;
   const pairs = $$('[data-gl-pair]', track);
   const n = pairs.length;
-  const cur = $('[data-gl-cur]')!;
-  const bar = $('[data-gl-bar]')!;
   const prev = $<HTMLButtonElement>('[data-gl-prev]')!;
   const next = $<HTMLButtonElement>('[data-gl-next]')!;
   let shown = -1;
@@ -113,9 +111,6 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
     i = Math.max(0, Math.min(n - 1, i));
     if (i === shown) return;
     shown = i;
-    cur.textContent = pad(i + 1);
-    gsap.set(bar, { scaleX: (i + 1) / n });
-    if (animate && !reduced) gsap.fromTo(cur, { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.4, ease: 'back.out(2)', overwrite: true });
   };
   setIdx(0, false);
 
@@ -189,8 +184,6 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
   const N = items.length;
   const a = $<HTMLElement>('[data-cp-a]')!;
   const b = $<HTMLElement>('[data-cp-b]')!;
-  const label = $<HTMLElement>('[data-cp-label]')!;
-  const hint = $<HTMLElement>('[data-cp-hint]')!;
   const buttons = items.map((it) => $<HTMLButtonElement>('button', it)!);
   const open = (i: number) => lb.open('campaigns', i);
   ribbon.addEventListener('click', (e) => {
@@ -272,8 +265,7 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
       const fade = String(1 - out);
       a.style.transform = `translate3d(${(-(1 - inn) * W * 0.8 - out * W * 0.25).toFixed(1)}px,0,0)`;
       b.style.transform = `translate3d(${((1 - inn) * W * 0.8 + out * W * 0.25).toFixed(1)}px,0,0)`;
-      a.style.opacity = b.style.opacity = label.style.opacity = fade;
-      hint.style.opacity = String(smooth(clamp01((p - 0.93) / 0.05)));
+      a.style.opacity = b.style.opacity = fade;
       const s = p >= SETTLE;
       if (s !== settled) {
         settled = s;
@@ -292,7 +284,7 @@ $$<HTMLImageElement>('[data-gl-archive] .tile img').forEach((im) => {
     return () => {
       ro.disconnect();
       ribbon.classList.remove('is-settled');
-      [...items, a, b, label, hint].forEach((el) => { el.style.transform = ''; el.style.opacity = ''; });
+      [...items, a, b].forEach((el) => { el.style.transform = ''; el.style.opacity = ''; });
       buttons.forEach((bt) => { bt.tabIndex = -1; });
     };
   });

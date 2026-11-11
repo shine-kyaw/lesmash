@@ -31,24 +31,11 @@
   -webkit-text-stroke: 0.025em var(--black); paint-order: stroke fill;
   text-shadow: 0 0.04em 0 var(--black), 0 0.09em 0.4em rgb(0 0 0 / 0.5);
 }
-.hm-hero__cue {
-  position: absolute; z-index: 2; left: 50%; bottom: clamp(1rem, 4vh, 2.25rem); translate: -50% 0;
-  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--cream); text-decoration: none;
-}
-.hm-hero__cue i { display: block; width: 1px; height: 2.5rem; background: color-mix(in srgb, var(--cream) 35%, transparent); position: relative; overflow: hidden; }
-.hm-hero__cue i::after {
-  content: ''; position: absolute; inset: 0; background: var(--cream);
-  transform: translateY(-100%); animation: hm-drip 2.2s var(--ease) infinite;
-}
-@keyframes hm-drip { 60%, 100% { transform: translateY(100%); } }
 
 /* Hidden until the script slams it in; reduced motion / no JS shows it. */
 .hm-js .hm-hero__slam { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .hm-js .hm-hero__slam { opacity: 1; }
-  .hm-hero__cue i::after { animation: none; transform: none; opacity: 0.5; }
 }
 
 /* ============================================================ 2. Doors ===== */
@@ -72,28 +59,12 @@
   font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.1rem, 4vw, 1.6rem);
   line-height: 1; transition: opacity 240ms var(--ease);
 }
-.hm-door__num { position: absolute; top: 0.9rem; left: 0.9rem; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.14em; color: var(--cream); opacity: 0.85; }
-.hm-door__tag {
-  position: absolute; left: 50%; top: 42%;
-  padding: 0.3em 0.55em 0.35em; white-space: nowrap;
-  font-family: var(--font-display); text-transform: uppercase; line-height: 1;
-  font-size: clamp(1.25rem, 5.2vw, 2rem);
-  background: var(--red); color: var(--cream);
-  border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--black);
-  translate: -50% -50%; rotate: -4deg; transform: scale(1);
-}
-.hm-door:nth-child(even) .hm-door__tag { background: var(--cream); color: var(--red); rotate: 3deg; }
 .hm-door__cap { display: none; }
 
 @media (min-width: 56.25rem) {
   .hm-doors__row { display: flex; height: min(88vh, 54rem); height: min(88svh, 54rem); min-height: 30rem; }
   .hm-door { flex: 1 1 0; transition: flex-grow 650ms var(--ease); }
   .hm-door__link { height: 100%; aspect-ratio: auto; }
-  .hm-door__tag {
-    top: 38%; font-size: clamp(1.6rem, 2.6vw, 3rem);
-    transform: scale(0); opacity: 0;
-    transition: transform 520ms cubic-bezier(0.34, 1.7, 0.5, 1), opacity 200ms var(--ease);
-  }
   .hm-door__plain { left: 1rem; right: 0.6rem; bottom: 1.4rem; font-size: clamp(0.8rem, 1.15vw, 1.6rem); white-space: nowrap; }
   .hm-door__cap {
     display: block; position: absolute; left: 1.4rem; right: 1.4rem; bottom: 1.4rem;
@@ -103,7 +74,6 @@
   }
   .hm-door:hover, .hm-door:focus-within { flex-grow: 3.4; }
   .hm-door:hover .hm-door__img, .hm-door:focus-within .hm-door__img { transform: scale(1.05); }
-  .hm-door:hover .hm-door__tag, .hm-door:focus-within .hm-door__tag { transform: scale(1); opacity: 1; }
   .hm-door:hover .hm-door__cap, .hm-door:focus-within .hm-door__cap { opacity: 1; transform: none; }
   .hm-door:hover .hm-door__plain, .hm-door:focus-within .hm-door__plain { opacity: 0; }
   .hm-door__link:focus-visible { outline-offset: -6px; outline-color: var(--cream); }
@@ -112,11 +82,8 @@
   .hm-doors__row:has(.hm-door:hover) .hm-door:not(:hover) .hm-door__img,
   .hm-doors__row:has(.hm-door:focus-within) .hm-door:not(:focus-within) .hm-door__img { filter: brightness(0.5) saturate(0.7); }
 }
-@media (hover: none) and (min-width: 56.25rem) {
-  .hm-door__tag { transform: scale(1); opacity: 1; }
-}
 @media (prefers-reduced-motion: reduce) {
-  .hm-door, .hm-door__img, .hm-door__tag, .hm-door__cap { transition-duration: 1ms; }
+  .hm-door, .hm-door__img, .hm-door__cap { transition-duration: 1ms; }
 }
 
 /* The header link the hovered door belongs to. */
@@ -137,12 +104,9 @@
 .hm-best__art { position: relative; aspect-ratio: 1 / 1; max-width: 34rem; width: 100%; justify-self: center; }
 .hm-best__panel {
   position: absolute; inset: 8% 4% 4% 10%; border: 3px solid var(--black); box-shadow: 8px 8px 0 var(--black);
-  background: var(--red) url('/brand/pattern-monogram.png') center / 9rem repeat; rotate: 2deg; overflow: hidden;
+  background: var(--red); rotate: 2deg; overflow: hidden;
 }
 .hm-best__burger { position: absolute; left: 4%; top: 24%; width: 98%; max-width: none; height: auto; filter: drop-shadow(0 18px 18px rgb(0 0 0 / 0.35)); rotate: -4deg; }
-.hm-best__sticker { position: absolute; width: clamp(5.5rem, 16vw, 9rem); height: auto; filter: drop-shadow(3px 5px 0 rgb(0 0 0 / 0.25)); will-change: transform; }
-.hm-best__sticker--a { top: -2%; right: -2%; }
-.hm-best__sticker--b { bottom: -3%; left: -3%; width: clamp(5rem, 14vw, 8rem); }
 @media (min-width: 56.25rem) {
   .hm-best__grid { grid-template-columns: 1.25fr 0.75fr; gap: var(--s8); }
 }
@@ -156,7 +120,6 @@
   font-size: clamp(2.2rem, 1rem + 5.5vw, 5.5rem); line-height: 0.92;
 }
 .hm-line__title span { color: var(--red); }
-.hm-line__sub { margin: 0; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
 .hm-line__head .tlink { margin-left: auto; }
 .hm-line__viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: var(--s4) 0 var(--s6); }
 .hm-line__viewport::-webkit-scrollbar { display: none; }
@@ -168,10 +131,7 @@
   border: 3px solid var(--black); box-shadow: 6px 6px 0 var(--black);
   transition: transform 360ms var(--ease);
 }
-.hm-card:nth-child(odd) .hm-card__fig { rotate: -1.2deg; }
-.hm-card:nth-child(even) .hm-card__fig { rotate: 1.2deg; }
 .hm-card__fig img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 68%; display: block; }
-.hm-card__num { position: absolute; top: 0.7rem; left: 0.7rem; z-index: 1; font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 600; background: var(--cream); color: var(--black); padding: 0.15rem 0.45rem; border: 2px solid var(--black); }
 .hm-card__name {
   position: absolute; left: -3px; bottom: 0.9rem; z-index: 1; margin: 0; padding: 0.3em 0.6em 0.35em;
   font-family: var(--font-display); text-transform: uppercase; font-weight: 400; font-size: clamp(1.15rem, 1rem + 1vw, 1.6rem); line-height: 1;
@@ -179,7 +139,7 @@
 }
 .hm-card:nth-child(even) .hm-card__name { background: var(--cream); color: var(--red); rotate: 2deg; }
 .hm-card__desc { margin: 0; font-size: var(--t-sm); line-height: 1.45; color: var(--ink-2); max-width: 36ch; }
-.hm-card:hover .hm-card__fig { transform: translateY(-6px) rotate(1.5deg); }
+.hm-card:hover .hm-card__fig { transform: translateY(-6px); }
 .hm-card__more {
   display: grid; place-content: center; text-align: center; gap: var(--s4); aspect-ratio: 3 / 4; padding: var(--s6);
   background: var(--red) url('/brand/pattern-monogram.png') center / 8rem repeat; border: 3px solid var(--black);
@@ -209,18 +169,17 @@
 }
 
 /* ======================================================== 5. Teasers ====== */
-.hm-more { background: var(--black); color: var(--cream); padding-block: clamp(3rem, 8vw, 6rem); }
+.hm-more { background: var(--black); color: var(--cream); padding-block: clamp(4rem, 10vw, 8rem); }
 .hm-more__row { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); }
 .hm-more__item a {
   position: relative; display: flex; align-items: flex-end; min-height: 11rem; overflow: hidden; isolation: isolate;
   padding: var(--s5); color: var(--cream); text-decoration: none; border: 3px solid var(--cream);
   transition: transform 300ms var(--ease);
 }
-.hm-more__item a:hover, .hm-more__item a:focus-visible { transform: translateY(-6px) rotate(-1deg); }
+.hm-more__item a:hover, .hm-more__item a:focus-visible { transform: none; }
 .hm-more__item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
 .hm-more__item a::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 30%, rgb(0 0 0 / 0.75)); }
 .hm-more__name { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); line-height: 1; }
-.hm-more__name small { display: block; margin-top: 0.5rem; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: 0.12em; opacity: 0.85; }
 @media (min-width: 48rem) { .hm-more__row { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hm-more__item a { min-height: 16rem; } }
 
 /* ------------------------------------------------------------------------
@@ -247,9 +206,6 @@
   .hm-hero__word { font-size: 23vw; }
   .hm-hero__le { transform: rotate(-6deg) translateX(-1.2em); }
 }
-
-/* Door labels in the same hand, like their mock's boxes. */
-.hm-door__tag { font-family: var(--font-hand); letter-spacing: 0.02em; border-width: 0; box-shadow: 5px 5px 0 rgb(0 0 0 / 0.55); }
 
 /* Each letter of SMASH is its own box, so the plate can flatten them. */
 .hm-ch { display: inline-block; will-change: transform; }

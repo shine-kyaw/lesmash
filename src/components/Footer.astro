@@ -50,11 +50,6 @@ const ways: Way[] = [
   ...(SITE.phone ? [{ href: 'tel:' + SITE.phone.e164, kind: 'call' as const, title: 'Call us', sub: SITE.phone.display, label: `Call Le SMASH on ${SITE.phone.display}`, platform: 'phone' }] : []),
 ].slice(0, 4);
 
-const board = [
-  'Next stop: Le SMASH', 'Smashed to order', '3 rooms', '5 kitchens',
-  'Kamayut', 'Yankin', 'Mayangone', 'Hlaing', 'Dine in', 'Takeaway',
-];
-
 /* Carriage geometry, in SVG units (one carriage = 1600 x 300, four doors). */
 const doors = [150, 530, 910, 1290];
 const windows = [[30, 100], [340, 160], [720, 160], [1100, 160], [1470, 100]];
@@ -66,7 +61,6 @@ const MID = 1620;                         // x of the middle carriage
   <div class="wrap ftr__top">
     <div class="ftr__brand">
       <Wordmark size="lg" />
-      <p class="ftr__tag">Smashed to order in {SITE.geo}. Come hungry.</p>
     </div>
     <div class="ftr__rooms">
       {branches.map((b) => (
@@ -192,11 +186,6 @@ const MID = 1620;                         // x of the middle carriage
           ))}
         </ul>
 
-        <div class="train__board" aria-hidden="true">
-          <div class="train__board-track">
-            {[0, 1].map(() => board.map((t) => <span>{t}</span>))}
-          </div>
-        </div>
       </div>
     </div>
 

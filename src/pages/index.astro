@@ -55,7 +55,6 @@ const teasers = [
       </span>
       <span class="hm-hero__sub" aria-hidden="true">Smashed to order · Yangon</span>
     </h1>
-    <a class="hm-hero__cue" href="#doors"><span>Scroll</span><i aria-hidden="true"></i></a>
   </section>
 
   {/* The client's ticker, under the hero as their mock draws it. */}
@@ -69,8 +68,6 @@ const teasers = [
           <a class="hm-door__link" href={href(d.to)}>
             <img class="hm-door__img" src={asset(d.img)} alt="" width="1600" height="1067"
                  loading="lazy" decoding="async" style={`object-position:${d.pos}`} />
-            <span class="hm-door__num" aria-hidden="true">0{i + 1}</span>
-            <span class="hm-door__tag" aria-hidden="true">{d.label}</span>
             <span class="hm-door__plain">{d.label}</span>
             <span class="hm-door__cap" aria-hidden="true">{d.cap}</span>
           </a>
@@ -87,7 +84,6 @@ const teasers = [
         <Slot slot={EDITORIAL.heroPositioning} class="lede" />
         <div class="btn-row">
           <a class="btn btn--ember" href={href('/menu')}>See the menu</a>
-          <a class="btn btn--ghost" href={href('/visit')}>Find us</a>
         </div>
       </div>
       <div class="hm-best__art" aria-hidden="true">
@@ -95,7 +91,6 @@ const teasers = [
           <img class="hm-best__burger" data-hm-burger src={asset('/brand/hero-burger.png')} alt=""
                width="689" height="516" loading="lazy" decoding="async" />
         </div>
-        <img class="hm-best__sticker hm-best__sticker--a" data-hm-spin="1" src={asset('/brand/sticker-beef.png')} alt="" width="320" height="320" loading="lazy" decoding="async" />
       </div>
     </div>
   </section>
@@ -106,7 +101,6 @@ const teasers = [
       <div class="hm-line__pin">
         <div class="wrap hm-line__head">
           <h2 class="hm-line__title" id="hm-line-title">The <span>line-up</span></h2>
-          <p class="hm-line__sub">{burgers.length} burgers · smashed to order</p>
           <a class="tlink" href={href('/menu')}>Full menu</a>
         </div>
         <div class="hm-line__viewport" data-hm-viewport>
@@ -115,7 +109,6 @@ const teasers = [
               <li class="hm-card" data-hm-card>
                 <a class="hm-card__in" href={href('/menu') + '#' + b.slug} style="text-decoration:none;color:inherit" data-hm-inner>
                   <figure class="hm-card__fig">
-                    <span class="hm-card__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                     <img src={asset(b.image?.src ?? '')} alt={b.image?.alt ?? b.name}
                          width="1024" height="1365" loading="lazy" decoding="async" />
                     <h3 class="hm-card__name">{b.name}</h3>
@@ -144,7 +137,7 @@ const teasers = [
           <li class="hm-more__item">
             <a href={href(t.to)}>
               <img src={asset(t.img)} alt="" width="1600" height="1067" loading="lazy" decoding="async" style={`object-position:${t.pos}`} />
-              <span class="hm-more__name">{t.name}<small>{t.note}</small></span>
+              <span class="hm-more__name">{t.name}</span>
             </a>
           </li>
         ))}
@@ -265,12 +258,6 @@ const teasers = [
   if (!reduced) {
     const best = $('[data-hm-best]');
     if (best) {
-      $$('[data-hm-spin]').forEach((s) => {
-        gsap.fromTo(s, { rotation: 0 }, {
-          rotation: 300 * Number(s.dataset.hmSpin), ease: 'none',
-          scrollTrigger: { trigger: best, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-        });
-      });
       const head = $('[data-hm-pop]');
       if (head) gsap.from(head, {
         y: 70, rotation: -2, opacity: 0, duration: 0.9, ease: 'back.out(1.7)',

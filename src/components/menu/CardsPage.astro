@@ -30,7 +30,6 @@ function priceLines(display: string): { lead: string; value: string }[] {
 <div id={part === 1 ? category.slug : undefined} class:list={['mn-cards', { 'mn-cards--first': part === 1 }]}>
   <header class="mn-phead">
     <h2 class="mn-phead__title">{category.name}</h2>
-    {parts > 1 && <p class="mn-phead__part">{part} / {parts}</p>}
     {category.slug === 'burgers' && (
       <p class="mn-phead__note">Burger prices at the counter</p>
     )}
@@ -59,7 +58,7 @@ function priceLines(display: string): { lead: string; value: string }[] {
             {lines.length > 0 && (
               <p class:list={['mn-price', { 'mn-price--multi': !single }]}>
                 {single ? (
-                  <><span class="mn-price__lab">Price :</span> <b>{lines[0].value}</b></>
+                  <><b>{lines[0].value}</b></>
                 ) : (
                   lines.map((l) => <span class="mn-price__line">{l.lead} <b>{l.value}</b></span>)
                 )}

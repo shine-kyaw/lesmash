@@ -26,12 +26,6 @@
 .vs-hero h1 .script { font-size: 1.05em; color: var(--ember); display: inline-block; }
 .vs-hero .lede { margin-top: var(--s5); color: var(--ink-2); }
 .vs-hero .btn-row { margin-top: var(--s6); }
-.vs-hero__stickers { position: absolute; inset: 0; pointer-events: none; }
-.vs-hero__stickers img { position: absolute; width: clamp(72px, 13vw, 190px); height: auto; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35)); }
-.vs-hero__stickers img:nth-child(1) { right: 6%; top: 22%; rotate: 10deg; }
-@media (max-width: 700px) {
-  .vs-hero__stickers img:nth-child(1) { top: 12%; right: -2%; }
-}
 
 /* ----------------------------------------------------------------- rooms */
 .vs-rooms { position: relative; padding-block: clamp(var(--s8), 9vw, var(--s9)); overflow: hidden; }
@@ -115,7 +109,6 @@
   font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.08em;
   padding: 4px 10px; border-radius: var(--r-pill); border: 1px solid var(--line); color: var(--ink-2);
 }
-.vs-fact--warn { border-style: dashed; color: var(--ink-3); }
 .vs-room__actions { margin-top: auto; }
 
 @media (min-width: 900px) {
@@ -160,7 +153,6 @@
 .vs-team__head .lede { margin-top: var(--s4); max-width: 62ch; }
 
 .vs-tm { margin-top: var(--s6); }
-.vs-tm__hint { margin-bottom: var(--s3); }
 .vs-tm__stage { position: relative; }
 .vs-tm__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s3); }
 .vs-tm__grid li { min-width: 0; }
@@ -265,7 +257,6 @@
 
 .vs-metro { --dot: 34px; list-style: none; margin: var(--s7) 0 0; padding: 0; display: grid; gap: var(--s5); position: relative; }
 .vs-metro li { position: relative; padding-left: calc(var(--dot) + var(--s4)); color: #fff; font-family: var(--font-display); text-transform: uppercase; font-size: var(--t-md); line-height: var(--dot); min-height: var(--dot); }
-.vs-metro li small { display: block; font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); line-height: 1.4; opacity: 0.9; }
 .vs-metro li::before {
   content: ''; position: absolute; left: 0; top: 0; width: var(--dot); height: var(--dot); border-radius: 50%;
   background: var(--cream); border: 6px solid var(--black); box-sizing: border-box; z-index: 2;
@@ -277,9 +268,6 @@
   .vs-metro li { padding: calc(var(--dot) + var(--s4)) var(--s3) 0 0; }
   .vs-metro li::after { left: var(--dot); top: calc(var(--dot) / 2 - 3px); width: calc(100% - var(--dot)); height: 6px; }
 }
-.vs-delivery__actions { margin-top: var(--s7); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); }
-.vs-delivery .btn--cream { color: var(--black); }
-.vs-delivery .vs-note { margin-top: var(--s5); color: rgba(255, 255, 255, 0.85); font-size: var(--t-sm); max-width: 62ch; }
 
 /* -------------------------------------------------------------- franchise */
 .vs-franchise { padding-block: clamp(var(--s8), 9vw, var(--s9)); }
@@ -287,7 +275,6 @@
 @media (min-width: 900px) { .vs-franchise__grid { grid-template-columns: 1.2fr 1fr; } }
 .vs-franchise h2 { margin-top: var(--s3); font-size: var(--t-xl); }
 .vs-franchise .lede { margin-top: var(--s4); }
-.vs-franchise .vs-note { margin-top: var(--s4); color: var(--ink-3); }
 .vs-franchise .btn-row { margin-top: var(--s5); }
 .vs-franchise__photo { border-radius: var(--r-lg); overflow: hidden; rotate: 1.5deg; box-shadow: 0 24px 40px -24px rgba(0, 0, 0, 0.6); }
 .vs-franchise__photo img { display: block; width: 100%; height: auto; }

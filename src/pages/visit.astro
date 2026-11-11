@@ -35,17 +35,12 @@ const roomPhotos: Record<string, { photo: string; alt: string; focus: string }> 
 /* The client's own coverage line, from their homepage mock. The townships come
    from their copy and are theirs to stand behind. */
 const townships = ['Kamayut', 'Yankin', 'Mayangone', 'Hlaing'];
-const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
 ---
 <Base path="/visit" title={title('Visit Us')} description={DESCRIPTIONS.visit} schema={schema}>
   <div class="vs-page" style={`--vs-mono:url(${asset('/brand/pattern-monogram.png')})`}>
 
     <section class="vs-hero brand-red" aria-labelledby="vs-h1">
-      <div class="vs-hero__stickers" aria-hidden="true">
-        <img src={asset('/brand/sticker-pork.png')} alt="" width="320" height="320" decoding="async" />
-      </div>
       <div class="wrap">
-        <p class="label label--ember">Visit us</p>
         <h1 id="vs-h1">
           <span class="vs-mask"><span>Find Le SMASH</span></span>
           <span class="vs-mask"><span><span class="script">near you.</span></span></span>
@@ -63,9 +58,7 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
     <section class="vs-rooms dark" id="rooms" aria-labelledby="vs-rooms-h">
       <div class="wrap">
         <div class="vs-sec-head">
-          <p class="label label--brass">All aboard</p>
           <h2 id="vs-rooms-h">The <span class="script">rooms</span></h2>
-          <p class="lede">Tap an address to open it in Google Maps.</p>
         </div>
 
         <div class="vs-rooms__list" data-rooms>
@@ -80,7 +73,7 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
           <div class="vs-board" data-board>
             <div>
               <h3>Hungry? <span class="script">Ring us.</span></h3>
-              <p>One number for Le SMASH. Opening hours for each room are still to be published.</p>
+              <p>One number for Le SMASH.</p>
             </div>
             <a class="btn btn--ember" href={`tel:${SITE.phone.e164}`}
                data-analytics="phone_click" data-source="visit">
@@ -100,21 +93,8 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
           <h2 id="vs-del-h">Where we <span class="script">deliver</span></h2>
         </div>
         <ul class="vs-metro" data-metro>
-          {townships.map((t) => <li data-stop>{t} <small>Township</small></li>)}
+          {townships.map((t) => <li data-stop>{t}</li>)}
         </ul>
-        {deliverable.length > 0 && (
-          <div class="vs-delivery__actions">
-            {deliverable.map((b) => (
-              <a class="btn btn--cream" href={b.foodpandaUrl!} target="_blank" rel="noopener noreferrer"
-                 data-analytics="order_click" data-branch={b.slug} data-platform="foodpanda" data-source="visit_delivery">
-                Order from {b.name}
-              </a>
-            ))}
-          </div>
-        )}
-        <p class="vs-note">
-          Township boundaries and the areas each kitchen covers are still to be confirmed.
-        </p>
       </div>
     </section>
 
@@ -129,11 +109,10 @@ const deliverable = branches.filter((b) => b.foodpandaUrl && b.hasDelivery);
     gsap.registerPlugin(ScrollTrigger);
     const rnd = (n: number) => (Math.random() * 2 - 1) * n;
 
-    // Hero: lines rise out of their masks, stickers pop in with a tilt.
+    // Hero: lines rise out of their masks.
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.from('.vs-hero .vs-mask > span', { yPercent: 115, duration: 0.9, stagger: 0.12 })
-      .from('.vs-hero .lede, .vs-hero .btn-row', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4')
-      .from('.vs-hero__stickers img', { scale: 0, rotation: () => rnd(30), duration: 0.7, ease: 'back.out(1.7)', stagger: 0.12 }, 0.3);
+      .from('.vs-hero .lede, .vs-hero .btn-row', { y: 20, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4');
 
     // Rooms: each stop lands with a little overshoot as it scrolls in.
     gsap.utils.toArray<HTMLElement>('[data-room]').forEach((el) => {
