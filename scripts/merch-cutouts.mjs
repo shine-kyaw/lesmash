@@ -541,6 +541,15 @@ async function photoStep() {
   await job('tee-black-back', 'black', 'back', 'art-monogram-light.png', PLACE.back);
   await job('tee-black-front', 'black', 'front', 'art-chest-light.png', PLACE.chest);
   await job('tee-pixel-front', 'black', 'front', 'art-flame-chest.png', PLACE.chest); // flame mark on the blank black front
+  // Shirts known only from worn photos: print lifted by scripts/merch-art-extra.mjs, plain on the other side.
+  if (fs.existsSync(OUT + 'art-smashnow.png')) {
+    await job('tee-smashnow-front', 'white', 'front', 'art-smashnow.png', { cx: 0.5, cy: 0.47, w: 0.4 });
+    await job('tee-smashnow-back', 'white', 'back', 'art-blank.png', { cx: 0.5, cy: 0.5, w: 0.01 });
+    await job('tee-smash3-back', 'black', 'back', 'art-smash3.png', { cx: 0.5, cy: 0.5, w: 0.46 });
+    await job('tee-smash3-front', 'black', 'front', 'art-blank.png', { cx: 0.5, cy: 0.5, w: 0.01 });
+    await job('tee-fries-front', 'black', 'front', 'art-fries.png', { cx: 0.5, cy: 0.36, w: 0.17 });
+    await job('tee-fries-back', 'black', 'back', 'art-blank.png', { cx: 0.5, cy: 0.5, w: 0.01 });
+  }
 
   /* one shared crop + scale so every face has the same proportions, centred on the garment, top-aligned */
   const pad = 14;

@@ -9,7 +9,6 @@ import '../styles/pages/merch.css';
 import { href } from '../lib/href';
 import { SITE } from '../lib/site.config.mjs';
 import { title, DESCRIPTIONS } from '../lib/seo';
-import { WORN } from '../data/merch';
 ---
 <Base path="/merch" title={title('Merch')} description={DESCRIPTIONS.merch}>
   {/* Pre-hide flag so animated pieces never flash their end state first.
@@ -19,22 +18,6 @@ import { WORN } from '../data/merch';
 
   <MerchHead />
   <Rack />
-
-  <section class="mc-worn" aria-labelledby="mc-worn-h">
-    <div class="wrap">
-      <h2 id="mc-worn-h" class="mc-worn__h">Worn <span class="script">in the wild.</span></h2>
-      <ul class="mc-worn__grid">
-        {WORN.map((w) => (
-          <li class="mc-worn__item">
-            <figure>
-              <img src={asset(w.src)} width={w.w} height={w.h} alt={w.alt} loading="lazy" decoding="async" />
-              <figcaption>{w.name}</figcaption>
-            </figure>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
 
   <Lineup />
 

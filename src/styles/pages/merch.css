@@ -30,12 +30,12 @@ html.mc-locked { overflow: hidden; }
   background: radial-gradient(ellipse 80% 70% at 50% 0%, #fdfcf9 0%, #efece6 60%, #e4e0d8 100%);
   padding-block: clamp(var(--s8), 9vw, var(--s9)) clamp(var(--s7), 7vw, var(--s8));
 }
-.mc-studio { --u: clamp(210px, 20.5vw, 290px); --sx: 50%; position: relative; }
+.mc-studio { --u: clamp(118px, 12.2vw, 230px); --sx: 50%; position: relative; }
 /* studio light: a soft key that tracks the pointer, and falloff to the edges */
 .mc-studio::before, .mc-studio::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 4; }
 .mc-studio::before { background: radial-gradient(ellipse 34% 70% at var(--sx) 30%, rgb(255 250 240 / 0.5), transparent 70%); mix-blend-mode: soft-light; }
 .mc-studio::after { background: linear-gradient(90deg, rgb(60 48 36 / 0.2), transparent 22%, transparent 78%, rgb(60 48 36 / 0.2)), linear-gradient(transparent 62%, rgb(60 48 36 / 0.12)); }
-.mc-scroll { padding-block: 36px 24px; }
+.mc-scroll { padding-block: 36px 24px; overflow-x: auto; scrollbar-width: none; }
 .mc-stage3d { perspective: 1300px; perspective-origin: 50% 12%; }
 .mc-row3d { position: relative; transform-style: preserve-3d; transform-origin: 50% 0; }
 .mc-rail {
@@ -53,7 +53,7 @@ html.mc-locked { overflow: hidden; }
 .mc-rail__cap { position: absolute; top: -9px; width: 14px; height: 31px; border-radius: 5px; background: linear-gradient(90deg, #6b7176, #f1f3f4 45%, #7a8085); box-shadow: 0 6px 8px -3px rgb(0 0 0 / 0.4); }
 .mc-rail__cap--l { left: 3vw; } .mc-rail__cap--r { right: 3vw; }
 .mc-row {
-  position: relative; display: flex; justify-content: center; gap: calc(var(--u) * 0.08);
+  position: relative; display: flex; justify-content: safe center; gap: calc(var(--u) * 0.08);
   list-style: none; margin: 0; padding: 22px var(--gutter) 0; transform-style: preserve-3d;
 }
 .mc-hang {
@@ -244,13 +244,3 @@ html.mc-locked { overflow: hidden; }
 .mc-hang-btn:hover::after, .mc-hang-btn:focus-visible::after { opacity: 1; translate: -50% 0; }
 @media (hover: none) { .mc-hang-btn::after { opacity: 0.85; translate: -50% 0; } }
 
-/* Worn in the wild: the client's own photos of the shirts on people. */
-.mc-worn { padding-block: clamp(4rem, 10vw, 7rem); background: var(--paper); }
-.mc-worn__h { font-size: var(--t-xl); margin-bottom: var(--s6); }
-.mc-worn__h .script { color: var(--red); }
-.mc-worn__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.mc-worn__item figure { margin: 0; }
-.mc-worn__item img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; transition: transform 0.5s cubic-bezier(.2,.8,.2,1); }
-.mc-worn__item:hover img { transform: scale(1.02); }
-.mc-worn__item figcaption { margin-top: var(--s2); font: 600 0.75rem/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
-@media (min-width: 900px) { .mc-worn__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s5); } }

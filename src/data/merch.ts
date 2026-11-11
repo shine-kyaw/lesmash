@@ -77,6 +77,39 @@ export const GARMENTS: Garment[] = [
     ],
   },
   {
+    id: 'tee-smashnow', name: 'Smash Now Tee', tag: 'White',
+    note: 'SMASH NOW, THANK US LATER! in big hand-drawn black letters across the front.',
+    front: CUT + 'tee-smashnow-front.webp', back: CUT + 'tee-smashnow-back.webp', w: 648, h: 700, rest: 'front',
+    frontAlt: 'White tee, front: SMASH NOW, THANK US LATER! in black hand lettering.',
+    backAlt: 'White tee, back, plain.',
+    gallery: [
+      { label: 'Worn', src: '/media/gallery/special-projects/09-smash-now-tee.jpg', w: 848, h: 1200, alt: 'Someone biting into fried chicken, wearing the white Smash Now, Thank Us Later tee.' },
+      { label: 'The print', src: S + 'smashnow-close.webp', w: 698, h: 580, alt: 'Close up of the hand-lettered SMASH NOW, THANK US LATER! print.' },
+    ],
+  },
+  {
+    id: 'tee-smash3', name: 'Smash Smash Smash Tee', tag: 'Black',
+    note: 'SMASH three times down the back in white, with a big red Le written over the top.',
+    front: CUT + 'tee-smash3-front.webp', back: CUT + 'tee-smash3-back.webp', w: 648, h: 700, rest: 'back',
+    frontAlt: 'Black tee, front, plain.',
+    backAlt: 'Black tee, back: SMASH three times in white with a red Le over it.',
+    gallery: [
+      { label: 'Worn', src: '/media/gallery/behind-the-scenes/09-smash-smash-smash.jpg', w: 1200, h: 1500, alt: 'Someone at the grand opening seen from behind in the black Smash Smash Smash tee.' },
+      { label: 'The print', src: S + 'smash3-close.webp', w: 900, h: 740, alt: 'Close up of SMASH three times in white with the red Le script over it.' },
+    ],
+  },
+  {
+    id: 'tee-fries', name: 'Fries Before Guys Tee', tag: 'Black',
+    note: 'Fries Before Guys in small typewriter letters on the chest, Fries in yellow.',
+    front: CUT + 'tee-fries-front.webp', back: CUT + 'tee-fries-back.webp', w: 648, h: 700, rest: 'front',
+    frontAlt: 'Black tee, front: Fries Before Guys in small typewriter letters on the chest.',
+    backAlt: 'Black tee, back, plain.',
+    gallery: [
+      { label: 'Worn', src: '/media/gallery/special-projects/12-fries-before-guys.jpg', w: 1200, h: 900, alt: 'Someone in the black Fries Before Guys tee holding a tray of loaded fries.' },
+      { label: 'The print', src: S + 'fries-close.webp', w: 470, h: 390, alt: 'Close up of Fries Before Guys printed on the chest, Fries in yellow.' },
+    ],
+  },
+  {
     id: 'jersey', name: 'YGN Jersey', tag: 'Basketball',
     note: 'YGN 01 on the front with red and white diagonal stripes, LAWRENCE 01 on the back.',
     front: CUT + 'jersey-front.webp', back: CUT + 'jersey-back.webp', w: 423, h: 820, rest: 'front',
@@ -111,10 +144,3 @@ export const LINEUP: LineItem[] = [
 ];
 
 
-/** Real photos of the shirts being worn, from the client's own shoots. */
-export const WORN = [
-  { name: 'Smash Now, Thank Us Later', src: '/media/gallery/special-projects/09-smash-now-tee.jpg', w: 848, h: 1200, alt: 'Someone biting into fried chicken, wearing the white Smash Now, Thank Us Later tee.' },
-  { name: 'Smash Smash Smash', src: '/media/gallery/behind-the-scenes/09-smash-smash-smash.jpg', w: 1200, h: 1500, alt: 'A black tee seen from behind: SMASH three times with a red Le over it, at the grand opening.' },
-  { name: 'Fries Before Guys', src: '/media/gallery/special-projects/12-fries-before-guys.jpg', w: 1200, h: 900, alt: 'A black Fries Before Guys tee, worn, holding a tray of loaded fries.' },
-  { name: 'The monogram tee', src: '/media/gallery/behind-the-scenes/06-on-the-back.jpg', w: 1200, h: 1500, alt: 'A cook in the kitchen seen from behind in the white Le SMASH monogram tee.' },
-];
