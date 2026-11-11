@@ -307,7 +307,7 @@ const MID = 1620;                         // x of the middle carriage
         .to(panels, { clipPath: OPEN, duration: 0.95, ease: 'power2.inOut', stagger: 0.04 }, '<')
         .addLabel('open')
         .add(() => { if (hold) { loop.pause(); held = true; } })
-        .to({}, { duration: 2.2 })
+        .to({}, { duration: 1.4 })
         .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
         .to([leavesL, leavesR], { x: 0, duration: 0.85, ease: 'power2.inOut' }, '<0.15')
         .to(panels, { clipPath: SHUT, duration: 0.85, ease: 'power2.inOut' }, '<')

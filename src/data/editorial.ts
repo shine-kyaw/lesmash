@@ -58,7 +58,7 @@ export const EDITORIAL = {
     'C-08',
     'agency draft, client approve',
     'Add the specifics only the kitchen knows: the ball weight, the time on the plancha, and how many patties come in each burger. Those numbers are what make this paragraph worth reading, and the patty count is the one fact the old copy promised and the menu cannot yet show.',
-    'A smash burger is thin on purpose. Ball of beef, hot plancha, one hard press. That press builds the dark, lacy crust round the edge. Two thin patties eat differently from one thick one: more crust, more seasoning, more of what people came for. It’s a technique, not a size.'
+    'Beef down. Plate down. Hard. The crust happens in those few seconds, and the crust is the whole point. Crispy edges, juicy middle.'
   ),
 
   /**
