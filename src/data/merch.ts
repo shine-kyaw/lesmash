@@ -48,6 +48,7 @@ export const GARMENTS: Garment[] = [
       { label: 'Back', src: S + 'white-back.webp', w: 640, h: 867, alt: 'Model in the white Graphic Tee seen from behind, the monogram across the back.' },
       { label: 'Front', src: S + 'white-front.webp', w: 640, h: 867, alt: 'Model in the white Graphic Tee seen from the front, small mark on the chest.' },
       { label: 'The print', src: S + 'art-white.webp', w: 900, h: 900, alt: 'The Le SMASH monogram in black with SMASH in red, on white cloth.' },
+      { label: 'On the crew', src: '/media/gallery/behind-the-scenes/10-the-shirt.jpg', w: 1200, h: 1500, alt: 'A cook in the kitchen seen from behind, tying his apron, wearing the white tee with the Le SMASH monogram.' },
     ],
   },
   {
@@ -107,4 +108,13 @@ export const LINEUP: LineItem[] = [
   { id: 'tote', name: 'Tote Bag', note: 'Red, with the Le SMASH lockup.', src: P + 'tote-bag.webp', w: 442, h: 753, glow: '255 70 64', alt: 'A red tote bag with black straps and the Le Burgers & Co. SMASH lockup.' },
   { id: 'cup-smash', name: 'Cups', note: 'Clear takeaway cup with SMASH.', src: P + 'cup-2.webp', w: 565, h: 686, glow: '255 150 160', alt: 'A clear takeaway cup with SMASH printed in cream down the side.' },
   { id: 'mug-black', name: 'Mugs', note: 'Black mug, pixel artwork.', src: P + 'mug-black.webp', w: 631, h: 597, glow: '255 80 70', alt: 'A black Le SMASH mug with white and red pixel artwork.' },
+];
+
+
+/** Real photos of the shirts being worn, from the client's own shoots. */
+export const WORN = [
+  { name: 'Smash Now, Thank Us Later', src: '/media/gallery/special-projects/09-smash-now-tee.jpg', w: 848, h: 1200, alt: 'Someone biting into fried chicken, wearing the white Smash Now, Thank Us Later tee.' },
+  { name: 'Smash Smash Smash', src: '/media/gallery/behind-the-scenes/09-smash-smash-smash.jpg', w: 1200, h: 1500, alt: 'A black tee seen from behind: SMASH three times with a red Le over it, at the grand opening.' },
+  { name: 'Fries Before Guys', src: '/media/gallery/special-projects/12-fries-before-guys.jpg', w: 1200, h: 900, alt: 'A black Fries Before Guys tee, worn, holding a tray of loaded fries.' },
+  { name: 'The monogram tee', src: '/media/gallery/behind-the-scenes/06-on-the-back.jpg', w: 1200, h: 1500, alt: 'A cook in the kitchen seen from behind in the white Le SMASH monogram tee.' },
 ];

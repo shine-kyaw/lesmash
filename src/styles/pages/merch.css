@@ -243,3 +243,14 @@ html.mc-locked { overflow: hidden; }
 }
 .mc-hang-btn:hover::after, .mc-hang-btn:focus-visible::after { opacity: 1; translate: -50% 0; }
 @media (hover: none) { .mc-hang-btn::after { opacity: 0.85; translate: -50% 0; } }
+
+/* Worn in the wild: the client's own photos of the shirts on people. */
+.mc-worn { padding-block: clamp(4rem, 10vw, 7rem); background: var(--paper); }
+.mc-worn__h { font-size: var(--t-xl); margin-bottom: var(--s6); }
+.mc-worn__h .script { color: var(--red); }
+.mc-worn__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mc-worn__item figure { margin: 0; }
+.mc-worn__item img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 6px; transition: transform 0.5s cubic-bezier(.2,.8,.2,1); }
+.mc-worn__item:hover img { transform: scale(1.02); }
+.mc-worn__item figcaption { margin-top: var(--s2); font: 600 0.75rem/1.2 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+@media (min-width: 900px) { .mc-worn__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s5); } }
