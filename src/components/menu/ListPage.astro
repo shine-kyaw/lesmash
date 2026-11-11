@@ -16,7 +16,6 @@ const total = columns.flat().reduce((n, b) => n + b.items.length, 0);
 <div id={part === 1 ? category.slug : undefined} class:list={['mn-lists', { 'mn-lists--flow': flow, 'mn-lists--few': total <= 8 }]}>
   <header class="mn-phead">
     <h2 class="mn-phead__title">{category.name}</h2>
-    {parts > 1 && <p class="mn-phead__part">{part} / {parts}</p>}
   </header>
   <div class="mn-lcols">
     {columns.filter((c) => c.length).map((col) => (

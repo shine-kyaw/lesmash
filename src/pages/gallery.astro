@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import GalleryTile from '../components/GalleryTile.astro';
-import { GALLERY_SECTIONS, GALLERY_COUNT } from '../data/gallery';
+import { GALLERY_SECTIONS } from '../data/gallery';
+// Campaigns and events already have their own blocks above; the archive holds the rest.
+const ARCHIVE = GALLERY_SECTIONS.filter((s) => s.slug !== 'campaigns' && s.slug !== 'events');
+const ARCHIVE_COUNT = ARCHIVE.reduce((n, s) => n + s.items.length, 0);
 import { SHOWCASE, CAMPAIGNS, EVENTS, FEED } from '../data/gallery-v2';
 import { href, asset } from '../lib/href';
 import { title, DESCRIPTIONS } from '../lib/seo';
@@ -148,11 +151,10 @@ const WALL = [
   <section class="gl-archive-head section" id="archive" style="padding-bottom:var(--s6)">
     <div class="wrap">
       <h2 class="gl-h2" style="margin-top:var(--s4)">
-        Everything we<br /><span class="script">have made so far.</span>
+        The rest of <span class="script">the roll.</span>
       </h2>
       <p class="lede" style="margin-top:var(--s5)">
-        A burger place that also makes posters, pop-ups and collabs.
-        {GALLERY_COUNT} pictures, {GALLERY_SECTIONS.length} parts.
+        {ARCHIVE_COUNT} more. Food, rooms, people.
       </p>
     </div>
   </section>
@@ -161,7 +163,7 @@ const WALL = [
       can feel how much of it is left. */}
   <nav class="menu-nav" aria-label="Gallery sections">
     <div class="wrap menu-nav__scroll">
-      {GALLERY_SECTIONS.map((s) => (
+      {ARCHIVE.map((s) => (
         <a href={`#${s.slug}`} data-course-link={s.slug}
            data-analytics="gallery_section_select" data-category={s.slug}>{s.name}</a>
       ))}
@@ -169,7 +171,7 @@ const WALL = [
   </nav>
 
   <div class="wrap gl-archive" data-gl-archive>
-    {GALLERY_SECTIONS.map((section, i) => (
+    {ARCHIVE.map((section, i) => (
       <section class="course track" id={section.slug}>
         <div class="track__rail">
           <p class="track__numeral">
