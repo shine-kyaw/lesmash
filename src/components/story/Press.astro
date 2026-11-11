@@ -1,23 +1,20 @@
 ---
 import Slot from '../Slot.astro';
 import { EDITORIAL } from '../../data/editorial';
+import { asset } from '../../lib/href';
 ---
 <section class="st-press dark" data-press aria-labelledby="st-press-h">
-  <div class="st-press__stage">
-    <div class="wrap st-press__grid">
-      <div class="st-press__text">
-        <p class="label st-press__kicker">How we smash</p>
-        <h2 id="st-press-h" class="st-press__title"><span class="st-mask"><span class="st-mask__in">Once. <span class="script">Hard.</span></span></span></h2>
-        <Slot slot={EDITORIAL.howWeSmash} class="lede st-press__copy" />
-      </div>
-      <div class="st-pr" data-pr aria-hidden="true">
-        <div class="st-pr__steam"><i></i><i></i><i></i></div>
-        <div class="st-pr__plate" data-pr-plate><span class="st-pr__handle"></span></div>
-        <div class="st-pr__ball" data-pr-ball></div>
-        <div class="st-pr__crust" data-pr-crust></div>
-        <div class="st-pr__griddle"></div>
-        <p class="st-pr__tag label">Scroll to press</p>
-      </div>
+  <div class="wrap st-press__grid">
+    <div class="st-press__text">
+      <p class="label st-press__kicker">How we smash</p>
+      <h2 id="st-press-h" class="st-press__title"><span class="st-mask"><span class="st-mask__in">Once. <span class="script">Hard.</span></span></span></h2>
+      <Slot slot={EDITORIAL.howWeSmash} class="lede st-press__copy" />
     </div>
+    <figure class="st-pr">
+      <video class="st-pr__video" muted playsinline preload="none"
+             poster={asset('/media/home/hero-poster.jpg')} aria-hidden="true" tabindex="-1" data-pr-video>
+        <source src={asset('/media/home/hero-720.mp4')} type="video/mp4" />
+      </video>
+    </figure>
   </div>
 </section>

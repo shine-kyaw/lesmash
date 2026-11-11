@@ -192,42 +192,17 @@ html:not(.st-js) .st-open__stage { position: relative; }
 /* =========================================================================
    3. The press (how we smash)
    ========================================================================= */
-.st-press { position: relative; height: 240svh; }
-.st-press__stage { position: sticky; top: 0; min-height: 100svh; display: grid; align-items: center; padding-block: 5.5rem 2rem; overflow: clip; }
+.st-press { position: relative; padding-block: clamp(4.5rem, 10vw, 8rem); overflow-x: clip; }
 .st-press__grid { display: grid; gap: var(--s7); align-items: center; }
 .st-press__kicker { color: var(--brass); margin-bottom: var(--s3); }
 .st-press__title { font-size: var(--t-xl); margin-bottom: var(--s5); }
 .st-press__title .script { color: var(--ember); }
-.st-press__copy { color: var(--ink-2); }
-
-.st-pr { position: relative; width: min(100%, 22rem); height: 22rem; margin-inline: auto; }
-.st-pr__griddle { position: absolute; left: 0; right: 0; bottom: 0; height: 1.6rem; border-radius: 4px; background: linear-gradient(180deg, #3b3836, #1a1817); box-shadow: 0 10px 20px -6px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15); }
-.st-pr__ball {
-  position: absolute; left: 50%; bottom: 1.6rem; width: 7.5rem; height: 7.5rem; margin-left: -3.75rem; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #c0594a, #8e3326 55%, #5a1d14); transform-origin: 50% 100%; transform: scale(2.2, 0.2);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
-}
-.st-pr__crust {
-  position: absolute; left: 50%; bottom: 1.6rem; width: 16.5rem; height: 1.5rem; margin-left: -8.25rem; border-radius: 50%;
-  border: 3px dotted #f0a35a; opacity: 1; filter: drop-shadow(0 0 6px rgba(240, 140, 60, 0.55)); pointer-events: none;
-}
-.st-pr__plate {
-  position: absolute; left: 50%; bottom: calc(1.6rem + 1.5rem); width: 19rem; height: 1.6rem; margin-left: -9.5rem; border-radius: 4px;
-  background: linear-gradient(180deg, #d9d6d2, #8c8883 60%, #5f5b57); box-shadow: 0 8px 12px -4px rgba(0, 0, 0, 0.7); transform: translateY(-86px);
-}
-.st-pr__handle { position: absolute; left: 50%; bottom: 100%; width: 3.2rem; height: 5.5rem; margin-left: -1.6rem; border-radius: 12px 12px 0 0; background: linear-gradient(90deg, #5a1d14, var(--red) 50%, #5a1d14); }
-.st-pr__steam { position: absolute; left: 50%; bottom: 3.2rem; width: 12rem; margin-left: -6rem; display: flex; justify-content: space-around; pointer-events: none; }
-.st-pr__steam i { width: 6px; height: 3.5rem; border-radius: 6px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.35)); animation: st-steam 2.2s ease-in-out infinite; }
-.st-pr__steam i:nth-child(2) { animation-delay: -0.7s; height: 4.5rem; }
-.st-pr__steam i:nth-child(3) { animation-delay: -1.4s; }
-@keyframes st-steam { 0% { translate: 0 6px; opacity: 0; } 40% { opacity: 1; } 100% { translate: 4px -22px; opacity: 0; } }
-.st-pr__tag { position: absolute; left: 0; right: 0; bottom: -2.2rem; text-align: center; color: var(--ink-3); display: none; }
-.st-js .st-pr__tag { display: block; }
-@media (prefers-reduced-motion: reduce) { .st-pr__steam i { animation: none; opacity: 0.6; } .st-press { height: auto; } .st-press__stage { position: relative; } }
-html:not(.st-js) .st-press { height: auto; }
-html:not(.st-js) .st-press__stage { position: relative; }
-@media (min-width: 900px) { .st-press__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s9); } .st-pr { width: 26rem; height: 25rem; } }
-@media (max-width: 899px) { .st-press__grid { grid-template-columns: 1fr; gap: var(--s6); } .st-press__text { order: 2; } .st-pr { height: 17rem; transform: scale(0.8); transform-origin: 50% 100%; } .st-press__stage { padding-top: 5rem; } .st-press__title { font-size: var(--t-lg); margin-bottom: var(--s3); } }
+.st-press__copy { color: var(--ink-2); max-width: 34ch; }
+/* The real press, filmed: a framed clip that plays once as it comes into view. */
+.st-pr { margin: 0; position: relative; aspect-ratio: 4 / 5; border-radius: 6px; overflow: hidden; background: #111; box-shadow: 0 30px 60px -24px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(255 255 255 / 0.06); }
+.st-pr__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 900px) { .st-press__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: var(--s9); } .st-pr { aspect-ratio: 4 / 5; max-height: 78svh; } }
+@media (max-width: 899px) { .st-press__title { font-size: var(--t-lg); margin-bottom: var(--s3); } .st-pr { aspect-ratio: 1 / 1; } }
 
 /* =========================================================================
    4. And counting

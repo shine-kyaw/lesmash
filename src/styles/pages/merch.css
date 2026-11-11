@@ -241,3 +241,14 @@ html.mc-locked { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .mc-ri, .mc-pivot, .mc-spin { transition: none; }
 }
+
+/* Rack affordance: a tag drops in under a piece on hover/focus so it reads as clickable. */
+.mc-hang-btn { cursor: pointer; }
+.mc-hang-btn::after {
+  content: 'See it worn'; position: absolute; left: 50%; bottom: -0.4rem; translate: -50% 6px; opacity: 0;
+  padding: 0.35rem 0.7rem; border-radius: 999px; background: var(--black, #111); color: #fff;
+  font: 600 0.68rem/1 var(--font-mono, monospace); letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap;
+  transition: opacity 0.2s, translate 0.25s cubic-bezier(.2,.8,.2,1); pointer-events: none;
+}
+.mc-hang-btn:hover::after, .mc-hang-btn:focus-visible::after { opacity: 1; translate: -50% 0; }
+@media (hover: none) { .mc-hang-btn::after { opacity: 0.85; translate: -50% 0; } }

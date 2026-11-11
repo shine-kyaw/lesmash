@@ -294,6 +294,9 @@ if (dlg && garments.length && items.length) {
     src.hid = true; src.li.classList.add('is-off');
     dspin.style.transform = `rotateY(${ang}deg)`;
     last = performance.now();
+    // Land on the piece being worn: the 3D garment flies down, then the photo of a person wearing it takes over.
+    const opened = g;
+    if (g.gallery.length) gsap.delayedCall(reduce ? 0 : 1.15, () => { if (d.open && g === opened && shot === -1) setShot(0); });
     cancelAnimationFrame(raf);
     if (!reduce) raf = requestAnimationFrame(tick);
     if (reduce) return;

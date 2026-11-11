@@ -265,18 +265,20 @@ import '../styles/pages/story.css';
     // The press: a ball of beef goes under the plate as you scroll.
     const press = document.querySelector<HTMLElement>('[data-press]');
     if (press) {
-      const g = (s: string) => press.querySelector(s);
-      const pt = gsap.timeline({
-        scrollTrigger: { trigger: press, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
-      });
-      pt.fromTo(g('[data-pr-plate]'), { y: -230 }, { y: -92, ease: 'power2.in', duration: 0.55 }, 0);
-      pt.fromTo(g('[data-pr-ball]'), { scaleX: 1, scaleY: 1 }, { scaleX: 2.2, scaleY: 0.2, ease: 'power4.in', duration: 0.5 }, 0.55);
-      pt.to(g('[data-pr-plate]'), { y: 0, ease: 'power4.in', duration: 0.5 }, 0.55);
-      pt.fromTo(g('[data-pr-crust]'), { opacity: 0 }, { opacity: 1, duration: 0.25 }, 1.0);
-      pt.to(g('[data-pr-plate]'), { y: -86, ease: 'power2.out', duration: 0.45 }, 1.1);
-      pt.fromTo(g('.st-pr__steam'), { opacity: 0 }, { opacity: 1, duration: 0.4 }, 1.1);
-      pt.to(g('.st-pr__tag'), { opacity: 0, duration: 0.2 }, 0.1);
-      pt.to({}, { duration: 0.3 });
+      // The real press on film: plays once each time it comes into view, holds the sizzle.
+      const v = press.querySelector<HTMLVideoElement>('[data-pr-video]');
+      const fig = press.querySelector('.st-pr');
+      if (v && fig) {
+        gsap.from(fig, { y: 60, rotation: 2, opacity: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: fig, start: 'top 85%', once: true } });
+        v.addEventListener('ended', () => v.pause());
+        const go = () => { v.currentTime = 0; v.play().catch(() => {}); };
+        ScrollTrigger.create({
+          trigger: fig, start: 'top 70%', end: 'bottom 20%',
+          onEnter: go, onEnterBack: go,
+          onLeave: () => v.pause(), onLeaveBack: () => v.pause(),
+        });
+      }
     }
 
     window.addEventListener('load', () => ScrollTrigger.refresh());
