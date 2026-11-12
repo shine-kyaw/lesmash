@@ -244,3 +244,6 @@ html.mc-locked { overflow: hidden; }
 .mc-hang-btn:hover::after, .mc-hang-btn:focus-visible::after { opacity: 1; translate: -50% 0; }
 @media (hover: none) { .mc-hang-btn::after { opacity: 0.85; translate: -50% 0; } }
 
+
+/* The 3D shirt sits in front of the button in z-space; let clicks fall through to it. */
+.mc-pivot, .mc-spin, .mc-wall { pointer-events: none; }
