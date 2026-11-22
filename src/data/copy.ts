@@ -12,6 +12,7 @@ export const COPY = {
     menu: 'Menu',
     gallery: 'Gallery',
     collaborations: 'Collaborations',
+    music: 'Music Video',
     merch: 'Merch',
     visit: 'Visit Us',
   },

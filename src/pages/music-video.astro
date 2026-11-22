@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import { VIDEOS } from '../data/music';
+import { asset, href } from '../lib/href';
+import { title, DESCRIPTIONS } from '../lib/seo';
+import { SITE } from '../lib/site.config.mjs';
+import '../styles/pages/music.css';
+---
+<Base path="/music-video" title={title('Music Video')} description={DESCRIPTIONS.music}>
+  <header class="mv-head brand-red">
+    <div class="wrap">
+      <h1 class="mv-h1">Music <span class="script">video</span></h1>
+      <p class="mv-head__lede">Songs with scenes shot in our rooms. Press play.</p>
+    </div>
+  </header>
+
+  <div class="mv-list dark">
+    {VIDEOS.map((v, i) => (
+      <article class="mv-item wrap" id={v.id} aria-labelledby={`mv-t-${i}`}>
+        {/* A poster first; the YouTube player is only loaded on press. */}
+        <div class="mv-player" data-mv-player data-yt={v.youtube} data-title={`${v.artist}, ${v.title}`}>
+          <button type="button" class="mv-play" data-mv-play aria-label={`Play ${v.artist}, ${v.title}`}>
+            <img src={asset(v.poster.src)} alt="" width={v.poster.w} height={v.poster.h}
+                 loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+            <span class="mv-play__btn" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="mv-meta">
+          <p class="mv-artist">{v.artist}</p>
+          <h2 class="mv-title" id={`mv-t-${i}`}>
+            {v.title}
+            {v.titleMy && <span class="mv-title__my" lang="my">{v.titleMy}</span>}
+          </h2>
+          <p class="mv-date">{v.date}</p>
+          <p class="mv-note">{v.note}</p>
+          <a class="mv-yt" href={`https://www.youtube.com/watch?v=${v.youtube}`} target="_blank" rel="noopener">
+            Watch on YouTube <span aria-hidden="true">&#8599;</span>
+          </a>
+        </div>
+
+        {v.artwork && (
+          <figure class="mv-art">
+            <img src={asset(v.artwork.src)} alt={v.artwork.alt} width={v.artwork.w} height={v.artwork.h}
+                 loading="lazy" decoding="async" />
+          </figure>
+        )}
+      </article>
+    ))}
+  </div>
+
+  <section class="mv-close" aria-labelledby="mv-close-h">
+    <div class="wrap mv-close__in">
+      <h2 id="mv-close-h">Come and see the <span class="script">set.</span></h2>
+      <div class="btn-row">
+        <a class="btn btn--ember" href={href('/visit')}>Find a room</a>
+        <a class="btn btn--ghost" href={SITE.social.instagram} target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  /* Swap the poster for the privacy-enhanced YouTube player on press. */
+  document.querySelectorAll<HTMLElement>('[data-mv-player]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('[data-mv-play]');
+    btn?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0&playsinline=1`;
+      f.title = box.dataset.title || 'Music video';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      box.replaceChildren(f);
+      f.focus();
+    });
+  });
+</script>

@@ -20,7 +20,9 @@ export const DESCRIPTIONS: Record<string, string> = {
   story:
     'How Le SMASH got going in Yangon: pop-ups and bazaars, the Junction Square opening, then a new room.',
   collaborations:
-    'Pop-ups, parties and projects Le SMASH has done in Yangon with Blind Tiger, Britto’s, TagU, RTH, Ellie’s, Ah-so and Ar-T.',
+    'Pop-ups, parties and projects Le SMASH has done in Yangon with Blind Tiger, Britto’s, TagU, RTH, Ellie’s and Ah-so.',
+  music:
+    'Music videos with scenes filmed at Le SMASH in Yangon, starting with AR-T’s Chit Pay Par.',
   merch:
     'Le SMASH merch: graphic tees, the YGN jersey, a tote, mugs and cups.',
   visit:

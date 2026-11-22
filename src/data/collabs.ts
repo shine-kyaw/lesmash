@@ -6,12 +6,14 @@
  * `place` is null. `blurb` is only ever a near-quote of the artwork.
  *
  * Entries run oldest to newest, one date format (client revision 01, 21 Nov 2026).
- * Three dates are worked out rather than read straight off the poster:
+ * Two dates are worked out rather than read straight off the poster:
  * - Sunset Ibiza prints only "August 9th" but is at Crystal Tower, Junction Square,
  *   the room Le SMASH moved into on 3 Dec 2025 (their Facebook post), so 2026.
  * - Sip & Smash prints "02.08.2025" at Junction Square. Day-first, as Yangon
  *   writes it: 8 Feb 2025 would predate the Junction Square shop (opened 10 May 2025).
- * - AR-T: the date the official video went up on YouTube (22 Mar 2026).
+ *
+ * AR-T moved to the Music Video page (src/data/music.ts), which the client asked to
+ * keep separate from collaborations.
  *
  * Image sizes are the real pixel sizes (media-manifest.json for /media/...
  * files, read from the files for /media/gallery/...).
@@ -43,7 +45,7 @@ export interface Collab {
 }
 
 /** The names that spin after the "×" in the opening. Every one is on a poster. */
-export const PARTNERS = ['RTH', 'Ah-so', 'Britto’s', 'TagU', 'Ellie’s', 'Ar-T', 'Blind Tiger'];
+export const PARTNERS = ['RTH', 'Ah-so', 'Britto’s', 'TagU', 'Ellie’s', 'Blind Tiger'];
 
 export const COLLABS: Collab[] = [
   {
@@ -158,24 +160,6 @@ export const COLLABS: Collab[] = [
       { label: 'Booth', value: 'No: FB-24' },
     ],
     wall: { x: 50, y: 5, w: 23, r: -2.5, z: 2, staple: true },
-  },
-  {
-    // campaigns/ar-t-s-scenes.jpg (gallery/collaborations/05-ar-t.jpg is the same artwork, smaller)
-    id: 'ar-t',
-    partner: 'AR-T',
-    title: 'Chit Pay Par (official music video)',
-    date: '22 Mar 2026',
-    place: 'Filmed at Le SMASH',
-    poster: {
-      src: '/media/campaigns/ar-t-s-scenes.jpg', w: 1400, h: 933,
-      alt: 'Poster: Have you caught the beautiful scenes in AR-T’s latest Official Music Video, “Chit Pay Par”? A man smiles at his phone in the Le SMASH dining room, with three stills from the video below.',
-    },
-    photos: [],
-    blurb: 'Some of the most memorable moments from this hit track were filmed right here at Le SMASH.',
-    details: [
-      { label: 'The invitation', value: 'Come and hang out at Le SMASH. Feel the atmosphere, soak in the music, and enjoy the SMASH experience in person.' },
-    ],
-    wall: { x: 33, y: 32, w: 28, r: -2, z: 4 },
   },
   {
     // campaigns/blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg + gallery/collaborations/01-blind-tiger.jpg

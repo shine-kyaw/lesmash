@@ -4,9 +4,13 @@ import { absoluteUrl } from '../lib/site.config.mjs';
 /** Generated so the origin always matches the deployed build. */
 const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
+  { path: '/story', priority: '0.7', changefreq: 'monthly' },
   { path: '/menu', priority: '0.9', changefreq: 'weekly' },
   { path: '/gallery', priority: '0.8', changefreq: 'weekly' },
-  { path: '/visit', priority: '0.7', changefreq: 'monthly' },
+  { path: '/collaborations', priority: '0.7', changefreq: 'monthly' },
+  { path: '/music-video', priority: '0.6', changefreq: 'monthly' },
+  { path: '/merch', priority: '0.6', changefreq: 'monthly' },
+  { path: '/visit', priority: '0.8', changefreq: 'monthly' },
 ];
 
 export const GET: APIRoute = () => {
