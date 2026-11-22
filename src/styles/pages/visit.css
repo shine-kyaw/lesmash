@@ -284,3 +284,6 @@
 @media (prefers-reduced-motion: reduce) {
   .vs-room__card, .vs-window img, .vs-rail__btn { transition: none; }
 }
+
+/* The call button carries the whole number: let it wrap rather than run off a phone. */
+.vs-rooms .btn[href^="tel:"] { white-space: normal; max-width: 100%; text-align: center; }

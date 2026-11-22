@@ -624,3 +624,50 @@
 .band--red { background: var(--red); color: #fff; }
 .band--ink { background: var(--black); color: var(--cream); }
 .band--red .label, .band--ink .label { color: rgb(244 239 230 / 0.75); }
+
+/* Touch screens: every header and footer link gets a 44px tap target
+   (revision 01, desktop/mobile pass). Pointer devices keep the tight look. */
+@media (pointer: coarse) {
+  .hdr__nav a { display: inline-flex; align-items: center; min-height: 44px; background-position: 0 calc(50% + 0.95em); }
+  .ftr__pages, .ftr__social { row-gap: 0; }
+  .ftr__pages a, .ftr__social a, .ftr__rooms a, .ftr__by { display: inline-flex; align-items: center; min-height: 44px; }
+  .hdr .mark, .tlink, .vs-pn__back, .gl-jump a, .menu-nav a, .mn-visit__link { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+/* ---------------------------------------------------------- phone menu */
+.hdr__toggle { display: none; }
+@media (max-width: 53.99rem) {
+  .js .hdr__inner { grid-template-columns: auto 1fr auto; }
+  .js .hdr__toggle:not([hidden]) {
+    grid-column: 3; justify-self: end;
+    display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 4px 0 12px;
+    background: none; border: 0; color: inherit; cursor: pointer;
+    font-family: var(--font-mono); font-size: var(--t-xs); letter-spacing: var(--track-label); text-transform: uppercase;
+  }
+  .hdr__toggle-bars { position: relative; width: 22px; height: 12px; }
+  .hdr__toggle-bars i { position: absolute; left: 0; right: 0; height: 2px; background: currentColor; border-radius: 2px; transition: transform 300ms var(--ease), top 300ms var(--ease); }
+  .hdr__toggle-bars i:first-child { top: 0; }
+  .hdr__toggle-bars i:last-child { top: 10px; }
+  .hdr.is-open .hdr__toggle-bars i:first-child { top: 5px; transform: rotate(45deg); }
+  .hdr.is-open .hdr__toggle-bars i:last-child { top: 5px; transform: rotate(-45deg); }
+
+  /* With script, the strip gives way to the full-screen list. */
+  .js .hdr__nav {
+    position: fixed; left: 0; right: 0; top: 68px; bottom: 0; z-index: 59;
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 0;
+    padding: var(--s6) var(--gutter) var(--s7); overflow-y: auto;
+    background: #0f0c0b; color: var(--cream);
+    -webkit-mask-image: none; mask-image: none;
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 260ms var(--ease), transform 260ms var(--ease), visibility 0s linear 260ms;
+  }
+  .js .hdr.is-open .hdr__nav { opacity: 1; visibility: visible; transform: none; transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
+  .js .hdr__nav a {
+    width: 100%; min-height: 56px; padding: 0.35rem 0; border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    font-family: var(--font-display); font-size: clamp(1.75rem, 8vw, 2.6rem); letter-spacing: -0.01em; line-height: 1;
+    background-image: none; color: var(--cream);
+  }
+  .js .hdr__nav a[aria-current='page'] { color: var(--red); }
+  .js .hdr.is-open { background: #0f0c0b; -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--cream); }
+  html.nav-open { overflow: hidden; }
+}

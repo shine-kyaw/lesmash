@@ -66,6 +66,28 @@
     };
     mark();
     window.addEventListener('scroll', mark, { passive: true });
+
+    // Phones: the Menu button opens the links full screen.
+    var toggle = $('[data-nav-toggle]', hdr);
+    var nav = $('#site-nav');
+    if (!toggle || !nav) return;
+    toggle.hidden = false;
+    var label = $('[data-nav-label]', toggle);
+    var small = window.matchMedia('(max-width: 53.99rem)');
+    var setOpen = function (open) {
+      hdr.classList.toggle('is-open', open);
+      document.documentElement.classList.toggle('nav-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      if (label) label.textContent = open ? 'Close' : 'Menu';
+      if (open) { var first = $('a', nav); if (first) first.focus({ preventScroll: true }); }
+    };
+    toggle.addEventListener('click', function () { setOpen(!hdr.classList.contains('is-open')); });
+    nav.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && hdr.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
+    });
+    var onSize = function () { if (!small.matches && hdr.classList.contains('is-open')) setOpen(false); };
+    if (small.addEventListener) small.addEventListener('change', onSize); else small.addListener(onSize);
   }
 
   /* --------------------------------------------------------------- reveal */
