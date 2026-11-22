@@ -12,9 +12,14 @@
 .mn-head__title { margin-top: var(--s3); font-size: clamp(2rem, 1rem + 4.4vw, 4rem); max-width: 18ch; }
 .mn-head__title .script { color: var(--ember); font-size: 1.15em; }
 
-.mn-jump {
-  margin-top: var(--s5); display: flex; gap: var(--s2); flex-wrap: wrap;
+.mn-jumpbar {
+  position: sticky; top: 68px; z-index: 30;
+  padding-block: var(--s3); margin-bottom: var(--s4);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
 }
+.mn-jump { display: flex; gap: var(--s2); flex-wrap: wrap; }
 .mn-jump a {
   font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 600; text-transform: uppercase;
   letter-spacing: var(--track-label); text-decoration: none; color: var(--ink);

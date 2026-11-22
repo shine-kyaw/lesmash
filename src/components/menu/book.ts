@@ -18,6 +18,7 @@ const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]')!;
 const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]')!;
 const countEl = root.querySelector<HTMLElement>('[data-count]')!;
 const jumpLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-jump]'));
+const jumpNav = document.querySelector<HTMLElement>('[data-jump-nav]');
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const wide = matchMedia('(min-width: 900px)');
@@ -142,11 +143,21 @@ function ui() {
   nextBtn.disabled = f >= maxF();
   curl.hidden = f >= maxF() || mode !== 'book';
   root.dataset.view = String(f);
+  // Light the category being read: the last one that starts at or before this view.
+  let on: HTMLAnchorElement | null = null;
   jumpLinks.forEach((a) => {
     const target = Number(a.dataset.jump);
     const view = desktop ? Math.ceil(target / 2) : target;
-    a.classList.toggle('is-on', mode === 'book' && view === f);
+    if (view <= f) on = a;
   });
+  jumpLinks.forEach((a) => a.classList.toggle('is-on', mode === 'book' && a === on));
+  // On a phone the bar scrolls sideways: keep the lit category in view.
+  const nav = jumpNav;
+  const lit = on as HTMLAnchorElement | null;
+  if (nav && lit && nav.scrollWidth > nav.clientWidth) {
+    const left = lit.offsetLeft - (nav.clientWidth - lit.offsetWidth) / 2;
+    nav.scrollTo({ left: Math.max(0, left), behavior: reduced.matches ? 'auto' : 'smooth' });
+  }
   nextBtn.querySelector('.mn-nav__tx')!.textContent = f === 0 ? 'Flip' : 'Next';
 }
 
@@ -414,7 +425,7 @@ jumpLinks.forEach((a) =>
     e.preventDefault();
     const target = Number(a.dataset.jump);
     goTo(desktop ? Math.ceil(target / 2) : target);
-    const top = stage.getBoundingClientRect().top + scrollY - 96;
+    const top = stage.getBoundingClientRect().top + scrollY - 150; // header + pinned category bar
     if (Math.abs(scrollY - top) > 40) window.scrollTo({ top, behavior: reduced.matches ? 'auto' : 'smooth' });
   })
 );

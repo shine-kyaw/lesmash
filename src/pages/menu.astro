@@ -34,15 +34,21 @@ const pageLabel = (p: (typeof pages)[number]) =>
   <section class="mn-head">
     <div class="wrap">
       <h1 class="mn-head__title">Flip it. <span class="script">Pick it.</span> Smash it.</h1>
-      <nav class="mn-jump" aria-label="Jump to a section of the menu">
-        {jumps.map((j) => (
-          <a href={`#mn-p-${j.page}`} data-jump={j.page} data-analytics="menu_category_select">{j.label}</a>
-        ))}
-      </nav>
     </div>
   </section>
 
   <section class="mn" data-mn data-total={pages.length} aria-label="The Le SMASH menu">
+    {/* The categories stay pinned under the header while the menu is on screen,
+        and the one you are reading stays lit (client revision 01). */}
+    <div class="mn-jumpbar">
+      <div class="wrap">
+        <nav class="mn-jump" aria-label="Jump to a section of the menu" data-jump-nav>
+          {jumps.map((j) => (
+            <a href={`#mn-p-${j.page}`} data-jump={j.page} data-analytics="menu_category_select">{j.label}</a>
+          ))}
+        </nav>
+      </div>
+    </div>
     <div class="wrap mn__bar">
       <button type="button" class="mn-toggle" data-toggle hidden aria-pressed="false">
         <span data-toggle-label>View as list</span>
