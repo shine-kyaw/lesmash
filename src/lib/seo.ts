@@ -12,7 +12,7 @@ export function title(pageTitle: string | null): string {
 
 export const DESCRIPTIONS: Record<string, string> = {
   home:
-    'Le SMASH Burgers & Co. Smash burgers in Yangon: American flavour, French precision, three rooms, five kitchens. Menu, photos and where to find us.',
+    'Le SMASH Burgers & Co. Smash burgers in Yangon: American flavour, French precision, two rooms, four kitchens. Menu, photos and where to find us.',
   menu:
     'The full Le SMASH menu in Yangon: burgers, brunch, mains, salads, snacks, drinks and cocktails.',
   gallery:

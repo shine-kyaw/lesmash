@@ -1,6 +1,7 @@
 import { SITE, absoluteUrl } from './site.config.mjs';
 import { directionsUrl, type Branch, type MenuCategory, type MenuItem, refSlug } from './content';
 import { toSchemaHours, hasConfirmedHours } from './hours';
+import { SHOW_PRICES } from '../components/menu/plan';
 
 /**
  * Structured data (PRD §19.4).
@@ -93,7 +94,7 @@ export function menuSchema(categories: MenuCategory[], items: MenuItem[]) {
             description: item.description,
             // An offer is emitted only for a confirmed price. No price, no offer.
             offers:
-              item.price !== null
+              SHOW_PRICES && item.price !== null
                 ? { '@type': 'Offer', price: item.price, priceCurrency: SITE.currency }
                 : null,
           })

@@ -2,9 +2,16 @@
  * Collaborations — Le SMASH with other Yangon brands, venues and artists.
  *
  * Every string below is transcribed from a poster or photo in public/media
- * (the source file is named beside each entry). Nothing is inferred: where a
- * poster prints no year, the date carries none; where it prints no place,
+ * (the source file is named beside each entry). Where it prints no place,
  * `place` is null. `blurb` is only ever a near-quote of the artwork.
+ *
+ * Entries run oldest to newest, one date format (client revision 01, 21 Nov 2026).
+ * Three dates are worked out rather than read straight off the poster:
+ * - Sunset Ibiza prints only "August 9th" but is at Crystal Tower, Junction Square,
+ *   the room Le SMASH moved into on 3 Dec 2025 (their Facebook post), so 2026.
+ * - Sip & Smash prints "02.08.2025" at Junction Square. Day-first, as Yangon
+ *   writes it: 8 Feb 2025 would predate the Junction Square shop (opened 10 May 2025).
+ * - AR-T: the date the official video went up on YouTube (22 Mar 2026).
  *
  * Image sizes are the real pixel sizes (media-manifest.json for /media/...
  * files, read from the files for /media/gallery/...).
@@ -36,40 +43,31 @@ export interface Collab {
 }
 
 /** The names that spin after the "×" in the opening. Every one is on a poster. */
-export const PARTNERS = ['Blind Tiger', 'Ah-so', 'Britto’s', 'TagU', 'RTH', 'Ellie’s', 'Ar-T'];
+export const PARTNERS = ['RTH', 'Ah-so', 'Britto’s', 'TagU', 'Ellie’s', 'Ar-T', 'Blind Tiger'];
 
 export const COLLABS: Collab[] = [
   {
-    // campaigns/blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg + gallery/collaborations/01-blind-tiger.jpg
-    id: 'blind-tiger',
-    partner: 'Blind Tiger',
-    title: 'Sunset Ibiza',
-    date: 'August 9th',
-    place: 'Crystal Tower, Ground Floor (Junction Square)',
+    // campaigns/lesmash-pop-up.jpg (gallery/events/04-pop-up-at-trt.jpg is a crop of the same artwork)
+    id: 'rth',
+    partner: 'RTH',
+    title: 'Le SMASH Pop-up',
+    date: '3–12 Apr 2025',
+    place: 'RTH Junction Square',
     poster: {
-      src: '/media/campaigns/blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg', w: 1080, h: 1350,
-      alt: 'Poster: Welcome to Sunset Ibiza, August 9th, with a white Blind Tiger cat holding a burger.',
+      src: '/media/campaigns/lesmash-pop-up.jpg', w: 1025, h: 1400,
+      alt: 'Poster: Le SMASH Pop-up @ RTH Junction Square, April 3–12, two hands holding the Le SMASH and RTH cards.',
     },
-    photos: [
-      {
-        src: '/media/gallery/collaborations/01-blind-tiger.jpg', w: 960, h: 1200,
-        alt: 'The invitation version of the Sunset Ibiza poster: You’re invited to Sunset Ibiza, August 9th, Le SMASH and Blind Tiger.',
-      },
-    ],
-    blurb: 'Sunsets, sips, & beats.',
-    details: [
-      { label: 'Time', value: '3 PM – 8 PM' },
-      { label: 'Special guests', value: 'DJ YUU & KJ' },
-      { label: 'Beer', value: 'Buy 1 get 1 free, 3 PM – 5 PM (with Tuborg)' },
-    ],
-    wall: { x: 3, y: 5, w: 24, r: -4, z: 3 },
+    photos: [],
+    blurb: null,
+    details: [],
+    wall: { x: 75, y: 2, w: 21, r: 4, z: 3 },
   },
   {
     // gallery/collaborations/02-ah-so.jpg
     id: 'ah-so',
     partner: 'Bar Ah-so',
     title: 'Sip & Smash',
-    date: '02.08.2025',
+    date: '2 Aug 2025',
     place: 'Le SMASH, Junction Square',
     poster: {
       src: '/media/gallery/collaborations/02-ah-so.jpg', w: 960, h: 1200,
@@ -85,7 +83,7 @@ export const COLLABS: Collab[] = [
     id: 'brittos-red-white',
     partner: 'Britto’s',
     title: 'Red & White Party',
-    date: 'Dec 5, 2025 (Friday)',
+    date: '5 Dec 2025',
     place: 'Junction Square',
     poster: {
       src: '/media/campaigns/le-smash-x-britto-s-invitation.jpg', w: 933, h: 1400,
@@ -105,7 +103,7 @@ export const COLLABS: Collab[] = [
     id: 'brittos-tagu',
     partner: 'Britto’s × TagU',
     title: 'Lights down, volume up!',
-    date: 'Saturday, 20 December 2025',
+    date: '20 Dec 2025',
     place: null,
     poster: {
       src: '/media/campaigns/dj-final-1jpg.jpg', w: 1080, h: 1350,
@@ -143,27 +141,11 @@ export const COLLABS: Collab[] = [
     wall: { x: 63, y: 33, w: 25, r: -3, z: 6, staple: true },
   },
   {
-    // campaigns/lesmash-pop-up.jpg (gallery/events/04-pop-up-at-trt.jpg is a crop of the same artwork)
-    id: 'rth',
-    partner: 'RTH',
-    title: 'Le SMASH Pop-up',
-    date: 'April 3–12, 2025',
-    place: 'RTH Junction Square',
-    poster: {
-      src: '/media/campaigns/lesmash-pop-up.jpg', w: 1025, h: 1400,
-      alt: 'Poster: Le SMASH Pop-up @ RTH Junction Square, April 3–12, two hands holding the Le SMASH and RTH cards.',
-    },
-    photos: [],
-    blurb: null,
-    details: [],
-    wall: { x: 75, y: 2, w: 21, r: 4, z: 3 },
-  },
-  {
     // campaigns/announcement.jpg
     id: 'ellies',
     partner: 'Ellie’s',
     title: 'Chit Thu Bazaar',
-    date: '1st, 2nd March 2026',
+    date: '1–2 Mar 2026',
     place: 'The Secretariat, Yangon',
     poster: {
       src: '/media/campaigns/announcement.jpg', w: 1080, h: 1350,
@@ -182,7 +164,7 @@ export const COLLABS: Collab[] = [
     id: 'ar-t',
     partner: 'AR-T',
     title: 'Chit Pay Par (official music video)',
-    date: null,
+    date: '22 Mar 2026',
     place: 'Filmed at Le SMASH',
     poster: {
       src: '/media/campaigns/ar-t-s-scenes.jpg', w: 1400, h: 933,
@@ -194,5 +176,30 @@ export const COLLABS: Collab[] = [
       { label: 'The invitation', value: 'Come and hang out at Le SMASH. Feel the atmosphere, soak in the music, and enjoy the SMASH experience in person.' },
     ],
     wall: { x: 33, y: 32, w: 28, r: -2, z: 4 },
+  },
+  {
+    // campaigns/blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg + gallery/collaborations/01-blind-tiger.jpg
+    id: 'blind-tiger',
+    partner: 'Blind Tiger',
+    title: 'Sunset Ibiza',
+    date: '9 Aug 2026',
+    place: 'Crystal Tower, Ground Floor (Junction Square)',
+    poster: {
+      src: '/media/campaigns/blind-tiger-x-le-smash-pop-up-stand-and-announcement.jpg', w: 1080, h: 1350,
+      alt: 'Poster: Welcome to Sunset Ibiza, August 9th, with a white Blind Tiger cat holding a burger.',
+    },
+    photos: [
+      {
+        src: '/media/gallery/collaborations/01-blind-tiger.jpg', w: 960, h: 1200,
+        alt: 'The invitation version of the Sunset Ibiza poster: You’re invited to Sunset Ibiza, August 9th, Le SMASH and Blind Tiger.',
+      },
+    ],
+    blurb: 'Sunsets, sips, & beats.',
+    details: [
+      { label: 'Time', value: '3 PM – 8 PM' },
+      { label: 'Special guests', value: 'DJ YUU & KJ' },
+      { label: 'Beer', value: 'Buy 1 get 1 free, 3 PM – 5 PM (with Tuborg)' },
+    ],
+    wall: { x: 3, y: 5, w: 24, r: -4, z: 3 },
   },
 ];

@@ -18,6 +18,10 @@ export function dims(src: string): { width: number; height: number } {
   return dimsByPath.get(src) ?? { width: 900, height: 675 };
 }
 
+/** Prices stay in the data but are not shown: the client asked for them off the
+    site (revision 01, 21 Nov 2026). Flip this to bring them back everywhere. */
+export const SHOW_PRICES = false;
+
 /** 5500 -> "5.5K", 10000 -> "10K". Prices are stored as MMK integers. */
 export function formatK(mmk: number): string {
   const k = mmk / 1000;
@@ -77,7 +81,7 @@ function chunk<T>(arr: T[], pages: number): T[][] {
 function listBlocks(category: MenuCategory): ListBlock[] {
   const price = (n: string) => {
     const v = category.listPrices[n];
-    return v === undefined ? null : formatK(v);
+    return !SHOW_PRICES || v === undefined ? null : formatK(v);
   };
   const groups = category.listGroups.length
     ? category.listGroups

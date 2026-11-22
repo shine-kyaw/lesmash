@@ -35,7 +35,7 @@ export const EDITORIAL = {
     'C-01',
     'agency draft, client approve',
     'One sentence under the hero, twenty words at most. Must be verifiable.',
-    'American flavour. French precision. Yangon-born. Three rooms, five kitchens — and counting.'
+    'American flavour. French precision. Yangon-born. Two rooms, four kitchens — and counting.'
   ),
 
   /** C-02 — three proof points. Must be true and verifiable. */
@@ -83,7 +83,7 @@ export const EDITORIAL = {
     'C-16',
     'client',
     'What is actually committed: rooms signed, kitchens opening, dates. Replace this the moment there is something specific to say.',
-    'Three rooms. Five kitchens. Kamayut, Yankin, Mayangone, Hlaing. And counting.'
+    'Two rooms. Four kitchens. Kamayut, Yankin, Mayangone. And counting.'
   ),
 
   /**

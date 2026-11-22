@@ -1,7 +1,7 @@
 ---
 import { asset } from '../../lib/href';
 import type { MenuCategory, MenuItem } from '../../lib/content';
-import { dims } from './plan';
+import { dims, SHOW_PRICES } from './plan';
 
 /**
  * One page of dish tiles, laid out like their printed boards: a photo on a
@@ -30,13 +30,10 @@ function priceLines(display: string): { lead: string; value: string }[] {
 <div id={part === 1 ? category.slug : undefined} class:list={['mn-cards', { 'mn-cards--first': part === 1 }]}>
   <header class="mn-phead">
     <h2 class="mn-phead__title">{category.name}</h2>
-    {category.slug === 'burgers' && (
-      <p class="mn-phead__note">Burger prices at the counter</p>
-    )}
   </header>
   <ul class="mn-items" data-n={items.length}>
     {items.map((item, i) => {
-      const lines = item.priceDisplay ? priceLines(item.priceDisplay) : [];
+      const lines = SHOW_PRICES && item.priceDisplay ? priceLines(item.priceDisplay) : [];
       const single = lines.length === 1 && lines[0].lead === '';
       const d = item.image ? dims(item.image.src) : null;
       return (

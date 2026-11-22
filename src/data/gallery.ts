@@ -133,7 +133,7 @@ export const GALLERY_SECTIONS: GallerySection[] = [
   {
     slug: 'spaces',
     name: 'Spaces and Locations',
-    blurb: 'Three rooms, five kitchens.',
+    blurb: 'Two rooms, four kitchens.',
     ratio: '3x2',
     items: [
       { src: '01-exterior.jpg', alt: 'The shopfront from the street, signage lit' },
