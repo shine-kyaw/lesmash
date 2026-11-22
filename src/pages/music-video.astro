@@ -62,19 +62,4 @@ import '../styles/pages/music.css';
   </section>
 </Base>
 
-<script>
-  /* Swap the poster for the privacy-enhanced YouTube player on press. */
-  document.querySelectorAll<HTMLElement>('[data-mv-player]').forEach((box) => {
-    const btn = box.querySelector<HTMLButtonElement>('[data-mv-play]');
-    btn?.addEventListener('click', () => {
-      const f = document.createElement('iframe');
-      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.yt}?autoplay=1&rel=0&playsinline=1`;
-      f.title = box.dataset.title || 'Music video';
-      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-      f.allowFullscreen = true;
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
-      box.replaceChildren(f);
-      f.focus();
-    });
-  });
-</script>
+<script is:inline defer src={asset('/scripts/music-player.js')}></script>
