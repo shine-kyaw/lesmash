@@ -84,3 +84,20 @@ Keep the banner's animation style. Only adjust spacing if the shorter copy leave
 ## Order of work
 1, 2, 3 (quick and certain), then 4, 5, 6, 7, 8.
 Push each step live when it's done. `npm run build` must end with "All budgets held."
+
+## Status (23 Nov 2026): all eight items live
+
+| # | Item | Commit |
+|---|---|---|
+| 1 | Two rooms, four kitchens; Hlaing removed | bbda9be |
+| 2 | Prices off (`SHOW_PRICES`); sticky category bar | bbda9be, d5e3321 |
+| 3 | Collaborations in date order | bbda9be |
+| 4 | Music Video tab (AR-T); AR-T out of Collaborations | 8f0552e, e7b79d5 |
+| 5 | Train: two stops, doors open on burgers | b6fc6eb |
+| 6 | LINE UP: lit shelf, no scroll-pinned ring | 45a5b8d |
+| 7 | One type system; marker font retired | dd7f5ec |
+| 8 | Phone menu, 44px tap targets, call button, size checks | ecea135 |
+
+Still waiting on Reyy: what Zigar is (the train's second stop shows Yankin until
+then; rename `src/content/branches/yankin.json` and it follows everywhere), and
+which Wine Su video to add (`src/data/music.ts`).
