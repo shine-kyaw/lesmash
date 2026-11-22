@@ -1,39 +1,45 @@
 ---
+/**
+ * The line-up: mugs, tote and cups on one lit shelf.
+ *
+ * Client revision 01 (21 Nov 2026) asked to rethink the old 3D ring, which
+ * pinned the page and turned on scroll (the "up-swipe / down-swipe"). Now:
+ * - Desktop: every piece stands side by side under its own light. Nothing is
+ *   hidden behind a gesture, and the page scrolls normally.
+ * - Phones: the same shelf becomes a sideways swipe, one piece per screen,
+ *   snapping into place, with arrow buttons as well.
+ */
 import { asset } from '../../lib/href';
 import { LINEUP } from '../../data/merch';
 ---
 <section class="mc-line dark" id="lineup" aria-labelledby="mc-line-h">
-  <div class="mc-line-pin" data-pin>
-    <div class="wrap mc-sec-head mc-sec-head--dark">
-      <h2 id="mc-line-h">Mugs, tote, cups</h2>
-    </div>
-
-    <div class="mc-arc" data-arc tabindex="0" role="group" aria-roledescription="carousel" aria-label="Mugs, tote and cups">
-      <div class="mc-light" aria-hidden="true"></div>
-      <div class="mc-floor" aria-hidden="true"></div>
-      <ul class="mc-ring" data-ring role="list">
-        {LINEUP.map((it, i) => (
-          <li class="mc-ri" data-i={i} style={`--w:${it.w};--h:${it.h}`}>
-            <button type="button" class="mc-ri-btn" tabindex="-1" aria-label={`${it.name}. ${it.note}`}>
-              <span class="mc-prod">
-                <img class="mc-prod__img" src={asset(it.src)} alt={it.alt} width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
-                <img class="mc-prod__refl" src={asset(it.src)} alt="" aria-hidden="true" width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
-                <span class="mc-prod__dim" aria-hidden="true"></span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <div class="wrap mc-line-foot">
-      <button type="button" class="mc-nav" data-prev aria-label="Previous piece">←</button>
-      <p class="mc-lu-name" data-name aria-live="polite">
-        <span class="mc-lu-name__n" data-name-n>{LINEUP[0].name}</span>
-        <span class="mc-lu-name__d label" data-name-d>{LINEUP[0].note}</span>
-      </p>
-      <button type="button" class="mc-nav" data-next aria-label="Next piece">→</button>
-    </div>
+  <div class="wrap mc-sec-head mc-sec-head--dark">
+    <h2 id="mc-line-h">Mugs, tote, cups</h2>
   </div>
-  <script type="application/json" id="mc-lineup-data" set:html={JSON.stringify(LINEUP.map(({ name, note, glow }) => ({ name, note, glow })))}></script>
+
+  <ul class="mc-shelf" data-shelf role="list" aria-label="Mugs, tote and cups">
+    {LINEUP.map((it) => (
+      <li class="mc-sh" style={`--glow:${it.glow};--ar:${it.w}/${it.h}`} data-sh>
+        <figure class="mc-sh__stage">
+          <span class="mc-sh__light" aria-hidden="true"></span>
+          <span class="mc-sh__prod">
+            <img class="mc-sh__img" src={asset(it.src)} alt={it.alt} width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+            <img class="mc-sh__refl" src={asset(it.src)} alt="" aria-hidden="true" width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+          </span>
+          <figcaption class="mc-sh__cap">
+            <span class="mc-sh__name">{it.name}</span>
+            <span class="mc-sh__note">{it.note}</span>
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+
+  <div class="wrap mc-shelf-nav" aria-hidden="true">
+    <button type="button" class="mc-nav" data-sh-prev tabindex="-1" aria-label="Previous piece">←</button>
+    <span class="mc-shelf-dots" data-sh-dots>
+      {LINEUP.map((_, i) => <i class:list={{ 'is-on': i === 0 }}></i>)}
+    </span>
+    <button type="button" class="mc-nav" data-sh-next tabindex="-1" aria-label="Next piece">→</button>
+  </div>
 </section>

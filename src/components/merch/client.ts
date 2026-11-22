@@ -343,120 +343,31 @@ if (dlg && garments.length && items.length) {
 }
 
 /* ============================================================
-   The line-up: a 3D ring. Scroll scrubs it (pinned on desktop);
-   drag, swipe, arrows and buttons turn it too.
+   The line-up: one lit shelf. Desktop shows every piece; phones swipe
+   sideways (CSS scroll-snap), with arrows and dots kept in step here.
    ============================================================ */
-const arc = $('[data-arc]');
-const ring = $('[data-ring]');
-if (arc && ring) {
-  const lis = $$('.mc-ri', ring);
-  const n = lis.length;
-  const info: { name: string; note: string; glow: string }[] = JSON.parse($('#mc-lineup-data')?.textContent || '[]');
-  const glows = info.map((x) => x.glow.split(' ').map(Number));
-  const nameBox = $('[data-name]')!;
-  const nameN = $('[data-name-n]')!;
-  const nameD = $('[data-name-d]')!;
-  let manual = 0, scrollP = 0, cur = 0, shown = -1, seen = false;
-  let dragging = false, dragVel = 0;
-  const target = () => scrollP * (n - 1) + manual;
-  const wrapD = (d: number) => { d = ((d % n) + n) % n; return d > n / 2 ? d - n : d; };
-
-  function render() {
-    const R = clamp(arc!.clientWidth * 0.36, 190, 440);
-    const front = ((Math.round(cur) % n) + n) % n;
-    lis.forEach((li, i) => {
-      const d = wrapD(i - cur);
-      const th = d * (360 / n);
-      const rad = (th * Math.PI) / 180;
-      const w = Math.exp(-d * d * 1.6);
-      const x = Math.sin(rad) * R;
-      const z = (Math.cos(rad) - 1) * R * 0.9;
-      const y = -34 * w;
-      const s = 1 + 0.2 * w;
-      const op = clamp(1.25 - Math.abs(d) * 0.5, 0, 1);
-      li.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateY(${(th * 0.82).toFixed(1)}deg) scale(${s.toFixed(3)})`;
-      li.style.opacity = op.toFixed(2);
-      li.style.zIndex = String(Math.round((w + 0.01) * 100) + (op > 0.02 ? 0 : -50));
-      li.style.setProperty('--lw', w.toFixed(3));
-      li.style.visibility = op < 0.02 ? 'hidden' : 'visible';
-      li.classList.toggle('is-on', i === front);
-      li.firstElementChild!.toggleAttribute('tabindex', false);
-    });
-    // light colour: blend the two nearest pieces
-    const i0 = Math.floor(((cur % n) + n) % n), f = ((cur % n) + n) % n - i0;
-    const a = glows[i0], b = glows[(i0 + 1) % n];
-    const rgb = a.map((v, k) => Math.round(v + (b[k] - v) * f)).join(' ');
-    (arc as HTMLElement).style.setProperty('--glow', rgb);
-    if (front !== shown) {
-      shown = front;
-      const set = () => { nameN.textContent = info[front].name; nameD.textContent = info[front].note; };
-      if (reduce) set(); else gsap.fromTo(nameBox, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', onStart: set });
-    }
-  }
-  render();
-
-  const stepTo = (i: number) => { manual = Math.round(manual + wrapD(i - cur)); if (reduce) { cur = target(); render(); } };
-  const go = (dir: number) => { manual = Math.round(manual) + dir; if (reduce) { cur = target(); render(); } };
-  $('[data-prev]')!.addEventListener('click', () => go(-1));
-  $('[data-next]')!.addEventListener('click', () => go(1));
-  lis.forEach((li, i) => li.addEventListener('click', () => { if (!dragMoved) stepTo(i); }));
-  arc.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
-    if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); }
-  });
-
-  /* drag / swipe */
-  let sx = 0, lx = 0, lt = 0, dragMoved = false;
-  const stepPx = () => clamp(arc.clientWidth * 0.22, 110, 260);
-  arc.addEventListener('pointerdown', (e: PointerEvent) => {
-    if (e.button !== 0) return;
-    dragging = true; dragMoved = false; sx = lx = e.clientX; lt = performance.now(); dragVel = 0;
-  });
-  window.addEventListener('pointermove', (e: PointerEvent) => {
-    if (!dragging) return;
-    if (!dragMoved && Math.abs(e.clientX - sx) > 6) { dragMoved = true; arc.setPointerCapture?.(e.pointerId); arc.classList.add('is-dragging'); }
-    if (!dragMoved) return;
-    const dx = e.clientX - lx, now = performance.now();
-    manual -= dx / stepPx();
-    dragVel = 0.7 * dragVel + 0.3 * (-dx / stepPx() / Math.max(0.008, (now - lt) / 1000));
-    lx = e.clientX; lt = now;
-    if (reduce) { cur = target(); render(); }
-  });
-  const endDrag = () => {
-    if (!dragging) return;
-    dragging = false; arc.classList.remove('is-dragging');
-    if (dragMoved) manual = Math.round(manual + clamp(dragVel, -6, 6) * 0.25);
-    if (reduce) { cur = target(); render(); }
-    setTimeout(() => { dragMoved = false; }, 0);
+const shelf = $('[data-shelf]');
+if (shelf) {
+  const items = $$('[data-sh]', shelf);
+  const dots = $$('[data-sh-dots] i');
+  const prev = $('[data-sh-prev]');
+  const next = $('[data-sh-next]');
+  const idx = () => Math.round(shelf.scrollLeft / Math.max(1, shelf.clientWidth));
+  const sync = () => { const i = idx(); dots.forEach((d, k) => d.classList.toggle('is-on', k === i)); };
+  const goTo = (i: number) => {
+    const k = clamp(i, 0, items.length - 1);
+    shelf.scrollTo({ left: k * shelf.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
   };
-  window.addEventListener('pointerup', endDrag);
-  window.addEventListener('pointercancel', endDrag);
-  arc.addEventListener('dragstart', (e) => e.preventDefault());
+  prev?.addEventListener('click', () => goTo(idx() - 1));
+  next?.addEventListener('click', () => goTo(idx() + 1));
+  shelf.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
 
-  /* scroll scrub (desktop, motion allowed) + the damped loop */
+  // The pieces rise onto the shelf one after another as it comes into view.
   if (!reduce) {
-    new IntersectionObserver((e) => { seen = e[0].isIntersecting; }, { rootMargin: '200px' }).observe(arc);
-    gsap.ticker.add((_t, deltaMs) => {
-      if (!seen) return;
-      const t = target();
-      if (Math.abs(t - cur) < 0.0006) { if (cur !== t) { cur = t; render(); } return; }
-      cur += (t - cur) * (1 - Math.exp(-(deltaMs / 1000) * 7));
-      render();
+    gsap.set(items, { opacity: 0, y: 40 });
+    ScrollTrigger.create({
+      trigger: shelf, start: 'top 85%', once: true,
+      onEnter: () => gsap.to(items, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.09 }),
     });
-    const mm = gsap.matchMedia();
-    mm.add('(min-width: 761px)', () => {
-      const st = ScrollTrigger.create({
-        trigger: '#lineup', start: 'top top', end: () => `+=${Math.round(innerHeight * 0.5 * (n - 1))}`,
-        pin: '[data-pin]', pinSpacing: true, anticipatePin: 1,
-        snap: { snapTo: 1 / (n - 1), duration: { min: 0.2, max: 0.55 }, ease: 'power2.inOut' },
-        onUpdate: (self) => { scrollP = self.progress; },
-      });
-      return () => { st.kill(); scrollP = 0; };
-    });
-    window.addEventListener('resize', render);
-  } else {
-    cur = target(); render();
-    window.addEventListener('resize', render);
   }
-  (window as any).__mcRing = (p: number) => { manual = p; cur = p; render(); };
 }
