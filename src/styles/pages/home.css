@@ -183,16 +183,17 @@
 @media (min-width: 48rem) { .hm-more__row { grid-template-columns: repeat(3, minmax(0, 1fr)); } .hm-more__item a { min-height: 16rem; } }
 
 /* ------------------------------------------------------------------------
-   Hero revision (5 Nov): the SMASH is set in the brush hand from Reyy's mock
-   and sits in the lower third, over the grill, so the press and the patty —
-   the whole point of the film — stay clear above it.
+   Hero: SMASH sits in the lower third, over the grill, so the press and the
+   patty — the whole point of the film — stay clear above it. Set in the brand
+   display face, like the logo's own SMASH (revision 01 asks for the official
+   brand type everywhere; the 5 Nov brush hand from Reyy's mock is retired).
    ------------------------------------------------------------------------ */
 .hm-hero { place-items: end center; padding-bottom: clamp(7rem, 19vh, 11.5rem); }
 .hm-hero__le { font-size: clamp(2rem, 1rem + 3.4vw, 4.2rem); transform: rotate(-6deg) translateX(-1.6em); margin-bottom: -0.32em; }
 .hm-hero__word {
-  font-family: var(--font-hand); font-size: min(13vw, 12.5rem); line-height: 1; letter-spacing: 0.01em;
-  -webkit-text-stroke: 0; color: var(--red);
-  text-shadow: 0 0.03em 0 rgb(0 0 0 / 0.55), 0 0.1em 0.5em rgb(0 0 0 / 0.55);
+  font-family: var(--font-display); text-transform: uppercase; font-size: min(14vw, 12rem); line-height: 0.9; letter-spacing: -0.01em;
+  color: var(--red); -webkit-text-stroke: 0.025em var(--black); paint-order: stroke fill;
+  text-shadow: 0 0.04em 0 var(--black), 0 0.1em 0.5em rgb(0 0 0 / 0.55);
 }
 .hm-hero__sub {
   display: block; margin-top: 0.6rem; font-family: var(--font-mono); font-size: var(--t-xs);

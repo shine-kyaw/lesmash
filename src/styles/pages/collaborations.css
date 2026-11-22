@@ -25,7 +25,7 @@
   text-shadow: 0 0.04em 0 var(--black), 0 0.09em 0.4em rgb(0 0 0 / 0.5);
 }
 .cb-hero__x {
-  font-family: var(--font-hand); text-transform: none; font-weight: 400; color: var(--cream);
+  font-family: var(--font-display); text-transform: none; font-weight: 400; color: var(--cream);
   font-size: 0.95em; line-height: 0.7; margin: 0.04em 0 0 0.9em; transform: rotate(-8deg); display: inline-block;
   text-shadow: 0 0.04em 0 var(--black);
 }

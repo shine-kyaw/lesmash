@@ -110,7 +110,7 @@ html.mc-locked { overflow: hidden; }
 /* ---------- The line-up: one lit shelf ---------- */
 .mc-line { background: #0a0706; color: #fff; overflow-x: clip; padding-block: clamp(var(--s8), 9vw, var(--s9)); }
 .mc-line .mc-sec-head { margin-bottom: var(--s6); }
-.mc-line .mc-sec-head h2 { font-size: var(--t-lg); }
+.mc-line .mc-sec-head h2 { font-size: var(--t-xl); }
 
 .mc-shelf {
   list-style: none; margin: 0 auto; padding: 0 var(--gutter);
