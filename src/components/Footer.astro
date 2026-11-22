@@ -9,14 +9,15 @@ import { asset, href } from '../lib/href';
  * The footer is a platform, and a train keeps pulling in.
  *
  * One Le SMASH room is fitted out as a carriage — red benches, ring handles,
- * poles — so the last thing on every page is the platform at Le SMASH. A
- * carriage brakes in, its four doors open, and each doorway holds one way to
- * get fed: foodpanda for either room, GrabFood, or a phone call. Hover or tab
- * into the station and the train waits with its doors open.
+ * poles — so the last thing on every page is the platform at Le SMASH. The
+ * train runs between the two rooms (client revision 01, 21 Nov 2026): it brakes
+ * in, the station sign names the room, the doors open on four burgers sitting
+ * on the benches, then it pulls out for the other room with four more. Hover or
+ * tab into the station and the train waits with its doors open.
  *
- * On a phone only one doorway fits on screen, so the four buttons sit in a row
- * under the train instead. Without script, or with reduced motion, the train
- * just stands at the platform, doors open.
+ * The ways to get fed (foodpanda for either room, GrabFood, a call) sit in a row
+ * under the platform. Without script, or with reduced motion, the train just
+ * stands at the first room, doors open.
  *
  * No Grab store link has been supplied, so Grab opens GrabFood Yangon until
  * SITE.grabUrl is set.
@@ -35,6 +36,20 @@ const pages = [
   ['/gallery', COPY.nav.gallery], ['/collaborations', COPY.nav.collaborations], ['/music-video', COPY.nav.music],
   ['/merch', COPY.nav.merch], ['/visit', COPY.nav.visit],
 ] as const;
+
+/* The stops, in order, and the four burgers waiting at each. Room names come
+   from the branch records, so renaming a room renames its stop. */
+const SETS = [
+  ['smash', 'spicy-bacon', 'onion-smash', 'miso-bacon'],
+  ['kimchi-cheese', 'le-coq-buffalo-chicken', 'pulled-pork', 'smash-o-filet'],
+];
+const BURGER_NAMES: Record<string, string> = {
+  'smash': 'SMASH', 'spicy-bacon': 'Spicy Bacon', 'onion-smash': 'Onion SMASH', 'miso-bacon': 'Miso Bacon',
+  'kimchi-cheese': 'Kimchi Cheese', 'le-coq-buffalo-chicken': 'Le COQ Buffalo', 'pulled-pork': 'Pulled Pork',
+  'smash-o-filet': 'SMASH O Filet',
+};
+const stops = branches.slice(0, 2).map((b, i) => ({ name: b.name, burgers: SETS[i] }));
+const cut = (slug: string) => asset(`/media/burgers/cut/${slug}.webp`);
 
 const grabUrl = (SITE as { grabUrl?: string | null }).grabUrl ?? 'https://www.grab.com/mm/en/food/';
 const year = new Date().getFullYear();
@@ -75,9 +90,9 @@ const MID = 1620;                         // x of the middle carriage
   </div>
 
   {/* ------------------------------------------------------------ the station */}
-  <div class="stn" data-station>
+  <div class="stn" data-station data-stops={JSON.stringify(stops.map((st) => st.name))}>
     <div class="stn__wall" aria-hidden="true">
-      <div class="stn__sign"><span class="stn__sign-le">Le</span> SMASH</div>
+      <div class="stn__sign"><span class="stn__sign-le">Le</span> SMASH<small data-stop-name>{stops[0]?.name}</small></div>
     </div>
 
     <div class="stn__track">
@@ -168,20 +183,18 @@ const MID = 1620;                         // x of the middle carriage
           </g>
         </svg>
 
-        {/* What waits in each doorway of the middle carriage. */}
-        <ul class="ways ways--doors" aria-label="Order or call">
-          {ways.map((w, i) => (
-            <li class="ways__door" style={`--dx:${((MID + doors[i]) / 4840 * 100).toFixed(4)}%`} data-door>
-              <a class={`way way--${w.kind}`} href={w.href} target={w.kind === 'call' ? undefined : '_blank'}
-                 rel={w.kind === 'call' ? undefined : 'noopener noreferrer'} aria-label={w.label}
-                 data-analytics={w.kind === 'call' ? 'phone_click' : 'order_click'} data-platform={w.platform}
-                 data-branch={w.branch} data-source="footer-train">
-                {w.kind === 'call'
-                  ? <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z"/></svg>
-                  : <img src={asset(`/brand/partners/${w.kind === 'panda' ? 'foodpanda' : 'grab'}.svg`)} alt="" width="26" height="26" />}
-                <b>{w.title}</b>
-                <small>{w.sub}</small>
-              </a>
+        {/* What waits in each doorway of the middle carriage: one burger per stop. */}
+        <ul class="buns" aria-label="Burgers on board">
+          {doors.map((x, i) => (
+            <li class="buns__door" style={`--dx:${((MID + x) / 4840 * 100).toFixed(4)}%`} data-door>
+              {stops.map((st, si) => (
+                <a class="bun" href={href('/menu')} data-s={si} hidden={si > 0 ? true : undefined}
+                   aria-label={`${BURGER_NAMES[st.burgers[i]]}, on the menu`}>
+                  <img src={si === 0 ? cut(st.burgers[i]) : undefined} data-src={si > 0 ? cut(st.burgers[i]) : undefined}
+                       alt="" width="280" height="250" loading="lazy" decoding="async" draggable="false" />
+                  <span class="bun__tag">{BURGER_NAMES[st.burgers[i]]}</span>
+                </a>
+              ))}
             </li>
           ))}
         </ul>
@@ -191,7 +204,7 @@ const MID = 1620;                         // x of the middle carriage
 
     <div class="stn__floor" aria-hidden="true"></div>
 
-    {/* Phones: the same four, under the train. */}
+    {/* The ways to get fed, in a row under the platform. */}
     <ul class="ways ways--row" aria-label="Order or call">
       {ways.map((w) => (
         <li>
@@ -247,14 +260,29 @@ const MID = 1620;                         // x of the middle carriage
     const wheels = stn.querySelectorAll('.wheel');
     const glints = stn.querySelectorAll('.tr-glint');
     const panels = stn.querySelectorAll<HTMLElement>('[data-door]');
+    const stopName = stn.querySelector<HTMLElement>('[data-stop-name]');
+    const stopNames: string[] = JSON.parse(stn.dataset.stops || '[]');
+    let stop = 0;
+    /* Switch every doorway (and the sign) to stop i, while the train is out of sight. */
+    const setStop = (i: number) => {
+      stop = i;
+      if (stopName && stopNames[i]) stopName.textContent = stopNames[i];
+      stn.querySelectorAll<HTMLAnchorElement>('.bun').forEach((el) => {
+        const on = Number(el.dataset.s) === i;
+        el.hidden = !on;
+        const img = el.querySelector<HTMLImageElement>('img[data-src]');
+        if (on && img && !img.getAttribute('src')) img.src = img.dataset.src!;
+      });
+    };
+    const bunImgs = stn.querySelectorAll<HTMLElement>('.bun img');
     const SHUT = 'inset(0% 50% 0% 50%)';
     const OPEN = 'inset(0% 0% 0% 0%)';
 
-    // Where it stops: the middle carriage centred; on phones, its first doorway.
+    // Where it stops: the middle carriage centred; on phones, its first two doorways.
     const stopX = () => {
       const k = (train.getBoundingClientRect().height || 1) / 300;
       const vw = stn.clientWidth;
-      const focus = vw < 760 ? 1620 + 230 : 1620 + 800;
+      const focus = vw < 760 ? 1620 + 420 : 1620 + 800;
       return vw / 2 - focus * k;
     };
     const width = () => train.getBoundingClientRect().width;
@@ -283,7 +311,9 @@ const MID = 1620;                         // x of the middle carriage
       let held = false;        // the loop is paused because of it
       let onScreen = false;
 
+      let laps = 0;
       loop
+        .add(() => { if (laps++ > 0 && stopNames.length > 1) setStop((stop + 1) % stopNames.length); })
         .set(train, { x: () => stn.clientWidth + 40, y: 0 })
         .add(() => spin.play())
         .fromTo(speed, { v: 1 }, { v: 0, duration: 2.6, ease: 'power2.out', onUpdate: applySpeed })
@@ -294,9 +324,10 @@ const MID = 1620;                         // x of the middle carriage
         .to(leavesL, { x: -78, duration: 0.95, ease: 'power2.inOut' }, '<0.1')
         .to(leavesR, { x: 78, duration: 0.95, ease: 'power2.inOut' }, '<')
         .to(panels, { clipPath: OPEN, duration: 0.95, ease: 'power2.inOut', stagger: 0.04 }, '<')
+        .fromTo(bunImgs, { y: 14, scale: 0.92 }, { y: 0, scale: 1, duration: 0.6, ease: 'back.out(2.2)', stagger: (i) => (i >> 1) * 0.08 }, '<0.35')
         .addLabel('open')
         .add(() => { if (hold) { loop.pause(); held = true; } })
-        .to({}, { duration: 1.4 })
+        .to({}, { duration: 1.8 })
         .to(lamps, { opacity: 0.2, duration: 0.12, repeat: 3, yoyo: true })
         .to([leavesL, leavesR], { x: 0, duration: 0.85, ease: 'power2.inOut' }, '<0.15')
         .to(panels, { clipPath: SHUT, duration: 0.85, ease: 'power2.inOut' }, '<')
