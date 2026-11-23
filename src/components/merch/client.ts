@@ -343,31 +343,70 @@ if (dlg && garments.length && items.length) {
 }
 
 /* ============================================================
-   The line-up: one lit shelf. Desktop shows every piece; phones swipe
-   sideways (CSS scroll-snap), with arrows and dots kept in step here.
+   The line-up: one piece under a spotlight. Picker, arrows, keys and a
+   sideways swipe change it; the page itself always scrolls normally.
    ============================================================ */
-const shelf = $('[data-shelf]');
-if (shelf) {
-  const items = $$('[data-sh]', shelf);
-  const dots = $$('[data-sh-dots] i');
-  const prev = $('[data-sh-prev]');
-  const next = $('[data-sh-next]');
-  const idx = () => Math.round(shelf.scrollLeft / Math.max(1, shelf.clientWidth));
-  const sync = () => { const i = idx(); dots.forEach((d, k) => d.classList.toggle('is-on', k === i)); };
-  const goTo = (i: number) => {
-    const k = clamp(i, 0, items.length - 1);
-    shelf.scrollTo({ left: k * shelf.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
-  };
-  prev?.addEventListener('click', () => goTo(idx() - 1));
-  next?.addEventListener('click', () => goTo(idx() + 1));
-  shelf.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+const spot = $('[data-spot]');
+if (spot) {
+  const stage = $('[data-spot-stage]', spot)!;
+  const pieces = $$('[data-spot-piece]', spot);
+  const picks = $$<HTMLButtonElement>('[data-spot-pick]', spot);
+  const nameEl = $('[data-spot-name]', spot)!;
+  const noteEl = $('[data-spot-note]', spot)!;
+  const numEl = $('[data-spot-n]', spot)!;
+  const n = pieces.length;
+  let cur = 0, busy = false;
 
-  // The pieces rise onto the shelf one after another as it comes into view.
+  const show = (next: number, dir: number) => {
+    next = ((next % n) + n) % n;
+    if (next === cur || busy) return;
+    const out = pieces[cur], inn = pieces[next], pick = picks[next];
+    picks.forEach((p, i) => p.setAttribute('aria-pressed', String(i === next)));
+    numEl.textContent = String(next + 1).padStart(2, '0');
+    spot.style.setProperty('--glow', pick.dataset.glow || '255 70 64');
+    const prev = cur; cur = next;
+    if (reduce) {
+      out.hidden = true; inn.hidden = false;
+      nameEl.textContent = pick.dataset.name || ''; noteEl.textContent = pick.dataset.note || '';
+      return;
+    }
+    busy = true;
+    inn.hidden = false;
+    const tl = gsap.timeline({ onComplete: () => { out.hidden = true; gsap.set([out, inn], { clearProps: 'transform,opacity' }); busy = false; } });
+    tl.to(out, { xPercent: -60 * dir, rotation: -6 * dir, opacity: 0, duration: 0.45, ease: 'power2.in' }, 0)
+      .fromTo(inn, { xPercent: 60 * dir, rotation: 6 * dir, opacity: 0, y: 16 },
+        { xPercent: 0, rotation: 0, opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.6)' }, 0.25)
+      .to([nameEl, noteEl], { opacity: 0, y: 8, duration: 0.18, ease: 'power1.in' }, 0)
+      .add(() => { nameEl.textContent = pick.dataset.name || ''; noteEl.textContent = pick.dataset.note || ''; }, 0.2)
+      .to([nameEl, noteEl], { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', stagger: 0.05 }, 0.22);
+    void prev;
+  };
+
+  picks.forEach((p, i) => p.addEventListener('click', () => show(i, i > cur ? 1 : -1)));
+  $('[data-spot-prev]', spot)?.addEventListener('click', () => show(cur - 1, -1));
+  $('[data-spot-next]', spot)?.addEventListener('click', () => show(cur + 1, 1));
+  stage.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { show(cur + 1, 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { show(cur - 1, -1); e.preventDefault(); }
+  });
+
+  // Sideways swipe / drag on the stage. Vertical movement is left to the page.
+  let sx = 0, sy = 0, down = false;
+  stage.addEventListener('pointerdown', (e: PointerEvent) => { if (e.button !== 0) return; down = true; sx = e.clientX; sy = e.clientY; });
+  window.addEventListener('pointerup', (e: PointerEvent) => {
+    if (!down) return; down = false;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) show(cur + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  });
+  window.addEventListener('pointercancel', () => { down = false; });
+  stage.addEventListener('dragstart', (e) => e.preventDefault());
+
+  // First reveal: the piece rises onto the plinth as the section comes in.
   if (!reduce) {
-    gsap.set(items, { opacity: 0, y: 40 });
+    gsap.set(pieces[0], { opacity: 0, y: 40 });
     ScrollTrigger.create({
-      trigger: shelf, start: 'top 85%', once: true,
-      onEnter: () => gsap.to(items, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.09 }),
+      trigger: spot, start: 'top 80%', once: true,
+      onEnter: () => gsap.to(pieces[0], { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', clearProps: 'transform,opacity' }),
     });
   }
 }
