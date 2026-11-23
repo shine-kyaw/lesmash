@@ -1,62 +1,39 @@
 ---
-/**
- * The line-up: mugs, tote and cups, one at a time under a spotlight.
- *
- * Client revision 01 (21 Nov 2026) asked to drop the up/down swipe of the old
- * scroll-pinned 3D ring, for "a more balanced composition that feels intuitive
- * and easy to browse" with smoother transitions. So:
- * - One stage: the piece in front stands on a lit plinth, the light takes its
- *   colour, a reflection on the floor. Name, note and count beside it.
- * - A row of all five underneath to pick from. Arrows, keys and a sideways
- *   swipe on the stage step through them. The page always scrolls normally.
- * - Phones: stage on top, details and picker row below.
- * Without script every piece is still listed with its name and note.
- */
 import { asset } from '../../lib/href';
 import { LINEUP } from '../../data/merch';
-const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class="mc-line dark" id="lineup" aria-labelledby="mc-line-h">
-  <div class="wrap mc-sec-head mc-sec-head--dark">
-    <h2 id="mc-line-h">Mugs, tote, cups</h2>
-  </div>
-
-  <div class="wrap mc-spot" data-spot style={`--glow:${LINEUP[0].glow}`}>
-    <div class="mc-spot__stage" data-spot-stage tabindex="0" role="group" aria-roledescription="carousel"
-         aria-label="Mugs, tote and cups. Use the arrow keys or swipe to change piece.">
-      <span class="mc-spot__light" aria-hidden="true"></span>
-      <span class="mc-spot__plinth" aria-hidden="true"></span>
-      {LINEUP.map((it, i) => (
-        <figure class="mc-spot__piece" data-spot-piece hidden={i > 0 ? true : undefined} style={`--ar:${it.w}/${it.h}`}>
-          <img class="mc-spot__img" src={asset(it.src)} alt={it.alt} width={it.w} height={it.h}
-               loading="lazy" decoding="async" draggable="false" />
-          <img class="mc-spot__refl" src={asset(it.src)} alt="" aria-hidden="true" width={it.w} height={it.h}
-               loading="lazy" decoding="async" draggable="false" />
-        </figure>
-      ))}
+  <div class="mc-line-pin" data-pin>
+    <div class="wrap mc-sec-head mc-sec-head--dark">
+      <h2 id="mc-line-h">Mugs, tote, cups</h2>
     </div>
 
-    <div class="mc-spot__info">
-      <p class="mc-spot__count label" aria-hidden="true"><b data-spot-n>01</b> / {pad(LINEUP.length)}</p>
-      <div class="mc-spot__text" aria-live="polite">
-        <h3 class="mc-spot__name" data-spot-name>{LINEUP[0].name}</h3>
-        <p class="mc-spot__note" data-spot-note>{LINEUP[0].note}</p>
-      </div>
-      <div class="mc-spot__arrows">
-        <button type="button" class="mc-nav" data-spot-prev aria-label="Previous piece">←</button>
-        <button type="button" class="mc-nav" data-spot-next aria-label="Next piece">→</button>
-      </div>
+    <div class="mc-arc" data-arc tabindex="0" role="group" aria-roledescription="carousel" aria-label="Mugs, tote and cups">
+      <div class="mc-light" aria-hidden="true"></div>
+      <div class="mc-floor" aria-hidden="true"></div>
+      <ul class="mc-ring" data-ring role="list">
+        {LINEUP.map((it, i) => (
+          <li class="mc-ri" data-i={i} style={`--w:${it.w};--h:${it.h}`}>
+            <button type="button" class="mc-ri-btn" tabindex="-1" aria-label={`${it.name}. ${it.note}`}>
+              <span class="mc-prod">
+                <img class="mc-prod__img" src={asset(it.src)} alt={it.alt} width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+                <img class="mc-prod__refl" src={asset(it.src)} alt="" aria-hidden="true" width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
+                <span class="mc-prod__dim" aria-hidden="true"></span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
 
-    <ul class="mc-spot__picks" role="list" aria-label="Choose a piece">
-      {LINEUP.map((it, i) => (
-        <li>
-          <button type="button" class="mc-pick" data-spot-pick={i} aria-pressed={i === 0 ? 'true' : 'false'}
-                  aria-label={`${it.name}: ${it.note}`} data-name={it.name} data-note={it.note} data-glow={it.glow}>
-            <img src={asset(it.src)} alt="" width={it.w} height={it.h} loading="lazy" decoding="async" draggable="false" />
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div class="wrap mc-line-foot">
+      <button type="button" class="mc-nav" data-prev aria-label="Previous piece">←</button>
+      <p class="mc-lu-name" data-name aria-live="polite">
+        <span class="mc-lu-name__n" data-name-n>{LINEUP[0].name}</span>
+        <span class="mc-lu-name__d label" data-name-d>{LINEUP[0].note}</span>
+      </p>
+      <button type="button" class="mc-nav" data-next aria-label="Next piece">→</button>
+    </div>
   </div>
+  <script type="application/json" id="mc-lineup-data" set:html={JSON.stringify(LINEUP.map(({ name, note, glow }) => ({ name, note, glow })))}></script>
 </section>

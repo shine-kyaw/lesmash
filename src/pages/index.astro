@@ -95,13 +95,19 @@ const teasers = [
     </div>
   </section>
 
-  {/* 4 — the line-up */}
+  {/* 4 — the line-up. Client revision 01: no more scroll-pinned sideways run
+       ("up-swipe / down-swipe"). A row that snaps card by card; arrows, drag
+       and swipe move it, and the page always scrolls normally. */}
   {burgers.length > 0 && (
     <section class="hm-line" data-hm-line aria-labelledby="hm-line-title">
       <div class="hm-line__pin">
         <div class="wrap hm-line__head">
           <h2 class="hm-line__title" id="hm-line-title">The <span>line-up</span></h2>
-          <a class="tlink" href={href('/menu')}>Full menu</a>
+          <div class="hm-line__ctl">
+            <a class="tlink" href={href('/menu')}>Full menu</a>
+            <button type="button" class="hm-line__btn" data-hm-prev aria-label="Previous burgers" disabled>&larr;</button>
+            <button type="button" class="hm-line__btn" data-hm-next aria-label="Next burgers">&rarr;</button>
+          </div>
         </div>
         <div class="hm-line__viewport" data-hm-viewport>
           <ul class="hm-line__track" data-hm-track>
@@ -125,6 +131,7 @@ const teasers = [
             </li>
           </ul>
         </div>
+        <div class="wrap"><div class="hm-line__bar" aria-hidden="true"><i data-hm-bar></i></div></div>
       </div>
     </section>
   )}
@@ -275,55 +282,77 @@ const teasers = [
   (() => {
     const section = $('[data-hm-line]');
     const track = $('[data-hm-track]');
-    const viewport = $('[data-hm-viewport]');
-    if (!section || !track || !viewport || reduced) return;
+    const viewport = $('[data-hm-viewport]') as HTMLElement | null;
+    if (!section || !track || !viewport) return;
     const cards = $$('[data-hm-card]', track);
-    const inners = (c: HTMLElement) => $('[data-hm-inner]', c) as HTMLElement;
+    const prev = $('[data-hm-prev]') as HTMLButtonElement | null;
+    const next = $('[data-hm-next]') as HTMLButtonElement | null;
+    const bar = $('[data-hm-bar]') as HTMLElement | null;
 
+    // Arrows step one card; the bar and arrow states follow the scroll.
+    const stepW = () => (cards[0]?.getBoundingClientRect().width || 300) + parseFloat(getComputedStyle(track).columnGap || '24');
+    const sync = () => {
+      const max = viewport.scrollWidth - viewport.clientWidth;
+      const p = max > 0 ? viewport.scrollLeft / max : 1;
+      if (bar) { bar.style.width = (viewport.clientWidth / viewport.scrollWidth * 100).toFixed(2) + '%'; bar.style.left = (p * (100 - viewport.clientWidth / viewport.scrollWidth * 100)).toFixed(2) + '%'; }
+      if (prev) prev.disabled = viewport.scrollLeft < 4;
+      if (next) next.disabled = viewport.scrollLeft > max - 4;
+    };
+    const go = (dir: number) => viewport.scrollBy({ left: dir * stepW(), behavior: reduced ? 'auto' : 'smooth' });
+    prev?.addEventListener('click', () => go(-1));
+    next?.addEventListener('click', () => go(1));
+    viewport.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+
+    // Mouse: drag the row sideways. Touch and trackpads scroll it natively.
+    let down = false, moved = false, sx = 0, sl = 0;
+    viewport.addEventListener('pointerdown', (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      down = true; moved = false; sx = e.clientX; sl = viewport.scrollLeft;
+    });
+    window.addEventListener('pointermove', (e: PointerEvent) => {
+      if (!down) return;
+      const dx = e.clientX - sx;
+      if (!moved && Math.abs(dx) > 6) { moved = true; viewport.classList.add('is-dragging'); }
+      if (moved) viewport.scrollLeft = sl - dx;
+    });
+    window.addEventListener('pointerup', () => {
+      if (!down) return; down = false;
+      viewport.classList.remove('is-dragging');
+      if (moved) {
+        // settle on the nearest card
+        const w = stepW(); viewport.scrollTo({ left: Math.round(viewport.scrollLeft / w) * w, behavior: reduced ? 'auto' : 'smooth' });
+      }
+    });
+    viewport.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+    viewport.addEventListener('dragstart', (e) => e.preventDefault());
+
+    if (reduced) return;
+    // Each card lands with a little smash as it scrolls into view.
+    const inners = (c: HTMLElement) => $('[data-hm-inner]', c) as HTMLElement;
     const smash = (c: HTMLElement) => {
       gsap.timeline()
         .fromTo(inners(c), { opacity: 0, y: -110, scaleX: 0.96, scaleY: 1.08 },
           { opacity: 1, y: 0, scaleX: 1.06, scaleY: 0.9, duration: 0.2, ease: 'power4.in' })
         .to(inners(c), { scaleX: 1, scaleY: 1, duration: 0.55, ease: 'back.out(2)' });
     };
-
-    const mm = gsap.matchMedia();
-
-    mm.add('(min-width: 900px)', () => {
-      gsap.set(cards.map(inners), { opacity: 0 });
-      const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 8);
-      const tween = gsap.to(track, {
-        x: () => -dist(), ease: 'none',
-        scrollTrigger: {
-          trigger: section, start: 'top top', end: () => '+=' + dist(),
-          pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1,
-        },
+    gsap.set(cards.map(inners), { opacity: 0 });
+    let seen = 0;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const c = e.target as HTMLElement;
+        io.unobserve(c);
+        gsap.delayedCall((seen++ % 4) * 0.1, () => smash(c));
       });
-      let live = false;
-      const pending: HTMLElement[] = [];
-      ScrollTrigger.create({
-        trigger: section, start: 'top 75%', once: true,
-        onEnter: () => { live = true; pending.splice(0).forEach((c, i) => gsap.delayedCall(i * 0.12, () => smash(c))); },
-      });
-      cards.forEach((c) => {
-        ScrollTrigger.create({
-          trigger: c, containerAnimation: tween, start: 'left 94%', once: true,
-          onEnter: () => (live ? smash(c) : pending.push(c)),
-        });
-      });
-    });
-
-    mm.add('(max-width: 899.98px)', () => {
-      gsap.set(cards.map(inners), { opacity: 0 });
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          smash(e.target as HTMLElement);
-          io.unobserve(e.target);
-        });
-      }, { threshold: 0.35 });
+    }, { root: viewport, threshold: 0.35 });
+    // Start watching once the section itself is on screen, so the first row lands together.
+    const gate = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      gate.disconnect();
       cards.forEach((c) => io.observe(c));
-      return () => io.disconnect();
-    });
+    }, { threshold: 0.2 });
+    gate.observe(section);
   })();
 </script>

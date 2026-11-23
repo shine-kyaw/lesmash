@@ -62,7 +62,7 @@ Keep the banner's animation style. Only adjust spacing if the shorter copy leave
   doors close and the train moves on. Keep the stops short, as already tuned.
 - Burger images: cut-outs from our existing burger photos.
 
-### 6. LINE UP (deck 04)
+### 6. LINE UP (deck 04): the home page section titled "The Line-up", not the merch ring
 - Replace the up/down swipe with a calmer layout that's easy to scan. Desktop: a horizontal
   line-up with snap and arrow keys. Mobile: one item per screen, swiped sideways with
   snap-scrolling. Both use the same motion.
@@ -94,7 +94,7 @@ Push each step live when it's done. `npm run build` must end with "All budgets h
 | 3 | Collaborations in date order | bbda9be |
 | 4 | Music Video tab (AR-T); AR-T out of Collaborations | 8f0552e, e7b79d5 |
 | 5 | Train: two stops, doors open on burgers | b6fc6eb |
-| 6 | LINE UP: lit shelf, no scroll-pinned ring | 45a5b8d |
+| 6 | LINE UP = the home page "The Line-up" (pinned sideways scroll). Now a snapping row with arrows, drag and a progress bar; no page lock. The merch ring was changed by mistake and is restored as it was. | see git log 24 Nov |
 | 7 | One type system; marker font retired | dd7f5ec |
 | 8 | Phone menu, 44px tap targets, call button, size checks | ecea135 |
 

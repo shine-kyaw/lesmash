@@ -120,8 +120,22 @@
   font-size: clamp(2.2rem, 1rem + 5.5vw, 5.5rem); line-height: 0.92;
 }
 .hm-line__title span { color: var(--red); }
-.hm-line__head .tlink { margin-left: auto; }
-.hm-line__viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: var(--s4) 0 var(--s6); }
+.hm-line__ctl { margin-left: auto; display: flex; align-items: center; gap: var(--s3); }
+.hm-line__ctl .tlink { margin-right: var(--s3); }
+.hm-line__btn {
+  width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(--black); background: var(--cream); color: var(--black);
+  font-size: 1.2rem; cursor: pointer; box-shadow: 3px 3px 0 var(--black);
+  transition: transform 200ms var(--ease), background-color 200ms var(--ease), box-shadow 200ms var(--ease), opacity 200ms;
+}
+.hm-line__btn:hover:not(:disabled) { background: var(--red); color: var(--cream); transform: translate(-1px, -2px); box-shadow: 4px 5px 0 var(--black); }
+.hm-line__btn:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.hm-line__btn:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+.hm-line__bar { position: relative; height: 4px; background: rgb(0 0 0 / 0.12); border-radius: 2px; overflow: hidden; }
+.hm-line__bar i { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: var(--black); border-radius: 2px; }
+.hm-line__viewport { overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); overscroll-behavior-x: contain; scrollbar-width: none; padding: var(--s4) 0 var(--s6); }
+.hm-line__viewport.is-dragging { scroll-snap-type: none; cursor: grabbing; }
+.hm-line__viewport.is-dragging a { pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .hm-line__viewport { cursor: grab; } }
 .hm-line__viewport::-webkit-scrollbar { display: none; }
 .hm-line__track { display: flex; gap: var(--s5); padding-inline: var(--gutter); width: max-content; margin: 0; list-style: none; }
 .hm-card { flex: 0 0 auto; width: min(76vw, 21rem); scroll-snap-align: center; list-style: none; }
@@ -148,16 +162,14 @@
 .hm-card__more b { font-family: var(--font-display); font-weight: 400; text-transform: uppercase; font-size: clamp(1.6rem, 1rem + 2vw, 2.4rem); line-height: 1; background: var(--black); padding: 0.4em 0.6em; rotate: -3deg; }
 
 @media (min-width: 56.25rem) {
-  .hm-line__pin { height: 100vh; height: 100svh; }
-  .hm-line__viewport { flex: 1; min-height: 0; overflow: visible; padding-block: var(--s3) var(--s4); }
-  .hm-line__track { height: 100%; align-items: center; }
-  /* Width derives from viewport height so card + caption always fit the pinned screen. */
-  .hm-card { width: clamp(16rem, calc((100svh - 19rem) * 0.77), 28rem); height: auto; display: block; }
-  .hm-card__in { height: auto; }
-  .hm-card__fig { aspect-ratio: 3 / 3.9; }
+  /* About four cards across a laptop, with the next one peeking in. */
+  .hm-card { width: clamp(17rem, 22vw, 22rem); scroll-snap-align: start; }
   .hm-card__desc { min-height: 3em; }
   .hm-card--end { align-self: stretch; }
-  .hm-card__more { height: 100%; aspect-ratio: auto; }
+  .hm-card__more { height: calc(100% - 3em - var(--s4)); aspect-ratio: auto; }
+}
+@media (max-width: 56.24rem) {
+  .hm-line__btn { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hm-line__pin { height: auto; }
